@@ -55,6 +55,7 @@ public class MainFrame extends JFrame
         // Activating the frame
         setVisible(true);
         pack();
+        setLocationRelativeTo(null);
         validate();
 
         Dimension dim = getSize();
