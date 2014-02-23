@@ -14,33 +14,40 @@ import java.util.Properties;
  * @copyright Copyright (c) 2014
  * @license Creative Commons Attribution-ShareAlike 3.0
  */
-public class ActionsPanel extends JPanel
+public class ActionsPanel extends AbstractPanel
 {
     protected JButton startServerBtn;
     protected JButton stopServerBtn;
     protected ConfigPanel configPanel;
+    protected StatusPanel statusPanel;
 
-    public ActionsPanel(ConfigPanel configPanel)
+    public ActionsPanel(ConfigPanel configPanel, StatusPanel statusPanel)
     {
         super();
         this.configPanel = configPanel;
-        this.setLayout(new GridBagLayout());
+        this.statusPanel = statusPanel;
         this.addLabels();
         this.addButtons();
         this.attachListeners();
+
+        if(configPanel.getForm().getConfig().size() > 0) {
+            statusPanel.appendMessage("Configuration loaded");
+        }
     }
 
     protected void addLabels()
     {
         GridBagConstraints c;
 
+        // Adding the label for the section
         JLabel actionLabel = new JLabel("Server control");
-
         c = new GridBagConstraints();
         c.gridx = 0;
         c.gridy = 0;
-
-        this.add(actionLabel, c);
+        c.weightx = 1;
+        c.insets = new Insets(20, 0, 0, 0);
+        c.anchor = GridBagConstraints.FIRST_LINE_START;
+        add(actionLabel, c);
     }
 
     protected void addButtons()
@@ -49,60 +56,67 @@ public class ActionsPanel extends JPanel
         Insets insets = new Insets(10, 10, 10, 10);
 
         // Creating the start server button
-        this.startServerBtn = new JButton("Start server");
-        this.startServerBtn.setActionCommand("startServer");
+        startServerBtn = new JButton("Start server");
+        startServerBtn.setActionCommand("startServer");
 
         c = new GridBagConstraints();
         c.gridx = 0;
         c.gridy = 1;
         c.insets = insets;
 
-        this.add(this.startServerBtn, c);
+        add(startServerBtn, c);
 
         // Creating the stop server button
-        this.stopServerBtn = new JButton("Stop server");
-        this.stopServerBtn.setActionCommand("stopServer");
+        stopServerBtn = new JButton("Stop server");
+        stopServerBtn.setActionCommand("stopServer");
+        stopServerBtn.setEnabled(false);
 
         c = new GridBagConstraints();
         c.gridx = 1;
         c.gridy = 1;
         c.insets = insets;
 
-        this.add(this.stopServerBtn, c);
+        add(stopServerBtn, c);
     }
 
     protected void attachListeners()
     {
         final ConfigPanel configPanel = this.configPanel;
+        final StatusPanel statusPanel = this.statusPanel;
 
         startServerBtn.addActionListener(new ActionListener()
         {
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                boolean fileExists = false;
+                statusPanel.appendMessage("Server started");
+                startServerBtn.setEnabled(false);
+                stopServerBtn.setEnabled(true);
+            }
+        });
 
-                File file = new File("config.properties");
-                fileExists = file.exists();
+        stopServerBtn.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                boolean configSaved = false;
 
-                if(fileExists == false) {
-                    try {
-                        fileExists = file.createNewFile();
-                    } catch (IOException e1) {
-                        e1.printStackTrace();
-                    }
+                try {
+                    configPanel.getForm().getData().getConfig().store();
+                    configSaved = true;
+                } catch (IOException e1) {
+                    e1.printStackTrace();
                 }
 
-                if(fileExists) {
-                    OutputStream out = null;
-                    try {
-                        out = new FileOutputStream(file);
-                        Properties properties = configPanel.getConfig();
-                        properties.store(out, "Server properties");
-                    } catch (IOException e1) {
-                        e1.printStackTrace();
-                    }
+                statusPanel.appendMessage("Server stopped");
+
+                if(configSaved) {
+                    statusPanel.appendMessage("Configuration saved");
                 }
+
+                startServerBtn.setEnabled(true);
+                stopServerBtn.setEnabled(false);
             }
         });
     }

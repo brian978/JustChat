@@ -1,10 +1,9 @@
 package justchat.gui.panel;
 
-import justchat.gui.form.ServerProperties;
+import justchat.gui.form.ConfigForm;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Properties;
 
 /**
  * JustChat
@@ -13,13 +12,13 @@ import java.util.Properties;
  * @copyright Copyright (c) 2014
  * @license Creative Commons Attribution-ShareAlike 3.0
  */
-public class ConfigPanel extends JPanel
+public class ConfigPanel extends AbstractPanel
 {
-    protected ServerProperties configForm;
+    protected ConfigForm configForm;
 
     public ConfigPanel()
     {
-        setLayout(new GridBagLayout());
+        super();
         addLabels();
         buildForm();
     }
@@ -28,25 +27,30 @@ public class ConfigPanel extends JPanel
     {
         GridBagConstraints c;
 
-        JLabel label = new JLabel("Server properties");
-        label.setHorizontalAlignment(SwingConstants.LEFT);
-
+        // Adding the label for the section
+        JLabel actionLabel = new JLabel("Server config");
         c = new GridBagConstraints();
         c.gridx = 0;
         c.gridy = 0;
-        c.insets = new Insets(10, 10, 10, 10);
-
-        add(label, c);
+        c.weightx = 1.0;
+        c.insets = new Insets(0, 0, 0, 0);
+        c.anchor = GridBagConstraints.FIRST_LINE_START;
+        add(actionLabel, c);
     }
 
     protected void buildForm()
     {
-        configForm = new ServerProperties(this, 0, 1);
-        configForm.createInputForm();
+        configForm = new ConfigForm();
+        configForm.create();
+
+        GridBagConstraints c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 1;
+        add(configForm, c);
     }
 
-    public Properties getConfig()
+    public ConfigForm getForm()
     {
-        return configForm.getProperties();
+        return configForm;
     }
 }
