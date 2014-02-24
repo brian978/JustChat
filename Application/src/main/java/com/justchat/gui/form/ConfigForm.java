@@ -1,7 +1,7 @@
-package justchat.gui.form;
+package com.justchat.gui.form;
 
-import justchat.gui.form.field.TextField;
-import justchat.util.PropertiesHandler;
+import com.justchat.gui.form.field.TextField;
+import com.justchat.util.PropertiesHandler;
 
 import javax.swing.*;
 import java.awt.*;

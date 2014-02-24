@@ -1,4 +1,4 @@
-package justchat.gui.form.field;
+package com.justchat.gui.form.field;
 
 import javax.swing.*;
 import java.awt.*;

@@ -1,8 +1,8 @@
-package justchat.gui;
+package com.justchat.gui;
 
-import justchat.gui.panel.ActionsPanel;
-import justchat.gui.panel.ConfigPanel;
-import justchat.gui.panel.StatusPanel;
+import com.justchat.gui.panel.ActionsPanel;
+import com.justchat.gui.panel.ConfigPanel;
+import com.justchat.gui.panel.StatusPanel;
 
 import javax.swing.*;
 import java.awt.*;

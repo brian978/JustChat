@@ -1,6 +1,6 @@
-package justchat.gui.panel;
+package com.justchat.gui.panel;
 
-import justchat.gui.form.ConfigForm;
+import com.justchat.gui.form.ConfigForm;
 
 import javax.swing.*;
 import java.awt.*;

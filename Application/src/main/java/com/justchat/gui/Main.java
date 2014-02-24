@@ -1,4 +1,4 @@
-package justchat.gui;
+package com.justchat.gui;
 
 import javax.swing.*;
 

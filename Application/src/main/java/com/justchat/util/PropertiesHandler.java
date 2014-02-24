@@ -1,4 +1,4 @@
-package justchat.util;
+package com.justchat.util;
 
 import java.io.*;
 import java.nio.charset.Charset;
