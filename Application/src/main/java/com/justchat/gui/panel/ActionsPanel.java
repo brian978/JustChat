@@ -1,5 +1,8 @@
 package com.justchat.gui.panel;
 
+import com.justchat.gui.feedback.ServerStatus;
+import com.justchat.gui.form.ConfigForm;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -17,21 +20,28 @@ public class ActionsPanel extends AbstractPanel
 {
     protected JButton startServerBtn;
     protected JButton stopServerBtn;
-    protected ConfigPanel configPanel;
-    protected StatusPanel statusPanel;
+    protected ConfigForm configForm;
+    protected ServerStatus serverStatus;
 
-    public ActionsPanel(ConfigPanel configPanel, StatusPanel statusPanel)
+    public ActionsPanel(ConfigForm configForm, ServerStatus serverStatus)
     {
         super();
-        this.configPanel = configPanel;
-        this.statusPanel = statusPanel;
+
+        this.configForm = configForm;
+        this.serverStatus = serverStatus;
+    }
+
+    public ActionsPanel render()
+    {
+        if(configForm.collectData().getContainer().size() > 0) {
+            serverStatus.append("Configuration loaded");
+        }
+
         this.addLabels();
         this.addButtons();
         this.attachListeners();
 
-        if(configPanel.getForm().getConfig().size() > 0) {
-            statusPanel.appendMessage("Configuration loaded");
-        }
+        return this;
     }
 
     protected void addLabels()
@@ -80,15 +90,15 @@ public class ActionsPanel extends AbstractPanel
 
     protected void attachListeners()
     {
-        final ConfigPanel configPanel = this.configPanel;
-        final StatusPanel statusPanel = this.statusPanel;
+        final ConfigForm configForm = this.configForm;
+        final ServerStatus serverStatus = this.serverStatus;
 
         startServerBtn.addActionListener(new ActionListener()
         {
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                statusPanel.appendMessage("Server started");
+                serverStatus.append("Server started");
                 startServerBtn.setEnabled(false);
                 stopServerBtn.setEnabled(true);
             }
@@ -102,16 +112,16 @@ public class ActionsPanel extends AbstractPanel
                 boolean configSaved = false;
 
                 try {
-                    configPanel.getForm().getData().getConfig().store();
+                    configForm.collectData().getContainer().store();
                     configSaved = true;
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 }
 
-                statusPanel.appendMessage("Server stopped");
+                serverStatus.append("Server stopped");
 
                 if(configSaved) {
-                    statusPanel.appendMessage("Configuration saved");
+                    serverStatus.append("Configuration saved");
                 }
 
                 startServerBtn.setEnabled(true);

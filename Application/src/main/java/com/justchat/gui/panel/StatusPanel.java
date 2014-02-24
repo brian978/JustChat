@@ -1,5 +1,6 @@
 package com.justchat.gui.panel;
 
+import com.justchat.gui.feedback.ServerStatus;
 import javax.swing.*;
 import java.awt.*;
 
@@ -12,11 +13,14 @@ import java.awt.*;
  */
 public class StatusPanel extends AbstractPanel
 {
-    protected JTextArea statusBox;
+    protected ServerStatus serverStatus;
 
-    public StatusPanel()
+    public StatusPanel(ServerStatus serverStatus)
     {
         super();
+
+        this.serverStatus = serverStatus;
+
         addLabels();
         addStatusBox();
     }
@@ -36,29 +40,10 @@ public class StatusPanel extends AbstractPanel
     {
         GridBagConstraints c;
 
-        statusBox = new JTextArea();
-        statusBox.setEditable(false);
-
         c = new GridBagConstraints();
         c.gridx = 0;
         c.gridy = 1;
 
-        JScrollPane areaScrollPane = new JScrollPane(statusBox);
-        areaScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        areaScrollPane.setPreferredSize(new Dimension(300, 200));
-
-        add(areaScrollPane, c);
-    }
-
-    public JTextArea getStatusBox()
-    {
-        return statusBox;
-    }
-
-    public StatusPanel appendMessage(String msg)
-    {
-        statusBox.append(msg + "\r\n");
-
-        return this;
+        add(serverStatus.getScrollable(), c);
     }
 }

@@ -20,20 +20,18 @@ public class ConfigForm extends JPanel
     Insets insets = new Insets(5, 5, 5, 5);
     ArrayList<TextField> fields = new ArrayList<>();
     PropertiesHandler config = new PropertiesHandler("servers.config");
+    boolean created = false;
 
     public ConfigForm()
     {
         setLayout(new GridBagLayout());
         setBackground(new Color(0, 0, 0, 0));
 
-        try {
-            config.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        // Adding some default fields to the form
+        addField(new TextField("Port:", "port"));
     }
 
-    protected void addField(TextField field)
+    public void addField(TextField field)
     {
         GridBagConstraints c = new GridBagConstraints();
         c.gridx = 0;
@@ -43,17 +41,30 @@ public class ConfigForm extends JPanel
         add(field, c);
     }
 
-    public void create()
+    public ConfigForm create()
     {
-        addField(new TextField("Port:", "port"));
+        // We don't want to create this form twice
+        if(created) {
+            return this;
+        }
+
+        try {
+            config.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         // Populating the fields with data
         for(TextField field : fields) {
             field.setValue(config.getProperty(field.getIdentifier()));
         }
+
+        created = true;
+
+        return this;
     }
 
-    public ConfigForm getData()
+    public ConfigForm collectData()
     {
         // Populating the fields with data
         for(TextField field : fields) {
@@ -63,7 +74,7 @@ public class ConfigForm extends JPanel
         return this;
     }
 
-    public PropertiesHandler getConfig()
+    public PropertiesHandler getContainer()
     {
         return config;
     }

@@ -16,9 +16,12 @@ public class ConfigPanel extends AbstractPanel
 {
     protected ConfigForm configForm;
 
-    public ConfigPanel()
+    public ConfigPanel(ConfigForm configForm)
     {
         super();
+
+        this.configForm = configForm;
+
         addLabels();
         buildForm();
     }
@@ -40,17 +43,9 @@ public class ConfigPanel extends AbstractPanel
 
     protected void buildForm()
     {
-        configForm = new ConfigForm();
-        configForm.create();
-
         GridBagConstraints c = new GridBagConstraints();
         c.gridx = 0;
         c.gridy = 1;
-        add(configForm, c);
-    }
-
-    public ConfigForm getForm()
-    {
-        return configForm;
+        add(configForm.create(), c);
     }
 }
