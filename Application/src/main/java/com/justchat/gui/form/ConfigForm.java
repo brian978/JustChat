@@ -50,13 +50,13 @@ public class ConfigForm extends JPanel
 
         try {
             config.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
-        // Populating the fields with data
-        for(TextField field : fields) {
-            field.setValue(config.getProperty(field.getIdentifier()));
+            // Populating the fields with data
+            for(TextField field : fields) {
+                field.setValue(config.getProperty(field.getIdentifier()));
+            }
+        } catch (IOException e) {
+            // We don't care that it didn't load (for now)
         }
 
         created = true;
