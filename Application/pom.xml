@@ -6,6 +6,12 @@
     <groupId>com.justchat</groupId>
     <artifactId>JustChat</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <dependencies>
+        <dependency>
+            <groupId>javax.websocket</groupId>
+            <artifactId>javax.websocket-all</artifactId>
+        </dependency>
+    </dependencies>
     <build>
         <plugins>
             <plugin>
