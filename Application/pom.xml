@@ -10,6 +10,7 @@
         <dependency>
             <groupId>javax.websocket</groupId>
             <artifactId>javax.websocket-all</artifactId>
+            <version>1.0</version>
         </dependency>
     </dependencies>
     <build>
