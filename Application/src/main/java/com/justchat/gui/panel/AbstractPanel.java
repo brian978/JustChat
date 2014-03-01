@@ -17,4 +17,27 @@ public abstract class AbstractPanel extends JPanel
         super();
         setLayout(new GridBagLayout());
     }
+
+    protected void configure()
+    {
+
+    }
+
+    protected void populate()
+    {
+
+    }
+
+    protected Component findComponentByName(String name)
+    {
+        Component[] components = getComponents();
+
+        for(Component component : components) {
+            if(component.getName().compareTo(name) == 0) {
+                return component;
+            }
+        }
+
+        return null;
+    }
 }

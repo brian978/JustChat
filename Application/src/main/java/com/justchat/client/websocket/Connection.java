@@ -33,6 +33,12 @@ public class Connection
         System.out.println("Received msg: " + message);
     }
 
+    @OnError
+    public void onError(Session session, Throwable t)
+    {
+        t.printStackTrace();
+    }
+
     public void connect() throws IOException, DeploymentException
     {
         session = client.connectToServer(Connection.class, URI.create("ws://" + host + ":" + port));
@@ -47,6 +53,6 @@ public class Connection
 
     public void sendMessage(String message)
     {
-
+        session.getAsyncRemote().sendText(message);
     }
 }
