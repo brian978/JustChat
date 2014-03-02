@@ -1,17 +1,14 @@
 package com.justchat.client.gui.panel;
 
-import com.justchat.client.frame.Conversation;
+import com.justchat.client.frame.menu.ChatMenu;
 import com.justchat.client.identity.User;
 import com.justchat.client.websocket.Connection;
-import com.justchat.client.websocket.factory.ConnectionFactory;
 import com.justchat.client.websocket.listeners.NewMessageListener;
 import com.justchat.gui.panel.AbstractPanel;
 
 import javax.swing.*;
-import javax.websocket.DeploymentException;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.IOException;
 
 /**
  * JustChat
@@ -51,7 +48,11 @@ public class ChatPanel extends AbstractPanel
 
         GridBagConstraints c;
 
-        // Adding the Chat box where the messages will appear
+        /**
+         * -----------------
+         * chat box pane
+         * -----------------
+         */
         chatBox = new ChatBoxPane();
 
         c = new GridBagConstraints();
@@ -65,7 +66,11 @@ public class ChatPanel extends AbstractPanel
 
         add(chatBox.getScrollable(), c);
 
-        // Adding the text box
+        /**
+         * -----------------
+         * chat message box
+         * -----------------
+         */
         final JTextField messageBox = new JTextField();
         messageBox.setName("MessageBox");
         messageBox.setPreferredSize(new Dimension(300, 30));
