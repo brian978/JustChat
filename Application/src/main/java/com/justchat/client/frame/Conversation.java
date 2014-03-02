@@ -1,7 +1,11 @@
 package com.justchat.client.frame;
 
+import com.justchat.client.gui.exception.FailedToLoadConfigurationException;
 import com.justchat.client.gui.panel.ChatPanel;
 import com.justchat.client.gui.panel.ErrorPanel;
+import com.justchat.client.identity.User;
+import com.justchat.client.websocket.Connection;
+import com.justchat.client.websocket.factory.ConnectionFactory;
 
 import javax.swing.*;
 import javax.websocket.DeploymentException;
@@ -15,11 +19,25 @@ import java.io.IOException;
  * @copyright Copyright (c) 2014
  * @license Creative Commons Attribution-ShareAlike 3.0
  */
-public class Primary extends JFrame
+public class Conversation extends JFrame
 {
-    public Primary()
+    User user;
+    private Connection connection = null;
+    String connectionMessage = null;
+
+    public Conversation()
     {
-        super("JustChat");
+        super("JustChat - conversation");
+
+        user = new User("Current user", true);
+
+        try {
+            connection = ConnectionFactory.factory();
+            connection.connect();
+        } catch (IOException | DeploymentException e) {
+            connectionMessage = e.getMessage();
+        }
+
         configureFrame();
         populateFrame();
         showFrame();
@@ -60,12 +78,13 @@ public class Primary extends JFrame
         c.fill = GridBagConstraints.BOTH;
         c.anchor = GridBagConstraints.FIRST_LINE_START;
 
-        try {
-            ChatPanel chatPanel = new ChatPanel();
+        // Adding the appropriate panels
+        if(connectionMessage == null) {
+            ChatPanel chatPanel = new ChatPanel(connection, user);
             chatPanel.setName("ChatPanel");
             add(chatPanel, c);
-        } catch (IOException | DeploymentException e) {
-            ErrorPanel errorPanel = new ErrorPanel(e.getMessage());
+        } else {
+            ErrorPanel errorPanel = new ErrorPanel(connectionMessage);
             add(errorPanel, c);
         }
     }

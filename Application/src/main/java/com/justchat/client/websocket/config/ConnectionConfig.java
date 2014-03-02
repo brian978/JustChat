@@ -1,4 +1,4 @@
-package com.justchat.client.websocket;
+package com.justchat.client.websocket.config;
 
 import com.justchat.util.Properties;
 
@@ -12,21 +12,20 @@ import java.io.IOException;
  * @copyright Copyright (c) 2014
  * @license Creative Commons Attribution-ShareAlike 3.0
  */
-public class SocketConfiguration
+public class ConnectionConfig
 {
-    String filename = "socket.properties";
-    File config = new File("config.properties");
+    File config = new File("socket.properties");
     Properties properties = new Properties(config);
 
-    public SocketConfiguration() throws IOException
+    public ConnectionConfig() throws IOException
     {
         this(true);
     }
 
-    public SocketConfiguration(boolean autoload) throws IOException
+    public ConnectionConfig(boolean autoload) throws IOException
     {
         if(!createFile() && autoload) {
-            properties.load();
+            load();
         }
     }
 
@@ -34,11 +33,15 @@ public class SocketConfiguration
     {
         boolean fileCreated = false;
 
-        if (!config.exists() && config.createNewFile()) {
-            properties.setProperty("host", "brian.hopto.org");
-            properties.setProperty("port", "7896");
-            properties.store();
-            fileCreated = true;
+        if (!config.exists()) {
+            if(config.createNewFile()) {
+                properties.setProperty("host", "brian.hopto.org");
+                properties.setProperty("port", "7896");
+                properties.store();
+                fileCreated = true;
+            } else {
+                throw new IOException("Cannot create file.");
+            }
         }
 
         return fileCreated;

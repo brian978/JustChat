@@ -1,5 +1,7 @@
 package com.justchat.client.websocket.listeners;
 
+import com.justchat.client.identity.User;
+
 /**
  * JustChat
  *
@@ -9,5 +11,5 @@ package com.justchat.client.websocket.listeners;
  */
 public interface NewMessageListener
 {
-    public void onNewMessage(String message);
+    public void onNewMessage(User user, String message);
 }

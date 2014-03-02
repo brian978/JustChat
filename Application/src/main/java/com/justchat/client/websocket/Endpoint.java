@@ -1,5 +1,6 @@
 package com.justchat.client.websocket;
 
+import com.justchat.client.identity.User;
 import com.justchat.client.websocket.listeners.NewMessageListener;
 
 import javax.websocket.*;
@@ -28,10 +29,10 @@ public class Endpoint {
     }
 
     @OnMessage
-    public void onMessage(String message, Session session) {
+    public void onMessage(String message) {
         System.out.println("Received msg: " + message);
         if(messageListener != null) {
-            messageListener.onNewMessage(message);
+            messageListener.onNewMessage(new User("Unknown user"), message);
         }
     }
 

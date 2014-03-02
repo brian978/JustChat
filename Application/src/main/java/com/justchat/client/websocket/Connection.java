@@ -16,8 +16,7 @@ public class Connection
     String host = "";
     int port = 0;
     Session session = null;
-    WebSocketContainer client = ContainerProvider.getWebSocketContainer();
-    Endpoint clientEndpoint = new Endpoint();
+    Endpoint endpoint = new Endpoint();
 
     public Connection(String host, int port)
     {
@@ -27,7 +26,8 @@ public class Connection
 
     public void connect() throws IOException, DeploymentException
     {
-        session = client.connectToServer(clientEndpoint, URI.create("ws://" + host + ":" + port));
+        session = ContainerProvider.getWebSocketContainer()
+                                   .connectToServer(endpoint, URI.create("ws://" + host + ":" + port));
     }
 
     public void disconnect() throws IOException
@@ -39,11 +39,13 @@ public class Connection
 
     public void sendMessage(String message)
     {
-        session.getAsyncRemote().sendText(message);
+        if (session != null) {
+            session.getAsyncRemote().sendText(message);
+        }
     }
 
     public Endpoint getEndpoint()
     {
-        return clientEndpoint;
+        return endpoint;
     }
 }

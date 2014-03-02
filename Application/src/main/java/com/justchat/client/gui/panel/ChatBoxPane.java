@@ -1,5 +1,6 @@
 package com.justchat.client.gui.panel;
 
+import com.justchat.client.identity.User;
 import com.justchat.gui.panel.AbstractPanel;
 import sun.awt.VariableGridLayout;
 
@@ -14,12 +15,13 @@ import java.awt.*;
  * @copyright Copyright (c) 2014
  * @license Creative Commons Attribution-ShareAlike 3.0
  */
-public class ChatBoxPanel extends JTextPane
+public class ChatBoxPane extends JTextPane
 {
-    public ChatBoxPanel()
+    public ChatBoxPane()
     {
         setName("ChatBox");
         setBackground(Color.WHITE);
+        setEditable(false);
     }
 
     public JScrollPane getScrollable()
@@ -30,7 +32,7 @@ public class ChatBoxPanel extends JTextPane
         return pane;
     }
 
-    public void append(Color color, String from, String message)
+    public void append(Color color, User from, String message)
     {
         StyleContext styleContext = StyleContext.getDefaultStyleContext();
         StyledDocument doc = getStyledDocument();
@@ -40,7 +42,7 @@ public class ChatBoxPanel extends JTextPane
             // Inserting the sender
             attributeSet = styleContext.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Foreground, color);
             attributeSet = styleContext.addAttribute(attributeSet, StyleConstants.Bold, true);
-            doc.insertString(doc.getLength(), from + ": ", attributeSet);
+            doc.insertString(doc.getLength(), from.getUsername() + ": ", attributeSet);
 
             // Inserting the message
             styleContext = StyleContext.getDefaultStyleContext();

@@ -1,18 +1,16 @@
 package com.justchat.client.gui.panel;
 
-import com.justchat.client.gui.exception.FailedToLoadConfigurationException;
+import com.justchat.client.frame.Conversation;
+import com.justchat.client.identity.User;
 import com.justchat.client.websocket.Connection;
-import com.justchat.client.websocket.SocketConfiguration;
+import com.justchat.client.websocket.factory.ConnectionFactory;
 import com.justchat.client.websocket.listeners.NewMessageListener;
 import com.justchat.gui.panel.AbstractPanel;
 
 import javax.swing.*;
 import javax.websocket.DeploymentException;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
 import java.io.IOException;
 
 /**
@@ -25,35 +23,15 @@ import java.io.IOException;
 public class ChatPanel extends AbstractPanel
 {
     Connection connection;
-    ChatBoxPanel chatBox;
+    ChatBoxPane chatBox;
+    User currentUser;
 
-    public ChatPanel() throws IOException, DeploymentException
+    public ChatPanel(Connection connection, User user)
     {
         super();
 
-        SocketConfiguration config;
-
-        try {
-            config = new SocketConfiguration();
-        } catch (IOException e) {
-            throw new FailedToLoadConfigurationException("Cannot load configuration file", e.getCause());
-        }
-
-        connection = new Connection(
-                config.get("host"),
-                Integer.parseInt(config.get("port"))
-        );
-
-        connection.connect();
-
-        connection.getEndpoint().setMessageListener(new NewMessageListener()
-        {
-            @Override
-            public void onNewMessage(String message)
-            {
-                chatBox.append(Color.BLUE, "Some user", message);
-            }
-        });
+        this.connection = connection;
+        this.currentUser = user;
 
         configure();
         populate();
@@ -74,7 +52,7 @@ public class ChatPanel extends AbstractPanel
         GridBagConstraints c;
 
         // Adding the Chat box where the messages will appear
-        chatBox = new ChatBoxPanel();
+        chatBox = new ChatBoxPane();
 
         c = new GridBagConstraints();
         c.weightx = 1.0;
@@ -106,14 +84,22 @@ public class ChatPanel extends AbstractPanel
 
     protected void setupEvents()
     {
+        // The event will be triggered when a new message arrives
+        connection.getEndpoint().setMessageListener(new NewMessageListener()
+        {
+            @Override
+            public void onNewMessage(User user, String message)
+            {
+                chatBox.append(Color.BLUE, user, message);
+            }
+        });
     }
 
     private class SendListener implements KeyListener, ActionListener
     {
+        private ChatBoxPane chatBoxPanel;
 
-        private ChatBoxPanel chatBoxPanel;
-
-        public SendListener(ChatBoxPanel chatBox)
+        public SendListener(ChatBoxPane chatBox)
         {
             chatBoxPanel = chatBox;
         }
@@ -125,7 +111,7 @@ public class ChatPanel extends AbstractPanel
             field.setText("");
 
             if (message.length() > 0) {
-                chatBoxPanel.append(Color.RED, "Me", message);
+                chatBoxPanel.append(Color.RED, currentUser, message);
                 connection.sendMessage(message);
             }
         }
