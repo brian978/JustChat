@@ -1,7 +1,7 @@
-package com.justchat.client;
+package com.justchat.client.frame;
 
-import com.justchat.client.gui.ChatPanel;
-import com.justchat.client.gui.ErrorPanel;
+import com.justchat.client.gui.panel.ChatPanel;
+import com.justchat.client.gui.panel.ErrorPanel;
 
 import javax.swing.*;
 import javax.websocket.DeploymentException;
@@ -15,14 +15,9 @@ import java.io.IOException;
  * @copyright Copyright (c) 2014
  * @license Creative Commons Attribution-ShareAlike 3.0
  */
-public class Main extends JFrame
+public class Primary extends JFrame
 {
-    public static void main(String[] args)
-    {
-        new Main();
-    }
-
-    public Main()
+    public Primary()
     {
         super("JustChat");
         configureFrame();
@@ -36,7 +31,7 @@ public class Main extends JFrame
         // Configuring the frame
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new GridBagLayout());
-        setIconImage(new ImageIcon(getClass().getResource("logo/justchat.png")).getImage());
+        setIconImage(new ImageIcon(getClass().getResource("/com/justchat/client/logo/justchat.png")).getImage());
     }
 
     protected void showFrame()

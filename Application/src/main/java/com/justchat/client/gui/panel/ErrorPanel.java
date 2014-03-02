@@ -1,4 +1,4 @@
-package com.justchat.client.gui;
+package com.justchat.client.gui.panel;
 
 import com.justchat.gui.panel.AbstractPanel;
 

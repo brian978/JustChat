@@ -11,14 +11,13 @@ import javax.websocket.*;
  * @copyright Copyright (c) 2014
  * @license Creative Commons Attribution-ShareAlike 3.0
  */
-
-@ClientEndpoint
 public class Connection
 {
     String host = "";
     int port = 0;
     Session session = null;
     WebSocketContainer client = ContainerProvider.getWebSocketContainer();
+    Endpoint clientEndpoint = new Endpoint();
 
     public Connection(String host, int port)
     {
@@ -26,22 +25,9 @@ public class Connection
         this.port = port;
     }
 
-    @OnMessage
-    public void onMessage(String message)
-    {
-        //the new USD rate arrives from the web socket server side.
-        System.out.println("Received msg: " + message);
-    }
-
-    @OnError
-    public void onError(Session session, Throwable t)
-    {
-        t.printStackTrace();
-    }
-
     public void connect() throws IOException, DeploymentException
     {
-        session = client.connectToServer(Connection.class, URI.create("ws://" + host + ":" + port));
+        session = client.connectToServer(clientEndpoint, URI.create("ws://" + host + ":" + port));
     }
 
     public void disconnect() throws IOException
@@ -54,5 +40,10 @@ public class Connection
     public void sendMessage(String message)
     {
         session.getAsyncRemote().sendText(message);
+    }
+
+    public Endpoint getEndpoint()
+    {
+        return clientEndpoint;
     }
 }

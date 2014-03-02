@@ -2,7 +2,6 @@ package com.justchat.util;
 
 import java.io.*;
 import java.nio.charset.Charset;
-import java.util.Properties;
 
 /**
  * JustChat
@@ -11,23 +10,28 @@ import java.util.Properties;
  * @copyright Copyright (c) 2014
  * @license Creative Commons Attribution-ShareAlike 3.0
  */
-public class PropertiesHandler extends Properties
+public class Properties extends java.util.Properties
 {
-    protected String filename;
+    protected File file;
 
-    public PropertiesHandler(String filename)
+    public Properties(String filename)
     {
-        this.filename = filename;
+        this.file = new File(filename);
+    }
+
+    public Properties(File file)
+    {
+        this.file = file;
     }
 
     public void load() throws IOException
     {
-        load(new FileInputStream(new File(filename)));
+        load(new FileInputStream(this.file));
     }
 
     public void store() throws IOException
     {
-        FileOutputStream stream = new FileOutputStream(new File(filename));
+        FileOutputStream stream = new FileOutputStream(this.file);
         OutputStreamWriter writer = new OutputStreamWriter(stream, Charset.forName("UTF-8"));
         BufferedWriter bufferedWriter = new BufferedWriter(writer);
 
