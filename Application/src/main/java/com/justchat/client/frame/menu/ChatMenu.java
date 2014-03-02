@@ -23,7 +23,9 @@ public class ChatMenu extends JMenuBar
         fileMenu.setMnemonic(KeyEvent.VK_F);
 
         addMenuItem(fileMenu, "Send file", "sendFileItem");
+
         fileMenu.addSeparator();
+
         addMenuItem(fileMenu, "Close", "conversationCloseItem");
     }
 
