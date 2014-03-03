@@ -3,6 +3,9 @@ package com.justchat.client.frame;
 import com.justchat.client.frame.menu.AbstractMenu;
 import com.justchat.client.frame.menu.MainMenu;
 import com.justchat.client.gui.panel.LoginPanel;
+import com.justchat.client.identity.User;
+import com.justchat.client.service.tools.AuthenticationInterface;
+import com.justchat.client.service.provider.facebook.Authentication;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,6 +22,9 @@ import java.awt.event.WindowEvent;
  */
 public class Main extends AbstractFrame
 {
+    AuthenticationInterface authentication;
+    User user;
+
     public Main()
     {
         super("JustChat");
@@ -61,7 +67,7 @@ public class Main extends AbstractFrame
          * Login panel
          * -------------
          */
-        LoginPanel loginPanel = new LoginPanel();
+        LoginPanel loginPanel = new LoginPanel(new Authentication());
 
         c = new GridBagConstraints();
         c.weightx = 1.0;

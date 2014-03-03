@@ -27,7 +27,7 @@ import java.io.IOException;
 public class Conversation extends AbstractFrame
 {
     User user;
-    private Connection connection = null;
+    Connection connection = null;
     String connectionMessage = null;
 
     public Conversation()

@@ -1,9 +1,12 @@
 package com.justchat.client.gui.panel;
 
+import com.justchat.client.service.tools.AuthenticationInterface;
 import com.justchat.gui.panel.AbstractPanel;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * JustChat
@@ -14,9 +17,13 @@ import java.awt.*;
  */
 public class LoginPanel extends AbstractPanel
 {
-    public LoginPanel()
+    AuthenticationInterface authentication;
+
+    public LoginPanel(AuthenticationInterface authentication)
     {
         super();
+
+        this.authentication = authentication;
 
         configure();
         populate();
@@ -28,7 +35,10 @@ public class LoginPanel extends AbstractPanel
         super.populate();
 
         GridBagConstraints c;
-        Insets insets = new Insets(15, 10, 5, 0);
+
+        // Some default constraints and insets
+        Insets insets = new Insets(0, 10, 5, 0);
+        Insets breakInset = new Insets(12, 10, 5, 0);
 
         c = new GridBagConstraints();
         c.weightx = 1.0;
@@ -55,7 +65,7 @@ public class LoginPanel extends AbstractPanel
         c.gridx = 0;
         c.gridy = 1;
 
-        add(identityField, c);
+        add(identityField, c, 0);
 
         /**
          * -----------------
@@ -67,6 +77,7 @@ public class LoginPanel extends AbstractPanel
 
         c.gridx = 0;
         c.gridy = 2;
+        c.insets = breakInset;
 
         add(passwordLabel, c);
 
@@ -74,16 +85,42 @@ public class LoginPanel extends AbstractPanel
         passwordField.setHorizontalAlignment(SwingConstants.LEFT);
         passwordField.setColumns(10);
 
-        c = new GridBagConstraints();
-
         c.gridx = 0;
         c.gridy = 3;
+        c.insets = insets;
 
-        add(passwordField, c);
+        add(passwordField, c, 1);
+
+        /**
+         * -----------------
+         * Login button
+         * -----------------
+         */
+        JButton loginBtn = new JButton("Login");
+        loginBtn.setActionCommand("doLogin");
+
+        c.gridx = 0;
+        c.gridy = 4;
+        c.insets = breakInset;
+
+        add(loginBtn, c, 2);
     }
 
     protected void setupEvents()
     {
+        final JTextField identifier = (JTextField) getComponent(0);
+        final JPasswordField password = (JPasswordField) getComponent(1);
 
+        JButton loginBtn = (JButton) getComponent(2);
+        loginBtn.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                if (e.getActionCommand().equals("doLogin")) {
+                    authentication.authenticate(identifier.getText(), new String(password.getPassword()));
+                }
+            }
+        });
     }
 }

@@ -9,8 +9,16 @@ package com.justchat.client.identity;
  */
 public class User
 {
+    protected String id = "";
     protected String username = "";
     protected boolean isCurrent = false;
+
+    public User(String id, String username)
+    {
+        this(username, false);
+
+        this.id = id;
+    }
 
     public User(String username)
     {
