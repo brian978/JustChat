@@ -1,5 +1,6 @@
 package com.justchat.client.frame;
 
+import com.justchat.client.frame.menu.AbstractMenu;
 import com.justchat.client.frame.menu.ChatMenu;
 import com.justchat.client.gui.exception.FailedToLoadConfigurationException;
 import com.justchat.client.gui.panel.ChatPanel;
@@ -23,7 +24,7 @@ import java.io.IOException;
  * @copyright Copyright (c) 2014
  * @license Creative Commons Attribution-ShareAlike 3.0
  */
-public class Conversation extends JFrame
+public class Conversation extends AbstractFrame
 {
     User user;
     private Connection connection = null;
@@ -48,44 +49,7 @@ public class Conversation extends JFrame
         ensureMinimumSize();
     }
 
-    protected void configureFrame()
-    {
-        // Configuring the frame
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new GridBagLayout());
-        setIconImage(new ImageIcon(getClass().getResource("/com/justchat/client/logo/justchat.png")).getImage());
-    }
-
-    protected void showFrame()
-    {
-        // Activating the frame
-        setVisible(true);
-        pack();
-        setLocationRelativeTo(null);
-        validate();
-    }
-
-    protected void ensureMinimumSize()
-    {
-        setMinimumSize(getSize());
-    }
-
-    protected void showErrorPanel()
-    {
-        GridBagConstraints c;
-
-        c = new GridBagConstraints();
-        c.weightx = 1.0;
-        c.weighty = 1.0;
-        c.gridx = 0;
-        c.gridy = 0;
-        c.fill = GridBagConstraints.BOTH;
-        c.anchor = GridBagConstraints.FIRST_LINE_START;
-
-        ErrorPanel errorPanel = new ErrorPanel(connectionMessage);
-        add(errorPanel, c);
-    }
-
+    @Override
     protected void populateFrame()
     {
         if (connectionMessage != null) {
@@ -103,6 +67,7 @@ public class Conversation extends JFrame
         ChatMenu menu = new ChatMenu();
 
         c = new GridBagConstraints();
+        c.weightx = 1.0;
         c.gridx = 0;
         c.gridy = 0;
         c.fill = GridBagConstraints.BOTH;
@@ -129,7 +94,23 @@ public class Conversation extends JFrame
         add(chatPanel, c);
     }
 
-    protected void attachMenuListeners(ChatMenu menu)
+    protected void showErrorPanel()
+    {
+        GridBagConstraints c;
+
+        c = new GridBagConstraints();
+        c.weightx = 1.0;
+        c.weighty = 1.0;
+        c.gridx = 0;
+        c.gridy = 0;
+        c.fill = GridBagConstraints.BOTH;
+        c.anchor = GridBagConstraints.FIRST_LINE_START;
+
+        ErrorPanel errorPanel = new ErrorPanel(connectionMessage);
+        add(errorPanel, c);
+    }
+
+    protected void attachMenuListeners(AbstractMenu menu)
     {
         final JFrame currentFrame = this;
         JMenuItem item;
@@ -152,9 +133,9 @@ public class Conversation extends JFrame
         }
 
         /**
-         * -----------------------
-         * Listener for send file
-         * -----------------------
+         * -------------------------------
+         * Listener for close conversation
+         * -------------------------------
          */
         item = menu.findItemByName("conversationCloseItem");
         if(item != null) {

@@ -1,6 +1,6 @@
 package com.justchat.client.gui.panel;
 
-import com.justchat.client.frame.menu.ChatMenu;
+import com.justchat.client.gui.panel.components.ChatBox;
 import com.justchat.client.identity.User;
 import com.justchat.client.websocket.Connection;
 import com.justchat.client.websocket.listeners.NewMessageListener;
@@ -20,7 +20,7 @@ import java.awt.event.*;
 public class ChatPanel extends AbstractPanel
 {
     Connection connection;
-    ChatBoxPane chatBox;
+    ChatBox chatBox;
     User currentUser;
 
     public ChatPanel(Connection connection, User user)
@@ -36,12 +36,6 @@ public class ChatPanel extends AbstractPanel
     }
 
     @Override
-    protected void configure()
-    {
-        super.configure();
-    }
-
-    @Override
     protected void populate()
     {
         super.populate();
@@ -53,7 +47,7 @@ public class ChatPanel extends AbstractPanel
          * chat box pane
          * -----------------
          */
-        chatBox = new ChatBoxPane();
+        chatBox = new ChatBox();
 
         c = new GridBagConstraints();
         c.weightx = 1.0;
@@ -102,9 +96,9 @@ public class ChatPanel extends AbstractPanel
 
     private class SendListener implements KeyListener, ActionListener
     {
-        private ChatBoxPane chatBoxPanel;
+        private ChatBox chatBoxPanel;
 
-        public SendListener(ChatBoxPane chatBox)
+        public SendListener(ChatBox chatBox)
         {
             chatBoxPanel = chatBox;
         }

@@ -1,6 +1,6 @@
 package com.justchat.client;
 
-import com.justchat.client.frame.Conversation;
+import com.justchat.client.frame.Main;
 
 /**
  * JustChat
@@ -13,6 +13,6 @@ public class Launcher
 {
     public static void main(String[] args)
     {
-        new Conversation();
+        new Main();
     }
 }

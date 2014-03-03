@@ -1,4 +1,4 @@
-package com.justchat.client.gui.panel;
+package com.justchat.client.gui.panel.components;
 
 import com.justchat.client.identity.User;
 import com.justchat.gui.panel.AbstractPanel;
@@ -15,9 +15,9 @@ import java.awt.*;
  * @copyright Copyright (c) 2014
  * @license Creative Commons Attribution-ShareAlike 3.0
  */
-public class ChatBoxPane extends JTextPane
+public class ChatBox extends JTextPane
 {
-    public ChatBoxPane()
+    public ChatBox()
     {
         setName("ChatBox");
         setBackground(Color.WHITE);
