@@ -1,6 +1,6 @@
 package com.justchat.client.gui.panel;
 
-import com.justchat.client.service.tools.AuthenticationInterface;
+import com.justchat.service.provider.AuthenticationInterface;
 import com.justchat.gui.panel.AbstractPanel;
 
 import javax.swing.*;

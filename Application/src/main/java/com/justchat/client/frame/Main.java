@@ -1,10 +1,11 @@
 package com.justchat.client.frame;
 
-import com.justchat.client.frame.menu.AbstractMenu;
+import com.justchat.gui.frame.AbstractFrame;
+import com.justchat.gui.menu.AbstractMenu;
 import com.justchat.client.frame.menu.MainMenu;
 import com.justchat.client.gui.panel.LoginPanel;
 import com.justchat.client.identity.User;
-import com.justchat.client.service.tools.AuthenticationInterface;
+import com.justchat.service.provider.AuthenticationInterface;
 import com.justchat.client.service.provider.facebook.Authentication;
 
 import javax.swing.*;

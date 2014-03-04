@@ -1,8 +1,8 @@
 package com.justchat.client.frame;
 
-import com.justchat.client.frame.menu.AbstractMenu;
+import com.justchat.gui.frame.AbstractFrame;
+import com.justchat.gui.menu.AbstractMenu;
 import com.justchat.client.frame.menu.ChatMenu;
-import com.justchat.client.gui.exception.FailedToLoadConfigurationException;
 import com.justchat.client.gui.panel.ChatPanel;
 import com.justchat.client.gui.panel.ErrorPanel;
 import com.justchat.client.identity.User;

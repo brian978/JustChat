@@ -1,7 +1,7 @@
 package com.justchat.client.service.provider.facebook;
 
 import com.justchat.client.identity.User;
-import com.justchat.client.service.tools.AbstractAuthentication;
+import com.justchat.service.provider.AbstractAuthentication;
 
 /**
  * JustChat
@@ -17,6 +17,8 @@ public class Authentication extends AbstractAuthentication
     {
         if(identifier.length() > 0 && password.length() > 5) {
             System.out.println("Authenticating user with identifier " + identifier + " and password " + password);
+        } else {
+            System.out.println("Not enough data");
         }
 
         return null;

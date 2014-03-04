@@ -1,4 +1,6 @@
-package com.justchat.client.frame;
+package com.justchat.gui.frame;
+
+import com.justchat.client.frame.FrameInterface;
 
 import javax.swing.*;
 import java.awt.*;

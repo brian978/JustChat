@@ -1,8 +1,8 @@
 package com.justchat.client.frame.menu;
 
+import com.justchat.gui.menu.AbstractMenu;
+
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.HashMap;
 

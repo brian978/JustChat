@@ -1,4 +1,4 @@
-package com.justchat.client.service.tools;
+package com.justchat.service.provider;
 
 import com.justchat.client.identity.User;
 

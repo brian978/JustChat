@@ -1,4 +1,4 @@
-package com.justchat.client.frame.menu;
+package com.justchat.gui.menu;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;
