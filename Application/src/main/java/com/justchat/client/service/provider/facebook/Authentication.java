@@ -1,6 +1,7 @@
 package com.justchat.client.service.provider.facebook;
 
 import com.justchat.client.identity.User;
+import com.justchat.client.websocket.Connection;
 import com.justchat.service.provider.AbstractAuthentication;
 
 /**
@@ -12,6 +13,11 @@ import com.justchat.service.provider.AbstractAuthentication;
  */
 public class Authentication extends AbstractAuthentication
 {
+    public Authentication(Connection connection)
+    {
+        super(connection);
+    }
+
     @Override
     public User authenticate(String identifier, String password)
     {

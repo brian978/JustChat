@@ -1,5 +1,7 @@
 package com.justchat.client.identity;
 
+import com.justchat.client.websocket.Connection;
+
 /**
  * JustChat
  *
@@ -9,20 +11,22 @@ package com.justchat.client.identity;
  */
 public class User
 {
-    protected String id = "";
-    protected String username = "";
-    protected boolean isCurrent = false;
+    private String id = "";
+    private String username = "";
+    private boolean isCurrent = false;
+    private Token token = null;
+    private Connection connection = null;
+
+    public User(String username)
+    {
+        this(username, false);
+    }
 
     public User(String id, String username)
     {
         this(username, false);
 
         this.id = id;
-    }
-
-    public User(String username)
-    {
-        this(username, false);
     }
 
     public User(String username, boolean isCurrent)
@@ -34,5 +38,12 @@ public class User
     public String getUsername()
     {
         return username;
+    }
+
+    public User setConnection(Connection connection)
+    {
+        this.connection = connection;
+
+        return this;
     }
 }

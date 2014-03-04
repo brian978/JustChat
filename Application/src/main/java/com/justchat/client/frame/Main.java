@@ -1,5 +1,9 @@
 package com.justchat.client.frame;
 
+import com.justchat.client.gui.exception.FailedToLoadConfigurationException;
+import com.justchat.client.service.websocket.ConnectionHandler;
+import com.justchat.client.websocket.Connection;
+import com.justchat.client.websocket.factory.ConnectionFactory;
 import com.justchat.gui.frame.AbstractFrame;
 import com.justchat.gui.menu.AbstractMenu;
 import com.justchat.client.frame.menu.MainMenu;
@@ -23,12 +27,18 @@ import java.awt.event.WindowEvent;
  */
 public class Main extends AbstractFrame
 {
-    AuthenticationInterface authentication;
-    User user;
+    AuthenticationInterface authentication = null;
+    User user = null;
 
     public Main()
     {
         super("JustChat");
+
+        try {
+            authentication = new Authentication(ConnectionFactory.factory());
+        } catch (FailedToLoadConfigurationException e) {
+            e.printStackTrace();
+        }
 
         configureFrame();
         populateFrame();
@@ -68,7 +78,7 @@ public class Main extends AbstractFrame
          * Login panel
          * -------------
          */
-        LoginPanel loginPanel = new LoginPanel(new Authentication());
+        LoginPanel loginPanel = new LoginPanel(authentication);
 
         c = new GridBagConstraints();
         c.weightx = 1.0;

@@ -98,6 +98,7 @@ public class LoginPanel extends AbstractPanel
          */
         JButton loginBtn = new JButton("Login");
         loginBtn.setActionCommand("doLogin");
+        loginBtn.setEnabled(false);
 
         c.gridx = 0;
         c.gridy = 4;

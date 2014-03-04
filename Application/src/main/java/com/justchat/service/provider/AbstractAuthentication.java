@@ -1,6 +1,7 @@
 package com.justchat.service.provider;
 
 import com.justchat.client.identity.User;
+import com.justchat.client.websocket.Connection;
 
 /**
  * JustChat
@@ -11,5 +12,21 @@ import com.justchat.client.identity.User;
  */
 abstract public class AbstractAuthentication implements AuthenticationInterface
 {
-    protected User user;
+    private Connection connection;
+    private User user = null;
+
+    public AbstractAuthentication(Connection connection)
+    {
+        this.connection = connection;
+    }
+
+    public Connection getConnection()
+    {
+        return connection;
+    }
+
+    public User getUser()
+    {
+        return user;
+    }
 }

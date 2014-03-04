@@ -1,6 +1,7 @@
 package com.justchat.client.websocket;
 
 import com.justchat.client.identity.User;
+import com.justchat.client.websocket.listeners.ConnectionStatusListener;
 import com.justchat.client.websocket.listeners.NewMessageListener;
 
 import javax.websocket.*;
@@ -16,10 +17,15 @@ import javax.websocket.*;
 public class Endpoint {
 
     NewMessageListener messageListener = null;
+    ConnectionStatusListener statusListener = null;
 
     @OnOpen
     public void onOpen(Session session) {
         System.out.println("Opened connection to server");
+
+        if(statusListener != null) {
+            statusListener.onConnectionEstablished();
+        }
     }
 
     @OnError
