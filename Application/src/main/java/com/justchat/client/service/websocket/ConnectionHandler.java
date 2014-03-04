@@ -2,7 +2,9 @@ package com.justchat.client.service.websocket;
 
 import com.justchat.client.websocket.Connection;
 import com.justchat.client.websocket.factory.ConnectionFactory;
+import com.justchat.service.provider.AuthenticationInterface;
 
+import javax.swing.*;
 import javax.websocket.DeploymentException;
 import java.io.IOException;
 import java.util.concurrent.Callable;
@@ -16,9 +18,13 @@ import java.util.concurrent.Callable;
  */
 public class ConnectionHandler implements Runnable
 {
-    public ConnectionHandler()
-    {
+    AuthenticationInterface authenticationService;
+    JLabel infoLabel;
 
+    public ConnectionHandler(AuthenticationInterface authenticationService, JLabel infoLabel)
+    {
+        this.authenticationService = authenticationService;
+        this.infoLabel = infoLabel;
     }
 
     /**
@@ -35,10 +41,12 @@ public class ConnectionHandler implements Runnable
     @Override
     public void run()
     {
-        try {
-            Connection connection = ConnectionFactory.factory();
-            connection.connect();
-        } catch (IOException | DeploymentException e) {
+        if(this.authenticationService != null) {
+            try {
+                this.authenticationService.getConnection().connect();
+            } catch (IOException | DeploymentException e) {
+                this.infoLabel.setText("Connection failed");
+            }
         }
     }
 }

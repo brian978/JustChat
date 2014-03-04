@@ -40,6 +40,23 @@ public class LoginPanel extends AbstractPanel
         Insets insets = new Insets(0, 10, 5, 0);
         Insets breakInset = new Insets(12, 10, 5, 0);
 
+        /**
+         * --------------------
+         * Informational label
+         * --------------------
+         */
+        JLabel infoLabel = new JLabel("<html><center>Connecting to <br>messaging server...</center>");
+        infoLabel.setName("infoLabel");
+
+        c = new GridBagConstraints();
+        c.weighty = 1.0;
+        c.gridx = 0;
+        c.gridy = 0;
+        c.insets = new Insets(0, 0, 20, 0);
+
+        add(infoLabel, c);
+
+        // Constraints for the fields
         c = new GridBagConstraints();
         c.weightx = 1.0;
         c.insets = insets;
@@ -54,18 +71,19 @@ public class LoginPanel extends AbstractPanel
         identityLabel.setHorizontalAlignment(SwingConstants.LEFT);
 
         c.gridx = 0;
-        c.gridy = 0;
+        c.gridy = 1;
 
         add(identityLabel, c);
 
         JTextField identityField = new JTextField();
         identityField.setAlignmentX(0);
         identityField.setColumns(10);
+        identityField.setName("identifierField");
 
         c.gridx = 0;
-        c.gridy = 1;
+        c.gridy = 2;
 
-        add(identityField, c, 0);
+        add(identityField, c);
 
         /**
          * -----------------
@@ -76,7 +94,7 @@ public class LoginPanel extends AbstractPanel
         passwordLabel.setHorizontalAlignment(SwingConstants.LEFT);
 
         c.gridx = 0;
-        c.gridy = 2;
+        c.gridy = 3;
         c.insets = breakInset;
 
         add(passwordLabel, c);
@@ -84,12 +102,13 @@ public class LoginPanel extends AbstractPanel
         JPasswordField passwordField = new JPasswordField();
         passwordField.setHorizontalAlignment(SwingConstants.LEFT);
         passwordField.setColumns(10);
+        passwordField.setName("passwordField");
 
         c.gridx = 0;
-        c.gridy = 3;
+        c.gridy = 4;
         c.insets = insets;
 
-        add(passwordField, c, 1);
+        add(passwordField, c);
 
         /**
          * -----------------
@@ -99,20 +118,21 @@ public class LoginPanel extends AbstractPanel
         JButton loginBtn = new JButton("Login");
         loginBtn.setActionCommand("doLogin");
         loginBtn.setEnabled(false);
+        loginBtn.setName("loginBtn");
 
         c.gridx = 0;
-        c.gridy = 4;
+        c.gridy = 5;
         c.insets = breakInset;
 
-        add(loginBtn, c, 2);
+        add(loginBtn, c);
     }
 
     protected void setupEvents()
     {
-        final JTextField identifier = (JTextField) getComponent(0);
-        final JPasswordField password = (JPasswordField) getComponent(1);
+        final JTextField identifier = (JTextField) findComponent("identifierField");
+        final JPasswordField password = (JPasswordField) findComponent("passwordField");
 
-        JButton loginBtn = (JButton) getComponent(2);
+        JButton loginBtn = (JButton) findComponent("loginBtn");
         loginBtn.addActionListener(new ActionListener()
         {
             @Override

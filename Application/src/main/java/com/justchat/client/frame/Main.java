@@ -4,11 +4,13 @@ import com.justchat.client.gui.exception.FailedToLoadConfigurationException;
 import com.justchat.client.service.websocket.ConnectionHandler;
 import com.justchat.client.websocket.Connection;
 import com.justchat.client.websocket.factory.ConnectionFactory;
+import com.justchat.client.websocket.listeners.ConnectionStatusListener;
 import com.justchat.gui.frame.AbstractFrame;
 import com.justchat.gui.menu.AbstractMenu;
 import com.justchat.client.frame.menu.MainMenu;
 import com.justchat.client.gui.panel.LoginPanel;
 import com.justchat.client.identity.User;
+import com.justchat.gui.panel.AbstractPanel;
 import com.justchat.service.provider.AuthenticationInterface;
 import com.justchat.client.service.provider.facebook.Authentication;
 
@@ -44,6 +46,14 @@ public class Main extends AbstractFrame
         populateFrame();
         showFrame();
         ensureMinimumSize();
+        setupEvents();
+
+        // We need the info box for failed messages
+        AbstractPanel panel = (AbstractPanel) findComponent("loginPanel");
+        JLabel infoLabel = (JLabel) panel.findComponent("infoLabel");
+
+        Thread connectionHandler = new Thread(new ConnectionHandler(authentication, infoLabel));
+        connectionHandler.start();
     }
 
     protected void ensureMinimumSize()
@@ -79,12 +89,13 @@ public class Main extends AbstractFrame
          * -------------
          */
         LoginPanel loginPanel = new LoginPanel(authentication);
+        loginPanel.setName("loginPanel");
 
         c = new GridBagConstraints();
         c.weightx = 1.0;
         c.weighty = 1.0;
         c.gridx = 0;
-        c.gridy = 1;
+        c.gridy = 2;
         c.fill = GridBagConstraints.HORIZONTAL;
         c.anchor = GridBagConstraints.LINE_START;
 
@@ -102,7 +113,7 @@ public class Main extends AbstractFrame
          * -----------------------
          */
         item = menu.findItemByName("exitItem");
-        if(item != null) {
+        if (item != null) {
             item.addActionListener(new ActionListener()
             {
                 @Override
@@ -112,5 +123,26 @@ public class Main extends AbstractFrame
                 }
             });
         }
+    }
+
+    private void setupEvents()
+    {
+        final AbstractFrame currentFrame = this;
+        Connection connection = authentication.getConnection();
+
+        connection.getEndpoint().addStatusListener(new ConnectionStatusListener()
+        {
+            @Override
+            public void onConnectionEstablished()
+            {
+                AbstractPanel loginPanel = (AbstractPanel) currentFrame.findComponent("loginPanel");
+
+                JButton loginBtn = (JButton) loginPanel.findComponent("loginBtn");
+                loginBtn.setEnabled(true);
+
+                JLabel infoLabel = (JLabel) loginPanel.findComponent("infoLabel");
+                infoLabel.setText("<html><center>Connected to <br>messaging server</center>");
+            }
+        });
     }
 }

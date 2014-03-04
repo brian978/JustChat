@@ -84,7 +84,7 @@ public class ChatPanel extends AbstractPanel
     protected void setupEvents()
     {
         // The event will be triggered when a new message arrives
-        connection.getEndpoint().setMessageListener(new NewMessageListener()
+        connection.getEndpoint().addMessageListener(new NewMessageListener()
         {
             @Override
             public void onNewMessage(User user, String message)

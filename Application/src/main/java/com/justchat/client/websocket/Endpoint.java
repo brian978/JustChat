@@ -5,6 +5,7 @@ import com.justchat.client.websocket.listeners.ConnectionStatusListener;
 import com.justchat.client.websocket.listeners.NewMessageListener;
 
 import javax.websocket.*;
+import java.util.ArrayList;
 
 /**
  * JustChat
@@ -14,17 +15,19 @@ import javax.websocket.*;
  * @license Creative Commons Attribution-ShareAlike 3.0
  */
 @ClientEndpoint
-public class Endpoint {
-
-    NewMessageListener messageListener = null;
-    ConnectionStatusListener statusListener = null;
+public class Endpoint
+{
+    ArrayList<NewMessageListener> messageListeners = new ArrayList<>();
+    ArrayList<ConnectionStatusListener> statusListeners = new ArrayList<>();
 
     @OnOpen
-    public void onOpen(Session session) {
+    public void onOpen(Session session)
+    {
         System.out.println("Opened connection to server");
-
-        if(statusListener != null) {
-            statusListener.onConnectionEstablished();
+        if (!statusListeners.isEmpty()) {
+            for (ConnectionStatusListener listener : statusListeners) {
+                listener.onConnectionEstablished();
+            }
         }
     }
 
@@ -35,20 +38,29 @@ public class Endpoint {
     }
 
     @OnMessage
-    public void onMessage(String message) {
+    public void onMessage(String message)
+    {
         System.out.println("Received msg: " + message);
-        if(messageListener != null) {
-            messageListener.onNewMessage(new User("Unknown user"), message);
+        if (!messageListeners.isEmpty()) {
+            for (NewMessageListener listener : messageListeners) {
+                listener.onNewMessage(new User("some user"), message);
+            }
         }
     }
 
     @OnClose
-    public void onClose(Session session, CloseReason closeReason) {
+    public void onClose(Session session, CloseReason closeReason)
+    {
         System.out.println("Closed connection to server because " + closeReason.getReasonPhrase());
     }
 
-    public void setMessageListener(NewMessageListener listener)
+    public void addMessageListener(NewMessageListener listener)
     {
-        messageListener = listener;
+        messageListeners.add(listener);
+    }
+
+    public void addStatusListener(ConnectionStatusListener statusListener)
+    {
+        statusListeners.add(statusListener);
     }
 }

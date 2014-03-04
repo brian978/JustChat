@@ -28,12 +28,14 @@ public abstract class AbstractPanel extends JPanel
 
     }
 
-    protected Component findComponentByName(String name)
+    public Component findComponent(String name)
     {
         Component[] components = getComponents();
 
+        String componentName;
         for(Component component : components) {
-            if(component.getName().compareTo(name) == 0) {
+            componentName = component.getName();
+            if(componentName != null && componentName.equals(name)) {
                 return component;
             }
         }

@@ -1,6 +1,7 @@
 package com.justchat.service.provider;
 
 import com.justchat.client.identity.User;
+import com.justchat.client.websocket.Connection;
 
 /**
  * JustChat
@@ -12,4 +13,8 @@ import com.justchat.client.identity.User;
 public interface AuthenticationInterface
 {
     public User authenticate(String identifier, String password);
+
+    public Connection getConnection();
+
+    public User getUser();
 }

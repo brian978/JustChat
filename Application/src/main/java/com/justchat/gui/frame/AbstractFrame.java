@@ -42,4 +42,19 @@ abstract public class AbstractFrame extends JFrame implements FrameInterface
     {
         setMinimumSize(getSize());
     }
+
+    public Component findComponent(String name)
+    {
+        Component[] components = getContentPane().getComponents();
+
+        String componentName;
+        for(Component component : components) {
+            componentName = component.getName();
+            if(componentName != null && componentName.equals(name)) {
+                return component;
+            }
+        }
+
+        return null;
+    }
 }
