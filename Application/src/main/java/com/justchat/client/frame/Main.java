@@ -9,7 +9,6 @@ import com.justchat.gui.frame.AbstractFrame;
 import com.justchat.gui.menu.AbstractMenu;
 import com.justchat.client.frame.menu.MainMenu;
 import com.justchat.client.gui.panel.LoginPanel;
-import com.justchat.client.identity.User;
 import com.justchat.gui.panel.AbstractPanel;
 import com.justchat.service.provider.AuthenticationInterface;
 import com.justchat.client.service.provider.facebook.Authentication;
@@ -30,7 +29,6 @@ import java.awt.event.WindowEvent;
 public class Main extends AbstractFrame
 {
     AuthenticationInterface authentication = null;
-    User user = null;
 
     public Main()
     {
@@ -56,6 +54,13 @@ public class Main extends AbstractFrame
         connectionHandler.start();
     }
 
+    protected void configureFrame()
+    {
+        super.configureFrame();
+
+        setLayout(new BorderLayout());
+    }
+
     protected void ensureMinimumSize()
     {
         setMinimumSize(new Dimension(200, 500));
@@ -75,12 +80,13 @@ public class Main extends AbstractFrame
 
         c = new GridBagConstraints();
         c.weightx = 1.0;
+        c.weighty = 1.0;
         c.gridx = 0;
         c.gridy = 0;
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.anchor = GridBagConstraints.FIRST_LINE_START;
+        c.fill = GridBagConstraints.BOTH;
+        c.anchor = GridBagConstraints.NORTHWEST;
 
-        add(mainMenu, c);
+        add(mainMenu, BorderLayout.PAGE_START);
         attachMenuListeners(mainMenu);
 
         /**
@@ -95,11 +101,11 @@ public class Main extends AbstractFrame
         c.weightx = 1.0;
         c.weighty = 1.0;
         c.gridx = 0;
-        c.gridy = 2;
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.anchor = GridBagConstraints.LINE_START;
+        c.gridy = 1;
+        c.fill = GridBagConstraints.BOTH;
+        c.anchor = GridBagConstraints.NORTHWEST;
 
-        add(loginPanel, c);
+        add(loginPanel, BorderLayout.LINE_START);
     }
 
     protected void attachMenuListeners(AbstractMenu menu)
@@ -125,23 +131,57 @@ public class Main extends AbstractFrame
         }
     }
 
+    private void showUserList()
+    {
+        // First we need to remove the login panel
+        AbstractPanel loginPanel = (AbstractPanel) findComponent("loginPanel");
+        if(loginPanel != null) {
+            remove(loginPanel);
+        }
+
+        // Now we need to add the user list panel
+
+        // Repainting
+        revalidate();
+        repaint();
+    }
+
     private void setupEvents()
     {
-        final AbstractFrame currentFrame = this;
+        final Main currentFrame = this;
+        final AbstractPanel loginPanel = (AbstractPanel) findComponent("loginPanel");
+
         Connection connection = authentication.getConnection();
 
+        // Connection events
         connection.getEndpoint().addStatusListener(new ConnectionStatusListener()
         {
             @Override
             public void onConnectionEstablished()
             {
-                AbstractPanel loginPanel = (AbstractPanel) currentFrame.findComponent("loginPanel");
-
                 JButton loginBtn = (JButton) loginPanel.findComponent("loginBtn");
                 loginBtn.setEnabled(true);
 
                 JLabel infoLabel = (JLabel) loginPanel.findComponent("infoLabel");
                 infoLabel.setText("<html><center>Connected to <br>messaging server</center>");
+            }
+        });
+
+        // Login events
+        final JTextField identifier = (JTextField) loginPanel.findComponent("identifierField");
+        final JPasswordField password = (JPasswordField) loginPanel.findComponent("passwordField");
+
+        final JButton loginBtn = (JButton) loginPanel.findComponent("loginBtn");
+        loginBtn.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                if (e.getActionCommand().equals("doLogin")) {
+                    loginBtn.setEnabled(false);
+                    authentication.authenticate(identifier.getText(), new String(password.getPassword()));
+                    currentFrame.showUserList();
+                }
             }
         });
     }

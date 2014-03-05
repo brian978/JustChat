@@ -21,12 +21,13 @@ public class Authentication extends AbstractAuthentication
     @Override
     public User authenticate(String identifier, String password)
     {
-        if(identifier.length() > 0 && password.length() > 5) {
+        if(identifier.length() > 0 && password.length() > 0) {
             System.out.println("Authenticating user with identifier " + identifier + " and password " + password);
+            user = new User(identifier);
         } else {
             System.out.println("Not enough data");
         }
 
-        return null;
+        return user;
     }
 }

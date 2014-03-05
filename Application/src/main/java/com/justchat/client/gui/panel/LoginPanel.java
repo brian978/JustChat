@@ -27,7 +27,6 @@ public class LoginPanel extends AbstractPanel
 
         configure();
         populate();
-        setupEvents();
     }
 
     protected void populate()
@@ -125,23 +124,5 @@ public class LoginPanel extends AbstractPanel
         c.insets = breakInset;
 
         add(loginBtn, c);
-    }
-
-    protected void setupEvents()
-    {
-        final JTextField identifier = (JTextField) findComponent("identifierField");
-        final JPasswordField password = (JPasswordField) findComponent("passwordField");
-
-        JButton loginBtn = (JButton) findComponent("loginBtn");
-        loginBtn.addActionListener(new ActionListener()
-        {
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                if (e.getActionCommand().equals("doLogin")) {
-                    authentication.authenticate(identifier.getText(), new String(password.getPassword()));
-                }
-            }
-        });
     }
 }

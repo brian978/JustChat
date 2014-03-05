@@ -12,8 +12,8 @@ import com.justchat.client.websocket.Connection;
  */
 abstract public class AbstractAuthentication implements AuthenticationInterface
 {
-    private Connection connection;
-    private User user = null;
+    protected Connection connection;
+    protected User user = null;
 
     public AbstractAuthentication(Connection connection)
     {
