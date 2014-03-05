@@ -10,7 +10,7 @@ import com.justchat.gui.menu.AbstractMenu;
 import com.justchat.client.frame.menu.MainMenu;
 import com.justchat.client.gui.panel.LoginPanel;
 import com.justchat.gui.panel.AbstractPanel;
-import com.justchat.service.provider.AuthenticationInterface;
+import com.justchat.service.AuthenticationInterface;
 import com.justchat.client.service.provider.facebook.Authentication;
 
 import javax.swing.*;
@@ -58,7 +58,7 @@ public class Main extends AbstractFrame
     {
         super.configureFrame();
 
-        setLayout(new BorderLayout());
+//        setLayout(new BorderLayout());
     }
 
     protected void ensureMinimumSize()
@@ -80,14 +80,28 @@ public class Main extends AbstractFrame
 
         c = new GridBagConstraints();
         c.weightx = 1.0;
-        c.weighty = 1.0;
         c.gridx = 0;
         c.gridy = 0;
-        c.fill = GridBagConstraints.BOTH;
+        c.fill = GridBagConstraints.HORIZONTAL;
         c.anchor = GridBagConstraints.NORTHWEST;
 
-        add(mainMenu, BorderLayout.PAGE_START);
+        add(mainMenu, c);
         attachMenuListeners(mainMenu);
+
+        /**
+         * ------------------------------------------------
+         * dummy panel to always keep the menu at the top
+         * ------------------------------------------------
+         */
+        c = new GridBagConstraints();
+        c.weightx = 1.0;
+        c.weighty = 1.0;
+        c.gridx = 0;
+        c.gridy = 1;
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.anchor = GridBagConstraints.NORTHWEST;
+
+        add(new JPanel(), c);
 
         /**
          * -------------
@@ -102,10 +116,10 @@ public class Main extends AbstractFrame
         c.weighty = 1.0;
         c.gridx = 0;
         c.gridy = 1;
-        c.fill = GridBagConstraints.BOTH;
+        c.fill = GridBagConstraints.HORIZONTAL;
         c.anchor = GridBagConstraints.NORTHWEST;
 
-        add(loginPanel, BorderLayout.LINE_START);
+        add(loginPanel, c);
     }
 
     protected void attachMenuListeners(AbstractMenu menu)
@@ -138,8 +152,6 @@ public class Main extends AbstractFrame
         if(loginPanel != null) {
             remove(loginPanel);
         }
-
-        // Now we need to add the user list panel
 
         // Repainting
         revalidate();

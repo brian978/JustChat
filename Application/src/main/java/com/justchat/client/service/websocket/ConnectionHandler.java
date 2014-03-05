@@ -1,13 +1,10 @@
 package com.justchat.client.service.websocket;
 
-import com.justchat.client.websocket.Connection;
-import com.justchat.client.websocket.factory.ConnectionFactory;
-import com.justchat.service.provider.AuthenticationInterface;
+import com.justchat.service.AuthenticationInterface;
 
 import javax.swing.*;
 import javax.websocket.DeploymentException;
 import java.io.IOException;
-import java.util.concurrent.Callable;
 
 /**
  * JustChat

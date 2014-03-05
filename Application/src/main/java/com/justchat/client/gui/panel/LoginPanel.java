@@ -1,12 +1,10 @@
 package com.justchat.client.gui.panel;
 
-import com.justchat.service.provider.AuthenticationInterface;
+import com.justchat.service.AuthenticationInterface;
 import com.justchat.gui.panel.AbstractPanel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 /**
  * JustChat

@@ -1,4 +1,4 @@
-package com.justchat.service.provider;
+package com.justchat.service;
 
 import com.justchat.client.identity.User;
 import com.justchat.client.websocket.Connection;
