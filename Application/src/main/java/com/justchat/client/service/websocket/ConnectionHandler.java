@@ -1,10 +1,12 @@
 package com.justchat.client.service.websocket;
 
+import com.justchat.event.EventsManager;
 import com.justchat.service.AuthenticationInterface;
 
 import javax.swing.*;
 import javax.websocket.DeploymentException;
 import java.io.IOException;
+import java.util.HashMap;
 
 /**
  * JustChat
@@ -16,12 +18,12 @@ import java.io.IOException;
 public class ConnectionHandler implements Runnable
 {
     AuthenticationInterface authenticationService;
-    JLabel infoLabel;
+    EventsManager eventsManager;
 
-    public ConnectionHandler(AuthenticationInterface authenticationService, JLabel infoLabel)
+    public ConnectionHandler(EventsManager eventsManager, AuthenticationInterface authenticationService)
     {
         this.authenticationService = authenticationService;
-        this.infoLabel = infoLabel;
+        this.eventsManager = eventsManager;
     }
 
     /**
@@ -42,7 +44,9 @@ public class ConnectionHandler implements Runnable
             try {
                 this.authenticationService.getConnection().connect();
             } catch (IOException | DeploymentException e) {
-                this.infoLabel.setText("Connection failed");
+                HashMap<String, Object> parameters = new HashMap<>();
+                parameters.put("status", "failed");
+                eventsManager.trigger("connectionStatus", this, parameters);
             }
         }
     }

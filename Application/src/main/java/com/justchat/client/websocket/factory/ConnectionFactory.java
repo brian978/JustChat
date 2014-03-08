@@ -3,6 +3,7 @@ package com.justchat.client.websocket.factory;
 import com.justchat.client.gui.exception.FailedToLoadConfigurationException;
 import com.justchat.client.websocket.Connection;
 import com.justchat.client.websocket.config.ConnectionConfig;
+import com.justchat.event.EventsManager;
 
 import java.io.IOException;
 
@@ -15,7 +16,7 @@ import java.io.IOException;
  */
 public class ConnectionFactory
 {
-    public static Connection factory() throws FailedToLoadConfigurationException
+    public static Connection factory(EventsManager eventsManager) throws FailedToLoadConfigurationException
     {
         ConnectionConfig config;
 
@@ -25,9 +26,13 @@ public class ConnectionFactory
             throw new FailedToLoadConfigurationException(e.getMessage(), e.getCause());
         }
 
-        return new Connection(
+        Connection connection = new Connection(
                 config.get("host"),
                 Integer.parseInt(config.get("port"))
         );
+
+        connection.getEndpoint().setEventsManager(eventsManager);
+
+        return connection;
     }
 }

@@ -1,5 +1,6 @@
 package com.justchat.client.frame;
 
+import com.justchat.event.EventsManager;
 import com.justchat.gui.frame.AbstractFrame;
 import com.justchat.gui.menu.AbstractMenu;
 import com.justchat.client.frame.menu.ChatMenu;
@@ -37,7 +38,7 @@ public class Conversation extends AbstractFrame
         user = new User("Current user", true);
 
         try {
-            connection = ConnectionFactory.factory();
+            connection = ConnectionFactory.factory(new EventsManager());
             connection.connect();
         } catch (IOException | DeploymentException e) {
             connectionMessage = e.getMessage();

@@ -3,9 +3,11 @@ package com.justchat.client.websocket;
 import com.justchat.client.identity.User;
 import com.justchat.client.websocket.listeners.ConnectionStatusListener;
 import com.justchat.client.websocket.listeners.NewMessageListener;
+import com.justchat.event.EventsManager;
 
 import javax.websocket.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * JustChat
@@ -17,17 +19,17 @@ import java.util.ArrayList;
 @ClientEndpoint
 public class Endpoint
 {
+    EventsManager eventsManager = null;
     ArrayList<NewMessageListener> messageListeners = new ArrayList<>();
-    ArrayList<ConnectionStatusListener> statusListeners = new ArrayList<>();
 
     @OnOpen
     public void onOpen(Session session)
     {
         System.out.println("Opened connection to server");
-        if (!statusListeners.isEmpty()) {
-            for (ConnectionStatusListener listener : statusListeners) {
-                listener.onConnectionEstablished();
-            }
+        if(eventsManager != null) {
+            HashMap<String, Object> parameters = new HashMap<>();
+            parameters.put("status", "success");
+            eventsManager.trigger("connectionStatus", this, parameters);
         }
     }
 
@@ -59,8 +61,8 @@ public class Endpoint
         messageListeners.add(listener);
     }
 
-    public void addStatusListener(ConnectionStatusListener statusListener)
+    public void setEventsManager(EventsManager eventsManager)
     {
-        statusListeners.add(statusListener);
+        this.eventsManager = eventsManager;
     }
 }

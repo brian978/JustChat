@@ -2,6 +2,7 @@ package com.justchat.service;
 
 import com.justchat.client.identity.User;
 import com.justchat.client.websocket.Connection;
+import com.justchat.event.EventsManager;
 
 /**
  * JustChat
@@ -12,11 +13,13 @@ import com.justchat.client.websocket.Connection;
  */
 abstract public class AbstractAuthentication implements AuthenticationInterface
 {
-    protected Connection connection;
+    protected EventsManager eventsManager = null;
+    protected Connection connection = null;
     protected User user = null;
 
-    public AbstractAuthentication(Connection connection)
+    public AbstractAuthentication(EventsManager eventsManager, Connection connection)
     {
+        this.eventsManager = eventsManager;
         this.connection = connection;
     }
 

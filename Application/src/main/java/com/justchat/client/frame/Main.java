@@ -5,6 +5,9 @@ import com.justchat.client.service.websocket.ConnectionHandler;
 import com.justchat.client.websocket.Connection;
 import com.justchat.client.websocket.factory.ConnectionFactory;
 import com.justchat.client.websocket.listeners.ConnectionStatusListener;
+import com.justchat.event.EventObject;
+import com.justchat.event.EventsManager;
+import com.justchat.event.listener.EventListener;
 import com.justchat.gui.frame.AbstractFrame;
 import com.justchat.gui.menu.AbstractMenu;
 import com.justchat.client.frame.menu.MainMenu;
@@ -13,6 +16,7 @@ import com.justchat.gui.panel.AbstractPanel;
 import com.justchat.service.AuthenticationInterface;
 import com.justchat.client.service.provider.facebook.Authentication;
 
+import javax.sound.sampled.Line;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -29,13 +33,14 @@ import java.awt.event.WindowEvent;
 public class Main extends AbstractFrame
 {
     AuthenticationInterface authentication = null;
+    EventsManager eventsManager = new EventsManager();
 
     public Main()
     {
         super("JustChat");
 
         try {
-            authentication = new Authentication(ConnectionFactory.factory());
+            authentication = new Authentication(eventsManager, ConnectionFactory.factory(eventsManager));
         } catch (FailedToLoadConfigurationException e) {
             e.printStackTrace();
         }
@@ -46,11 +51,7 @@ public class Main extends AbstractFrame
         ensureMinimumSize();
         setupEvents();
 
-        // We need the info box for failed messages
-        AbstractPanel panel = (AbstractPanel) findComponent("loginPanel");
-        JLabel infoLabel = (JLabel) panel.findComponent("infoLabel");
-
-        Thread connectionHandler = new Thread(new ConnectionHandler(authentication, infoLabel));
+        Thread connectionHandler = new Thread(new ConnectionHandler(eventsManager, authentication));
         connectionHandler.start();
     }
 
@@ -58,7 +59,7 @@ public class Main extends AbstractFrame
     {
         super.configureFrame();
 
-//        setLayout(new BorderLayout());
+        setLayout(new BoxLayout(getContentPane(), BoxLayout.PAGE_AXIS));
     }
 
     protected void ensureMinimumSize()
@@ -85,23 +86,8 @@ public class Main extends AbstractFrame
         c.fill = GridBagConstraints.HORIZONTAL;
         c.anchor = GridBagConstraints.NORTHWEST;
 
-        add(mainMenu, c);
+        setJMenuBar(mainMenu);
         attachMenuListeners(mainMenu);
-
-        /**
-         * ------------------------------------------------
-         * dummy panel to always keep the menu at the top
-         * ------------------------------------------------
-         */
-        c = new GridBagConstraints();
-        c.weightx = 1.0;
-        c.weighty = 1.0;
-        c.gridx = 0;
-        c.gridy = 1;
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.anchor = GridBagConstraints.NORTHWEST;
-
-        add(new JPanel(), c);
 
         /**
          * -------------
@@ -115,7 +101,7 @@ public class Main extends AbstractFrame
         c.weightx = 1.0;
         c.weighty = 1.0;
         c.gridx = 0;
-        c.gridy = 1;
+        c.gridy = 2;
         c.fill = GridBagConstraints.HORIZONTAL;
         c.anchor = GridBagConstraints.NORTHWEST;
 
@@ -163,27 +149,44 @@ public class Main extends AbstractFrame
         final Main currentFrame = this;
         final AbstractPanel loginPanel = (AbstractPanel) findComponent("loginPanel");
 
-        Connection connection = authentication.getConnection();
+        final JLabel infoLabel = (JLabel) loginPanel.findComponent("infoLabel");
+        final JTextField identifier = (JTextField) loginPanel.findComponent("identifierField");
+        final JPasswordField password = (JPasswordField) loginPanel.findComponent("passwordField");
+        final JButton loginBtn = (JButton) loginPanel.findComponent("loginBtn");
 
-        // Connection events
-        connection.getEndpoint().addStatusListener(new ConnectionStatusListener()
+        eventsManager.attach("connectionStatus", new EventListener()
         {
             @Override
-            public void onConnectionEstablished()
+            public <T> void handleEvent(EventObject<T> event)
             {
-                JButton loginBtn = (JButton) loginPanel.findComponent("loginBtn");
-                loginBtn.setEnabled(true);
+                String status = (String) event.getParameters().get("status");
 
-                JLabel infoLabel = (JLabel) loginPanel.findComponent("infoLabel");
-                infoLabel.setText("<html><center>Connected to <br>messaging server</center>");
+                if(status.equals("success")) {
+                    infoLabel.setVisible(false);
+                    loginBtn.setEnabled(true);
+                } else {
+                    infoLabel.setText("<html><center>Connection failed");
+                }
             }
         });
 
-        // Login events
-        final JTextField identifier = (JTextField) loginPanel.findComponent("identifierField");
-        final JPasswordField password = (JPasswordField) loginPanel.findComponent("passwordField");
+        eventsManager.attach("authenticationStatus", new EventListener()
+        {
+            @Override
+            public <T> void handleEvent(EventObject<T> event)
+            {
+                String status = (String) event.getParameters().get("status");
 
-        final JButton loginBtn = (JButton) loginPanel.findComponent("loginBtn");
+                if(status.equals("success")) {
+                    currentFrame.showUserList();
+                } else {
+                    loginBtn.setEnabled(true);
+                    infoLabel.setVisible(true);
+                    infoLabel.setText("<html><center>" + event.getParameters().get("message"));
+                }
+            }
+        });
+
         loginBtn.addActionListener(new ActionListener()
         {
             @Override
@@ -192,7 +195,6 @@ public class Main extends AbstractFrame
                 if (e.getActionCommand().equals("doLogin")) {
                     loginBtn.setEnabled(false);
                     authentication.authenticate(identifier.getText(), new String(password.getPassword()));
-                    currentFrame.showUserList();
                 }
             }
         });
