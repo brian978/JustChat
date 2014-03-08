@@ -59,7 +59,7 @@ public class LoginPanel extends AbstractPanel
          * Informational label
          * --------------------
          */
-        JLabel infoLabel = new JLabel("<html><center>Connecting to,<br> please wait...");
+        JLabel infoLabel = new JLabel("<html><center>Connecting,<br> please wait...");
         infoLabel.setName("infoLabel");
         infoLabel.setHorizontalAlignment(SwingConstants.CENTER);
 

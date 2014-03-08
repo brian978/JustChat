@@ -1,4 +1,4 @@
-package com.justchat.client.websocket.listeners;
+package com.justchat.model.user.manager.observer;
 
 import com.justchat.model.user.identity.User;
 
@@ -9,7 +9,8 @@ import com.justchat.model.user.identity.User;
  * @copyright Copyright (c) 2014
  * @license Creative Commons Attribution-ShareAlike 3.0
  */
-public interface NewMessageListener
+public interface UsersActionsObserver
 {
-    public void onNewMessage(User user, String message);
+    public void addedUser(User user);
+    public void removeduser(User user);
 }

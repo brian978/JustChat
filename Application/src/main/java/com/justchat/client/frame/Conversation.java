@@ -6,7 +6,7 @@ import com.justchat.gui.menu.AbstractMenu;
 import com.justchat.client.frame.menu.ChatMenu;
 import com.justchat.client.gui.panel.ChatPanel;
 import com.justchat.client.gui.panel.ErrorPanel;
-import com.justchat.client.identity.User;
+import com.justchat.model.user.identity.User;
 import com.justchat.client.websocket.Connection;
 import com.justchat.client.websocket.factory.ConnectionFactory;
 
@@ -35,7 +35,7 @@ public class Conversation extends AbstractFrame
     {
         super("JustChat - conversation");
 
-        user = new User("Current user", true);
+        user = new User("adsad", "Current user", true);
 
         try {
             connection = ConnectionFactory.factory(new EventsManager());

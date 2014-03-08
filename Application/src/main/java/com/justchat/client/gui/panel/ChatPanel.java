@@ -1,7 +1,7 @@
 package com.justchat.client.gui.panel;
 
 import com.justchat.client.gui.panel.components.ChatBox;
-import com.justchat.client.identity.User;
+import com.justchat.model.user.identity.User;
 import com.justchat.client.websocket.Connection;
 import com.justchat.client.websocket.listeners.NewMessageListener;
 import com.justchat.gui.panel.AbstractPanel;

@@ -1,8 +1,6 @@
 package com.justchat.client.gui.panel.components;
 
-import com.justchat.client.identity.User;
-import com.justchat.gui.panel.AbstractPanel;
-import sun.awt.VariableGridLayout;
+import com.justchat.model.user.identity.User;
 
 import javax.swing.*;
 import javax.swing.text.*;

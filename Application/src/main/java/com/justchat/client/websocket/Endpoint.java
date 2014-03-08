@@ -1,7 +1,6 @@
 package com.justchat.client.websocket;
 
-import com.justchat.client.identity.User;
-import com.justchat.client.websocket.listeners.ConnectionStatusListener;
+import com.justchat.model.user.identity.User;
 import com.justchat.client.websocket.listeners.NewMessageListener;
 import com.justchat.event.EventsManager;
 
@@ -45,7 +44,7 @@ public class Endpoint
         System.out.println("Received msg: " + message);
         if (!messageListeners.isEmpty()) {
             for (NewMessageListener listener : messageListeners) {
-                listener.onNewMessage(new User("some user"), message);
+                listener.onNewMessage(new User("some user", "asdsa"), message);
             }
         }
     }

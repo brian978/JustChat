@@ -1,10 +1,11 @@
 package com.justchat.client.service.provider.facebook;
 
-import com.justchat.client.identity.User;
+import com.justchat.model.user.identity.User;
 import com.justchat.client.websocket.Connection;
 import com.justchat.event.EventsManager;
 import com.justchat.service.AbstractAuthentication;
 
+import java.util.Arrays;
 import java.util.HashMap;
 
 /**
@@ -22,13 +23,15 @@ public class Authentication extends AbstractAuthentication
     }
 
     @Override
-    public User authenticate(String identifier, String password)
+    public boolean authenticate(String identifier, char[] password)
     {
+        boolean success = false;
         HashMap<String, Object> parameters = new HashMap<>();
 
-        if(identifier.length() > 0 && password.length() > 0) {
+        if(identifier.length() > 0 && password.length > 0) {
+            success = true;
             System.out.println("Authenticating user with identifier " + identifier + " and password " + password);
-            user = new User(identifier);
+            user = new User("asda", identifier, true);
             parameters.put("status", "success");
             parameters.put("user", user);
         } else {
@@ -38,6 +41,9 @@ public class Authentication extends AbstractAuthentication
 
         eventsManager.trigger("authenticationStatus", this, parameters);
 
-        return user;
+        // For security reasons we fill the password with 0's
+        Arrays.fill(password, '0');
+
+        return success;
     }
 }

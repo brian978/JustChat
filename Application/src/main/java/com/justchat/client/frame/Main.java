@@ -1,10 +1,10 @@
 package com.justchat.client.frame;
 
 import com.justchat.client.gui.exception.FailedToLoadConfigurationException;
+import com.justchat.client.gui.panel.UserListPanel;
+import com.justchat.model.user.identity.User;
 import com.justchat.client.service.websocket.ConnectionHandler;
-import com.justchat.client.websocket.Connection;
 import com.justchat.client.websocket.factory.ConnectionFactory;
-import com.justchat.client.websocket.listeners.ConnectionStatusListener;
 import com.justchat.event.EventObject;
 import com.justchat.event.EventsManager;
 import com.justchat.event.listener.EventListener;
@@ -15,13 +15,13 @@ import com.justchat.client.gui.panel.LoginPanel;
 import com.justchat.gui.panel.AbstractPanel;
 import com.justchat.service.AuthenticationInterface;
 import com.justchat.client.service.provider.facebook.Authentication;
+import com.justchat.util.Properties;
+import sun.awt.WindowClosingListener;
 
-import javax.sound.sampled.Line;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
+import java.io.IOException;
 
 /**
  * JustChat
@@ -32,8 +32,11 @@ import java.awt.event.WindowEvent;
  */
 public class Main extends AbstractFrame
 {
+    Properties preferences = new Properties("preferences.properties");
+    boolean preferencesLoaded = false;
     AuthenticationInterface authentication = null;
     EventsManager eventsManager = new EventsManager();
+    User user = null;
 
     public Main()
     {
@@ -44,6 +47,8 @@ public class Main extends AbstractFrame
         } catch (FailedToLoadConfigurationException e) {
             e.printStackTrace();
         }
+
+        preferencesLoaded = preferences.checkAndLoad();
 
         configureFrame();
         populateFrame();
@@ -60,6 +65,15 @@ public class Main extends AbstractFrame
         super.configureFrame();
 
         setLayout(new BoxLayout(getContentPane(), BoxLayout.PAGE_AXIS));
+
+        if (preferencesLoaded && preferences.get("MainWidth") != null) {
+            setPreferredSize(
+                    new Dimension(
+                            Integer.parseInt(preferences.get("MainWidth").toString()),
+                            Integer.parseInt(preferences.get("MainHeight").toString())
+                    )
+            );
+        }
     }
 
     protected void ensureMinimumSize()
@@ -97,15 +111,7 @@ public class Main extends AbstractFrame
         LoginPanel loginPanel = new LoginPanel(authentication);
         loginPanel.setName("loginPanel");
 
-        c = new GridBagConstraints();
-        c.weightx = 1.0;
-        c.weighty = 1.0;
-        c.gridx = 0;
-        c.gridy = 2;
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.anchor = GridBagConstraints.NORTHWEST;
-
-        add(loginPanel, c);
+        add(loginPanel);
     }
 
     protected void attachMenuListeners(AbstractMenu menu)
@@ -135,12 +141,19 @@ public class Main extends AbstractFrame
     {
         // First we need to remove the login panel
         AbstractPanel loginPanel = (AbstractPanel) findComponent("loginPanel");
-        if(loginPanel != null) {
+        if (loginPanel != null) {
             remove(loginPanel);
         }
 
+        // Adding the UserList in place of the login panel
+        UserListPanel userListPanel = new UserListPanel();
+        userListPanel.setName("userListPanel");
+
+        add(userListPanel);
+
         // Repainting
         revalidate();
+        pack();
         repaint();
     }
 
@@ -161,7 +174,7 @@ public class Main extends AbstractFrame
             {
                 String status = (String) event.getParameters().get("status");
 
-                if(status.equals("success")) {
+                if (status.equals("success")) {
                     infoLabel.setVisible(false);
                     loginBtn.setEnabled(true);
                 } else {
@@ -177,7 +190,8 @@ public class Main extends AbstractFrame
             {
                 String status = (String) event.getParameters().get("status");
 
-                if(status.equals("success")) {
+                if (status.equals("success")) {
+                    currentFrame.setUser((User) event.getParameters().get("user"));
                     currentFrame.showUserList();
                 } else {
                     loginBtn.setEnabled(true);
@@ -194,9 +208,122 @@ public class Main extends AbstractFrame
             {
                 if (e.getActionCommand().equals("doLogin")) {
                     loginBtn.setEnabled(false);
-                    authentication.authenticate(identifier.getText(), new String(password.getPassword()));
+                    authentication.authenticate(identifier.getText(), password.getPassword());
+                    password.setText("");
                 }
             }
         });
+
+        addWindowListener(new SaveOnExitListener());
+    }
+
+    private void setUser(User user)
+    {
+        this.user = user;
+    }
+
+    private class SaveOnExitListener implements WindowListener
+    {
+        /**
+         * Invoked the first time a window is made visible.
+         *
+         * @param e
+         */
+        @Override
+        public void windowOpened(WindowEvent e)
+        {
+
+        }
+
+        /**
+         * Invoked when the user attempts to close the window
+         * from the window's system menu.
+         *
+         * @param e
+         */
+        @Override
+        public void windowClosing(WindowEvent e)
+        {
+            Dimension size = ((AbstractFrame) e.getSource()).getSize();
+            preferences.setProperty("MainWidth", String.valueOf((int) size.getWidth()));
+            preferences.setProperty("MainHeight", String.valueOf((int) size.getHeight()));
+
+            try {
+                preferences.store();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        }
+
+        /**
+         * Invoked when a window has been closed as the result
+         * of calling dispose on the window.
+         *
+         * @param e
+         */
+        @Override
+        public void windowClosed(WindowEvent e)
+        {
+
+        }
+
+        /**
+         * Invoked when a window is changed from a normal to a
+         * minimized state. For many platforms, a minimized window
+         * is displayed as the icon specified in the window's
+         * iconImage property.
+         *
+         * @param e
+         * @see java.awt.Frame#setIconImage
+         */
+        @Override
+        public void windowIconified(WindowEvent e)
+        {
+
+        }
+
+        /**
+         * Invoked when a window is changed from a minimized
+         * to a normal state.
+         *
+         * @param e
+         */
+        @Override
+        public void windowDeiconified(WindowEvent e)
+        {
+
+        }
+
+        /**
+         * Invoked when the Window is set to be the active Window. Only a Frame or
+         * a Dialog can be the active Window. The native windowing system may
+         * denote the active Window or its children with special decorations, such
+         * as a highlighted title bar. The active Window is always either the
+         * focused Window, or the first Frame or Dialog that is an owner of the
+         * focused Window.
+         *
+         * @param e
+         */
+        @Override
+        public void windowActivated(WindowEvent e)
+        {
+
+        }
+
+        /**
+         * Invoked when a Window is no longer the active Window. Only a Frame or a
+         * Dialog can be the active Window. The native windowing system may denote
+         * the active Window or its children with special decorations, such as a
+         * highlighted title bar. The active Window is always either the focused
+         * Window, or the first Frame or Dialog that is an owner of the focused
+         * Window.
+         *
+         * @param e
+         */
+        @Override
+        public void windowDeactivated(WindowEvent e)
+        {
+
+        }
     }
 }

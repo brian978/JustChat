@@ -29,6 +29,31 @@ public class Properties extends java.util.Properties
         load(new FileInputStream(this.file));
     }
 
+    public boolean checkAndLoad()
+    {
+        boolean fileLoaded = false;
+
+        if (!file.exists()) {
+            try {
+                if(file.createNewFile()) {
+                    store();
+                    fileLoaded = true;
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            try {
+                load();
+                fileLoaded = true;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return fileLoaded;
+    }
+
     public void store() throws IOException
     {
         FileOutputStream stream = new FileOutputStream(this.file);

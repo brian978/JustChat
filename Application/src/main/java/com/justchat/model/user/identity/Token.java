@@ -1,4 +1,4 @@
-package com.justchat.client.identity;
+package com.justchat.model.user.identity;
 
 /**
  * JustChat
