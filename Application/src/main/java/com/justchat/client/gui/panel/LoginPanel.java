@@ -4,7 +4,6 @@ import com.justchat.service.AuthenticationInterface;
 import com.justchat.gui.panel.AbstractPanel;
 
 import javax.swing.*;
-import javax.swing.text.JTextComponent;
 import java.awt.*;
 
 /**
@@ -16,15 +15,11 @@ import java.awt.*;
  */
 public class LoginPanel extends AbstractPanel
 {
-    AuthenticationInterface authentication;
-
-    public LoginPanel(AuthenticationInterface authentication)
+    public LoginPanel()
     {
         super();
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-
-        this.authentication = authentication;
 
         configure();
         populate();
@@ -59,7 +54,7 @@ public class LoginPanel extends AbstractPanel
          * Informational label
          * --------------------
          */
-        JLabel infoLabel = new JLabel("<html><center>Connecting,<br> please wait...");
+        JLabel infoLabel = new JLabel();
         infoLabel.setName("infoLabel");
         infoLabel.setHorizontalAlignment(SwingConstants.CENTER);
 

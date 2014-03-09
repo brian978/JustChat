@@ -1,5 +1,6 @@
 package com.justchat.client.service.provider.facebook;
 
+import com.justchat.model.user.identity.Token;
 import com.justchat.model.user.identity.User;
 import com.justchat.client.websocket.Connection;
 import com.justchat.event.EventsManager;
@@ -31,7 +32,7 @@ public class Authentication extends AbstractAuthentication
         if(identifier.length() > 0 && password.length > 0) {
             success = true;
             System.out.println("Authenticating user with identifier " + identifier + " and password " + password);
-            user = new User("asda", identifier, true);
+            user = new User("asda", identifier, new Token("some Token"), connection);
             parameters.put("status", "success");
             parameters.put("user", user);
         } else {

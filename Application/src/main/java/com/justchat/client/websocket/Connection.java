@@ -26,8 +26,9 @@ public class Connection
 
     public void connect() throws IOException, DeploymentException
     {
-        session = ContainerProvider.getWebSocketContainer()
-                                   .connectToServer(endpoint, URI.create("ws://" + host + ":" + port));
+        WebSocketContainer container = ContainerProvider.getWebSocketContainer();
+
+        session = container.connectToServer(endpoint, URI.create("ws://" + host + ":" + port));
     }
 
     public void disconnect() throws IOException

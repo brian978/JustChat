@@ -1,7 +1,9 @@
 package com.justchat.client.frame;
 
 import com.justchat.client.gui.exception.FailedToLoadConfigurationException;
+import com.justchat.client.gui.list.UserList;
 import com.justchat.client.gui.panel.UserListPanel;
+import com.justchat.model.preferences.MainFramePreferences;
 import com.justchat.model.user.identity.User;
 import com.justchat.client.service.websocket.ConnectionHandler;
 import com.justchat.client.websocket.factory.ConnectionFactory;
@@ -13,15 +15,15 @@ import com.justchat.gui.menu.AbstractMenu;
 import com.justchat.client.frame.menu.MainMenu;
 import com.justchat.client.gui.panel.LoginPanel;
 import com.justchat.gui.panel.AbstractPanel;
+import com.justchat.model.user.manager.Users;
 import com.justchat.service.AuthenticationInterface;
 import com.justchat.client.service.provider.facebook.Authentication;
-import com.justchat.util.Properties;
-import sun.awt.WindowClosingListener;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
+import java.util.*;
 
 /**
  * JustChat
@@ -32,11 +34,15 @@ import java.io.IOException;
  */
 public class Main extends AbstractFrame
 {
-    Properties preferences = new Properties("preferences.properties");
-    boolean preferencesLoaded = false;
+    MainFramePreferences preferences = new MainFramePreferences();
+
     AuthenticationInterface authentication = null;
+
     EventsManager eventsManager = new EventsManager();
+
     User user = null;
+
+    Users users = new Users();
 
     public Main()
     {
@@ -48,16 +54,12 @@ public class Main extends AbstractFrame
             e.printStackTrace();
         }
 
-        preferencesLoaded = preferences.checkAndLoad();
-
         configureFrame();
         populateFrame();
         showFrame();
         ensureMinimumSize();
         setupEvents();
-
-        Thread connectionHandler = new Thread(new ConnectionHandler(eventsManager, authentication));
-        connectionHandler.start();
+        connectToServer();
     }
 
     protected void configureFrame()
@@ -65,15 +67,6 @@ public class Main extends AbstractFrame
         super.configureFrame();
 
         setLayout(new BoxLayout(getContentPane(), BoxLayout.PAGE_AXIS));
-
-        if (preferencesLoaded && preferences.get("MainWidth") != null) {
-            setPreferredSize(
-                    new Dimension(
-                            Integer.parseInt(preferences.get("MainWidth").toString()),
-                            Integer.parseInt(preferences.get("MainHeight").toString())
-                    )
-            );
-        }
     }
 
     protected void ensureMinimumSize()
@@ -84,21 +77,12 @@ public class Main extends AbstractFrame
     @Override
     protected void populateFrame()
     {
-        GridBagConstraints c;
-
         /**
          * -------------
          * main menu
          * -------------
          */
         MainMenu mainMenu = new MainMenu();
-
-        c = new GridBagConstraints();
-        c.weightx = 1.0;
-        c.gridx = 0;
-        c.gridy = 0;
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.anchor = GridBagConstraints.NORTHWEST;
 
         setJMenuBar(mainMenu);
         attachMenuListeners(mainMenu);
@@ -108,7 +92,7 @@ public class Main extends AbstractFrame
          * Login panel
          * -------------
          */
-        LoginPanel loginPanel = new LoginPanel(authentication);
+        LoginPanel loginPanel = new LoginPanel();
         loginPanel.setName("loginPanel");
 
         add(loginPanel);
@@ -146,10 +130,36 @@ public class Main extends AbstractFrame
         }
 
         // Adding the UserList in place of the login panel
-        UserListPanel userListPanel = new UserListPanel();
+        UserListPanel userListPanel = new UserListPanel(users);
         userListPanel.setName("userListPanel");
 
         add(userListPanel);
+
+        // Listeners for the panel
+        final UserList list = userListPanel.getUserList();
+        list.addMouseListener(new MouseAdapter()
+        {
+            /**
+             * {@inheritDoc}
+             *
+             * @param e
+             */
+            @Override
+            public void mouseClicked(MouseEvent e)
+            {
+                super.mouseClicked(e);
+
+                if(e.getClickCount() == 2) {
+                    String value = list.getSelectedValue();
+                    System.out.println("Selected value is " + value);
+                    startNewConveration();
+                }
+            }
+        });
+
+        // Since the login is pretty standard we didn't care about the windows dimensions that were set by the user
+        // but now...
+        setPreferredSize(preferences.getPreferedSize(getPreferredSize()));
 
         // Repainting
         revalidate();
@@ -157,49 +167,18 @@ public class Main extends AbstractFrame
         repaint();
     }
 
+    private void startNewConveration()
+    {
+
+    }
+
     private void setupEvents()
     {
-        final Main currentFrame = this;
         final AbstractPanel loginPanel = (AbstractPanel) findComponent("loginPanel");
 
-        final JLabel infoLabel = (JLabel) loginPanel.findComponent("infoLabel");
         final JTextField identifier = (JTextField) loginPanel.findComponent("identifierField");
         final JPasswordField password = (JPasswordField) loginPanel.findComponent("passwordField");
         final JButton loginBtn = (JButton) loginPanel.findComponent("loginBtn");
-
-        eventsManager.attach("connectionStatus", new EventListener()
-        {
-            @Override
-            public <T> void handleEvent(EventObject<T> event)
-            {
-                String status = (String) event.getParameters().get("status");
-
-                if (status.equals("success")) {
-                    infoLabel.setVisible(false);
-                    loginBtn.setEnabled(true);
-                } else {
-                    infoLabel.setText("<html><center>Connection failed");
-                }
-            }
-        });
-
-        eventsManager.attach("authenticationStatus", new EventListener()
-        {
-            @Override
-            public <T> void handleEvent(EventObject<T> event)
-            {
-                String status = (String) event.getParameters().get("status");
-
-                if (status.equals("success")) {
-                    currentFrame.setUser((User) event.getParameters().get("user"));
-                    currentFrame.showUserList();
-                } else {
-                    loginBtn.setEnabled(true);
-                    infoLabel.setVisible(true);
-                    infoLabel.setText("<html><center>" + event.getParameters().get("message"));
-                }
-            }
-        });
 
         loginBtn.addActionListener(new ActionListener()
         {
@@ -214,12 +193,91 @@ public class Main extends AbstractFrame
             }
         });
 
+        eventsManager.attach("connectionStatus", new ConnectionStatusListener());
+        eventsManager.attach("authenticationStatus", new AuthenticationStatusListener());
+
         addWindowListener(new SaveOnExitListener());
     }
 
     private void setUser(User user)
     {
         this.user = user;
+    }
+
+    private void connectToServer()
+    {
+        AbstractPanel loginPanel = (AbstractPanel) findComponent("loginPanel");
+        JLabel infoLabel = (JLabel) loginPanel.findComponent("infoLabel");
+        infoLabel.setText("<html><center>Connecting, please wait...");
+
+        Thread connectionHandler = new Thread(new ConnectionHandler(eventsManager, authentication));
+        connectionHandler.start();
+    }
+
+    private class AuthenticationStatusListener implements EventListener
+    {
+        JLabel infoLabel;
+        JButton loginBtn;
+
+        public AuthenticationStatusListener()
+        {
+            final AbstractPanel loginPanel = (AbstractPanel) findComponent("loginPanel");
+
+            infoLabel = (JLabel) loginPanel.findComponent("infoLabel");
+            loginBtn = (JButton) loginPanel.findComponent("loginBtn");
+        }
+
+        @Override
+        public <T> void handleEvent(EventObject<T> event)
+        {
+            String status = (String) event.getParameters().get("status");
+
+            if (status.equals("success")) {
+                setUser((User) event.getParameters().get("user"));
+                showUserList();
+            } else {
+                loginBtn.setEnabled(true);
+                infoLabel.setVisible(true);
+                infoLabel.setText("<html><center>" + event.getParameters().get("message"));
+            }
+        }
+    }
+
+    private class ConnectionStatusListener implements EventListener
+    {
+        JLabel infoLabel;
+        JButton loginBtn;
+        java.util.Timer timer = new java.util.Timer();
+
+        public ConnectionStatusListener()
+        {
+            final AbstractPanel loginPanel = (AbstractPanel) findComponent("loginPanel");
+
+            infoLabel = (JLabel) loginPanel.findComponent("infoLabel");
+            loginBtn = (JButton) loginPanel.findComponent("loginBtn");
+        }
+
+        @Override
+        public <T> void handleEvent(EventObject<T> event)
+        {
+            String status = (String) event.getParameters().get("status");
+
+            if (status.equals("success")) {
+                infoLabel.setVisible(false);
+                loginBtn.setEnabled(true);
+            } else {
+                infoLabel.setText("<html><center>Connection failed");
+
+                timer.schedule(new TimerTask()
+                {
+                    @Override
+                    public void run()
+                    {
+                        connectToServer();
+                    }
+                }, 3000);
+            }
+        }
     }
 
     private class SaveOnExitListener implements WindowListener
@@ -245,11 +303,11 @@ public class Main extends AbstractFrame
         public void windowClosing(WindowEvent e)
         {
             Dimension size = ((AbstractFrame) e.getSource()).getSize();
-            preferences.setProperty("MainWidth", String.valueOf((int) size.getWidth()));
-            preferences.setProperty("MainHeight", String.valueOf((int) size.getHeight()));
+            preferences.set("MainWidth", String.valueOf((int) size.getWidth()));
+            preferences.set("MainHeight", String.valueOf((int) size.getHeight()));
 
             try {
-                preferences.store();
+                preferences.getStorage().store();
             } catch (IOException e1) {
                 e1.printStackTrace();
             }

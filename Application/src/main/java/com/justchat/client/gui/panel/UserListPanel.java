@@ -17,11 +17,16 @@ import java.awt.*;
  */
 public class UserListPanel extends AbstractPanel
 {
-    public UserListPanel()
+    UserList userList;
+    Users users;
+
+    public UserListPanel(Users users)
     {
         super();
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         setPreferredSize(new Dimension(300, 500));
+
+        this.users = users;
 
         configure();
         populate();
@@ -36,10 +41,8 @@ public class UserListPanel extends AbstractPanel
     {
         super.populate();
 
-        Users usersModel = new Users();
-
         // Creating the UserList object so we have something to display
-        UserList userList = new UserList();
+        userList = new UserList();
 
         // Adding a scroll panel to the list
         JScrollPane userListScroller = new JScrollPane(userList);
@@ -48,15 +51,18 @@ public class UserListPanel extends AbstractPanel
         add(userListScroller);
 
         // Setting up some dependencies
-        usersModel.addObserver(userList);
+        users.addObserver(userList);
 
         // Adding some dummy users
         User usr;
         for (int i = 0; i < 50; i++) {
             usr = new User(Integer.toString(i), Double.toString(Math.random()) + "--" + Integer.toString(i));
-            usersModel.add(usr);
+            users.add(usr);
         }
+    }
 
-        usersModel.remove(usersModel.find("10"));
+    public UserList getUserList()
+    {
+        return userList;
     }
 }

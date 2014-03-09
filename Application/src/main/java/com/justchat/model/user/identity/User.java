@@ -17,6 +17,14 @@ public class User
     private Token token = null;
     private Connection connection = null;
 
+    public User(String id, String username, Token token, Connection connection)
+    {
+        this.id = id;
+        this.username = username;
+        this.token = token;
+        this.connection = connection;
+    }
+
     public User(String id, String username, boolean isCurrent)
     {
         this.id = id;
