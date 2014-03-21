@@ -14,8 +14,4 @@ public class FailedToLoadConfigurationException extends IOException
     public FailedToLoadConfigurationException(String message, Throwable cause) {
         super(message, cause);
     }
-
-    public FailedToLoadConfigurationException(Throwable cause) {
-        super(cause);
-    }
 }
