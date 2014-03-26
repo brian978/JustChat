@@ -28,7 +28,7 @@ public class Connection
     {
         WebSocketContainer container = ContainerProvider.getWebSocketContainer();
 
-        session = container.connectToServer(endpoint, URI.create("ws://" + host + ":" + port));
+        session = container.connectToServer(endpoint, ClientEndpointConfig.Builder.create().build(), URI.create("wss://" + host + ":" + port));
     }
 
     public void disconnect() throws IOException

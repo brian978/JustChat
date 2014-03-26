@@ -16,13 +16,13 @@ import java.util.HashMap;
  * @license Creative Commons Attribution-ShareAlike 3.0
  */
 @ClientEndpoint
-public class Endpoint
+public class Endpoint extends javax.websocket.Endpoint
 {
     EventsManager eventsManager = null;
     ArrayList<NewMessageListener> messageListeners = new ArrayList<>();
 
-    @OnOpen
-    public void onOpen(Session session)
+    @Override
+    public void onOpen(Session session, EndpointConfig endpointConfig)
     {
         System.out.println("Opened connection to server");
         if(eventsManager != null) {

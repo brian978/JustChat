@@ -44,6 +44,7 @@ public class ConnectionHandler implements Runnable
             try {
                 this.authenticationService.getConnection().connect();
             } catch (IOException | DeploymentException e) {
+                System.out.println(e);
                 HashMap<String, Object> parameters = new HashMap<>();
                 parameters.put("status", "failed");
                 eventsManager.trigger("connectionStatus", this, parameters);
