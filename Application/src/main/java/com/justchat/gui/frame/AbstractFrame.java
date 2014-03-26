@@ -22,7 +22,7 @@ abstract public class AbstractFrame extends JFrame implements FrameInterface
     protected void configureFrame()
     {
         // Configuring the frame
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setLayout(new GridBagLayout());
         setIconImage(new ImageIcon(getClass().getResource("/com/justchat/client/logo/justchat.png")).getImage());
     }
