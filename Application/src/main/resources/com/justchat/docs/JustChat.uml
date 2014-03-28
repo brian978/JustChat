@@ -177,10 +177,91 @@
 <XPD:OBJ name="OwnedElements[1]" type="UMLPackage" guid="0fvMqGmHD0Wdc126x8OdQgAA">
 <XPD:ATTR name="Name" type="string">menu</XPD:ATTR>
 <XPD:REF name="Namespace">P5hMPBIHu0y/retCH/XsaAAA</XPD:REF>
+<XPD:ATTR name="#OwnedElements" type="integer">1</XPD:ATTR>
+<XPD:OBJ name="OwnedElements[0]" type="UMLClass" guid="1lUwpaYLokyXN1JYEh6F1QAA">
+<XPD:ATTR name="Name" type="string">AbstractMenu</XPD:ATTR>
+<XPD:REF name="Namespace">0fvMqGmHD0Wdc126x8OdQgAA</XPD:REF>
+<XPD:ATTR name="#Operations" type="integer">2</XPD:ATTR>
+<XPD:OBJ name="Operations[0]" type="UMLOperation" guid="rInwXpHdOUKrHyC/uRisYAAA">
+<XPD:ATTR name="Name" type="string">addMenu</XPD:ATTR>
+<XPD:ATTR name="Visibility" type="UMLVisibilityKind">vkProtected</XPD:ATTR>
+<XPD:REF name="Owner">1lUwpaYLokyXN1JYEh6F1QAA</XPD:REF>
+<XPD:ATTR name="#Parameters" type="integer">2</XPD:ATTR>
+<XPD:OBJ name="Parameters[0]" type="UMLParameter" guid="sHVweu+du0WBEN7tsyQwBQAA">
+<XPD:ATTR name="Name" type="string">label</XPD:ATTR>
+<XPD:ATTR name="TypeExpression" type="string">String</XPD:ATTR>
+<XPD:REF name="BehavioralFeature">rInwXpHdOUKrHyC/uRisYAAA</XPD:REF>
+</XPD:OBJ>
+<XPD:OBJ name="Parameters[1]" type="UMLParameter" guid="QMcpjrDGRUOqvxN/qc9o9wAA">
+<XPD:ATTR name="Name" type="string">name</XPD:ATTR>
+<XPD:ATTR name="TypeExpression" type="string">String</XPD:ATTR>
+<XPD:REF name="BehavioralFeature">rInwXpHdOUKrHyC/uRisYAAA</XPD:REF>
+</XPD:OBJ>
+</XPD:OBJ>
+<XPD:OBJ name="Operations[1]" type="UMLOperation" guid="HB61PawOnU+jmRfBymjrBQAA">
+<XPD:ATTR name="Name" type="string">addMenuItem</XPD:ATTR>
+<XPD:ATTR name="Visibility" type="UMLVisibilityKind">vkProtected</XPD:ATTR>
+<XPD:REF name="Owner">1lUwpaYLokyXN1JYEh6F1QAA</XPD:REF>
+<XPD:ATTR name="#Parameters" type="integer">3</XPD:ATTR>
+<XPD:OBJ name="Parameters[0]" type="UMLParameter" guid="/bJDnz4YfEKU2sDkisl5QAAA">
+<XPD:ATTR name="Name" type="string">menu</XPD:ATTR>
+<XPD:ATTR name="TypeExpression" type="string">JMenu</XPD:ATTR>
+<XPD:REF name="BehavioralFeature">HB61PawOnU+jmRfBymjrBQAA</XPD:REF>
+</XPD:OBJ>
+<XPD:OBJ name="Parameters[1]" type="UMLParameter" guid="DGA6vZcJLEK+3r7rSV5VkAAA">
+<XPD:ATTR name="Name" type="string">label</XPD:ATTR>
+<XPD:ATTR name="TypeExpression" type="string">String</XPD:ATTR>
+<XPD:REF name="BehavioralFeature">HB61PawOnU+jmRfBymjrBQAA</XPD:REF>
+</XPD:OBJ>
+<XPD:OBJ name="Parameters[2]" type="UMLParameter" guid="qw9Vc8uETUOzAtUKfFayHwAA">
+<XPD:ATTR name="Name" type="string">name</XPD:ATTR>
+<XPD:ATTR name="TypeExpression" type="string">String</XPD:ATTR>
+<XPD:REF name="BehavioralFeature">HB61PawOnU+jmRfBymjrBQAA</XPD:REF>
+</XPD:OBJ>
+</XPD:OBJ>
+<XPD:ATTR name="#Attributes" type="integer">1</XPD:ATTR>
+<XPD:OBJ name="Attributes[0]" type="UMLAttribute" guid="RtZ2Ub9Hg02OsP2czL9T5QAA">
+<XPD:ATTR name="Name" type="string">menuItems</XPD:ATTR>
+<XPD:ATTR name="Visibility" type="UMLVisibilityKind">vkProtected</XPD:ATTR>
+<XPD:ATTR name="TypeExpression" type="string">HashMap&lt;String, JMenuItem&gt;</XPD:ATTR>
+<XPD:REF name="Owner">1lUwpaYLokyXN1JYEh6F1QAA</XPD:REF>
+</XPD:OBJ>
+</XPD:OBJ>
 </XPD:OBJ>
 <XPD:OBJ name="OwnedElements[2]" type="UMLPackage" guid="EcEmBHTC+kaDBWxsVzaa+gAA">
 <XPD:ATTR name="Name" type="string">panel</XPD:ATTR>
 <XPD:REF name="Namespace">P5hMPBIHu0y/retCH/XsaAAA</XPD:REF>
+<XPD:ATTR name="#OwnedElements" type="integer">1</XPD:ATTR>
+<XPD:OBJ name="OwnedElements[0]" type="UMLClass" guid="vZxK8EPZ8EeEEf6dUeNdTQAA">
+<XPD:ATTR name="Name" type="string">AbstractPanel</XPD:ATTR>
+<XPD:REF name="Namespace">EcEmBHTC+kaDBWxsVzaa+gAA</XPD:REF>
+<XPD:ATTR name="#Operations" type="integer">4</XPD:ATTR>
+<XPD:OBJ name="Operations[0]" type="UMLOperation" guid="6BIlCAvDZUG9C3DaQw6v5QAA">
+<XPD:ATTR name="Name" type="string">AbstractPanel</XPD:ATTR>
+<XPD:ATTR name="Documentation" type="string">calls setLayout(new GridBagLayout())</XPD:ATTR>
+<XPD:REF name="Owner">vZxK8EPZ8EeEEf6dUeNdTQAA</XPD:REF>
+</XPD:OBJ>
+<XPD:OBJ name="Operations[1]" type="UMLOperation" guid="r3lMoP9lSECfBOX7ZHCg2wAA">
+<XPD:ATTR name="Name" type="string">configure</XPD:ATTR>
+<XPD:ATTR name="Visibility" type="UMLVisibilityKind">vkProtected</XPD:ATTR>
+<XPD:REF name="Owner">vZxK8EPZ8EeEEf6dUeNdTQAA</XPD:REF>
+</XPD:OBJ>
+<XPD:OBJ name="Operations[2]" type="UMLOperation" guid="0fz0qGZBUUOdq8Twd1o55QAA">
+<XPD:ATTR name="Name" type="string">populate</XPD:ATTR>
+<XPD:ATTR name="Visibility" type="UMLVisibilityKind">vkProtected</XPD:ATTR>
+<XPD:REF name="Owner">vZxK8EPZ8EeEEf6dUeNdTQAA</XPD:REF>
+</XPD:OBJ>
+<XPD:OBJ name="Operations[3]" type="UMLOperation" guid="E94v0/0bTk2w6C0/QAZ1hQAA">
+<XPD:ATTR name="Name" type="string">findComponent</XPD:ATTR>
+<XPD:REF name="Owner">vZxK8EPZ8EeEEf6dUeNdTQAA</XPD:REF>
+<XPD:ATTR name="#Parameters" type="integer">1</XPD:ATTR>
+<XPD:OBJ name="Parameters[0]" type="UMLParameter" guid="9LqA7w1c/E69d2TmsjqbtQAA">
+<XPD:ATTR name="Name" type="string">name</XPD:ATTR>
+<XPD:ATTR name="TypeExpression" type="string">String</XPD:ATTR>
+<XPD:REF name="BehavioralFeature">E94v0/0bTk2w6C0/QAZ1hQAA</XPD:REF>
+</XPD:OBJ>
+</XPD:OBJ>
+</XPD:OBJ>
 </XPD:OBJ>
 </XPD:OBJ>
 </XPD:OBJ>
