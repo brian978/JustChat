@@ -1,4 +1,4 @@
-package com.justchat.model.preferences;
+package com.justchat.client.frame.preferences;
 
 import com.acamar.util.Properties;
 

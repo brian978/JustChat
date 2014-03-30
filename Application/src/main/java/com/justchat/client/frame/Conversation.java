@@ -27,22 +27,29 @@ import java.io.IOException;
 public class Conversation extends AbstractFrame
 {
     User user;
-    AsyncConnection connection = null;
+    Connection connection = null;
     String connectionMessage = null;
 
-    public Conversation()
+    public Conversation(Connection connection)
     {
         super("JustChat - conversation");
 
         user = new User("adsad", "Current user", true);
 
-        connection = new AsyncConnection();
-        connection.connect();
+        this.connection = connection;
 
         configureFrame();
         populateFrame();
         showFrame();
         ensureMinimumSize();
+    }
+
+    @Override
+    protected void configureFrame()
+    {
+        super.configureFrame();
+
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
     }
 
     @Override

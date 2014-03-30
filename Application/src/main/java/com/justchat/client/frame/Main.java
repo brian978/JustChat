@@ -3,22 +3,19 @@ package com.justchat.client.frame;
 import com.acamar.gui.frame.AbstractFrame;
 import com.acamar.gui.menu.AbstractMenu;
 import com.acamar.gui.panel.AbstractPanel;
-import com.acamar.service.authentication.AbstractAuthentication;
 import com.acamar.service.authentication.AuthenticationEvent;
 import com.acamar.service.authentication.AuthenticationListener;
 import com.acamar.service.provider.dummy.authentication.DummyAuthentication;
 import com.acamar.websocket.AsyncConnection;
 import com.acamar.websocket.ConnectionEvent;
 import com.acamar.websocket.ConnectionStatusListener;
-import com.justchat.client.gui.exception.FailedToLoadConfigurationException;
 import com.justchat.client.gui.list.UserList;
 import com.justchat.client.gui.panel.UserListPanel;
-import com.justchat.model.preferences.MainFramePreferences;
+import com.justchat.client.frame.preferences.MainFramePreferences;
 import com.justchat.model.user.identity.User;
 import com.justchat.client.frame.menu.MainMenu;
 import com.justchat.client.gui.panel.LoginPanel;
 import com.justchat.model.user.manager.Users;
-import sun.jdbc.odbc.ee.ConnectionHandler;
 
 import javax.swing.*;
 import java.awt.*;
@@ -173,7 +170,7 @@ public class Main extends AbstractFrame
 
     private void startNewConveration()
     {
-
+        new Conversation(connection);
     }
 
     private void setupEvents()
@@ -230,7 +227,7 @@ public class Main extends AbstractFrame
         @Override
         public void authenticationPerformed(AuthenticationEvent e)
         {
-            if(e.isAuthenticated()) {
+            if (e.isAuthenticated()) {
                 setUser(new User("asdsa", "asdf"));
                 showUserList();
             } else {
@@ -261,6 +258,10 @@ public class Main extends AbstractFrame
             if (e.getStatusCode() == ConnectionEvent.CONNECTION_OPENED) {
                 infoLabel.setVisible(false);
                 loginBtn.setEnabled(true);
+            } else if (e.getStatusCode() == ConnectionEvent.CONNECTION_CLOSED) {
+                infoLabel.setVisible(true);
+                loginBtn.setEnabled(false);
+                infoLabel.setText("<html><center>" + e.getMessage());
             } else {
                 infoLabel.setText("<html><center>" + e.getMessage());
                 timer.schedule(new TimerTask()
