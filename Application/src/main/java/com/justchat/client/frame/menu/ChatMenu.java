@@ -1,6 +1,7 @@
 package com.justchat.client.frame.menu;
 
-import com.justchat.gui.menu.AbstractMenu;
+
+import com.acamar.gui.menu.AbstractMenu;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;
@@ -15,8 +16,6 @@ import java.util.HashMap;
  */
 public class ChatMenu extends AbstractMenu
 {
-    protected HashMap<String, JMenuItem> menuItems = new HashMap<>();
-
     public ChatMenu()
     {
         JMenu fileMenu = addMenu("File", "fileMenu");

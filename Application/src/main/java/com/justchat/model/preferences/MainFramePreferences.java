@@ -1,9 +1,8 @@
 package com.justchat.model.preferences;
 
-import com.justchat.util.Properties;
+import com.acamar.util.Properties;
 
 import java.awt.*;
-import java.io.IOException;
 
 /**
  * JustChat

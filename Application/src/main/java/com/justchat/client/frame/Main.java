@@ -1,23 +1,24 @@
 package com.justchat.client.frame;
 
+import com.acamar.gui.frame.AbstractFrame;
+import com.acamar.gui.menu.AbstractMenu;
+import com.acamar.gui.panel.AbstractPanel;
+import com.acamar.service.authentication.AbstractAuthentication;
+import com.acamar.service.authentication.AuthenticationEvent;
+import com.acamar.service.authentication.AuthenticationListener;
+import com.acamar.service.provider.dummy.authentication.DummyAuthentication;
+import com.acamar.websocket.AsyncConnection;
+import com.acamar.websocket.ConnectionEvent;
+import com.acamar.websocket.ConnectionStatusListener;
 import com.justchat.client.gui.exception.FailedToLoadConfigurationException;
 import com.justchat.client.gui.list.UserList;
 import com.justchat.client.gui.panel.UserListPanel;
 import com.justchat.model.preferences.MainFramePreferences;
 import com.justchat.model.user.identity.User;
-import com.justchat.client.service.websocket.ConnectionHandler;
-import com.justchat.client.websocket.factory.ConnectionFactory;
-import com.justchat.event.EventObject;
-import com.justchat.event.EventsManager;
-import com.justchat.event.listener.EventListener;
-import com.justchat.gui.frame.AbstractFrame;
-import com.justchat.gui.menu.AbstractMenu;
 import com.justchat.client.frame.menu.MainMenu;
 import com.justchat.client.gui.panel.LoginPanel;
-import com.justchat.gui.panel.AbstractPanel;
 import com.justchat.model.user.manager.Users;
-import com.justchat.service.AuthenticationInterface;
-import com.justchat.client.service.provider.facebook.Authentication;
+import sun.jdbc.odbc.ee.ConnectionHandler;
 
 import javax.swing.*;
 import java.awt.*;
@@ -35,30 +36,33 @@ import java.util.*;
 public class Main extends AbstractFrame
 {
     MainFramePreferences preferences = new MainFramePreferences();
-
-    AuthenticationInterface authentication = null;
-
-    EventsManager eventsManager = new EventsManager();
+    DummyAuthentication authentication = null;
+    AsyncConnection connection = null;
 
     User user = null;
-
     Users users = new Users();
 
     public Main()
     {
         super("JustChat");
 
-        try {
-            authentication = new Authentication(eventsManager, ConnectionFactory.factory(eventsManager));
-        } catch (FailedToLoadConfigurationException e) {
-            e.printStackTrace();
-        }
+        authentication = new DummyAuthentication();
+        connection = new AsyncConnection();
 
+        // Adding the components on the frame
         configureFrame();
         populateFrame();
+        setupEvents();
+
+        // Adding the listeners to our objects
+        authentication.addAuthenticationListener(new AuthenticationStatusListener());
+        connection.addConnectionStatusListener(new ConnectionStatus());
+
+        // Displaying the frame
         showFrame();
         ensureMinimumSize();
-        setupEvents();
+
+        // Finishing the rest of the tasks
         connectToServer();
     }
 
@@ -149,7 +153,7 @@ public class Main extends AbstractFrame
             {
                 super.mouseClicked(e);
 
-                if(e.getClickCount() == 2) {
+                if (e.getClickCount() == 2) {
                     String value = list.getSelectedValue();
                     System.out.println("Selected value is " + value);
                     startNewConveration();
@@ -193,9 +197,6 @@ public class Main extends AbstractFrame
             }
         });
 
-        eventsManager.attach("connectionStatus", new ConnectionStatusListener());
-        eventsManager.attach("authenticationStatus", new AuthenticationStatusListener());
-
         addWindowListener(new SaveOnExitListener());
     }
 
@@ -210,46 +211,43 @@ public class Main extends AbstractFrame
         JLabel infoLabel = (JLabel) loginPanel.findComponent("infoLabel");
         infoLabel.setText("<html><center>Connecting, please wait...");
 
-        Thread connectionHandler = new Thread(new ConnectionHandler(eventsManager, authentication));
-        connectionHandler.start();
+        connection.connect();
     }
 
-    private class AuthenticationStatusListener implements EventListener
+    private class AuthenticationStatusListener implements AuthenticationListener
     {
         JLabel infoLabel;
         JButton loginBtn;
 
         public AuthenticationStatusListener()
         {
-            final AbstractPanel loginPanel = (AbstractPanel) findComponent("loginPanel");
+            AbstractPanel loginPanel = (AbstractPanel) findComponent("loginPanel");
 
             infoLabel = (JLabel) loginPanel.findComponent("infoLabel");
             loginBtn = (JButton) loginPanel.findComponent("loginBtn");
         }
 
         @Override
-        public <T> void handleEvent(EventObject<T> event)
+        public void authenticationPerformed(AuthenticationEvent e)
         {
-            String status = (String) event.getParameters().get("status");
-
-            if (status.equals("success")) {
-                setUser((User) event.getParameters().get("user"));
+            if(e.isAuthenticated()) {
+                setUser(new User("asdsa", "asdf"));
                 showUserList();
             } else {
                 loginBtn.setEnabled(true);
                 infoLabel.setVisible(true);
-                infoLabel.setText("<html><center>" + event.getParameters().get("message"));
+                infoLabel.setText("<html><center>" + e.getMessage());
             }
         }
     }
 
-    private class ConnectionStatusListener implements EventListener
+    private class ConnectionStatus implements ConnectionStatusListener
     {
         JLabel infoLabel;
         JButton loginBtn;
         java.util.Timer timer = new java.util.Timer();
 
-        public ConnectionStatusListener()
+        public ConnectionStatus()
         {
             final AbstractPanel loginPanel = (AbstractPanel) findComponent("loginPanel");
 
@@ -258,16 +256,13 @@ public class Main extends AbstractFrame
         }
 
         @Override
-        public <T> void handleEvent(EventObject<T> event)
+        public void statusChanged(ConnectionEvent e)
         {
-            String status = (String) event.getParameters().get("status");
-
-            if (status.equals("success")) {
+            if (e.getStatusCode() == ConnectionEvent.CONNECTION_OPENED) {
                 infoLabel.setVisible(false);
                 loginBtn.setEnabled(true);
             } else {
-                infoLabel.setText("<html><center>Connection failed");
-
+                infoLabel.setText("<html><center>" + e.getMessage());
                 timer.schedule(new TimerTask()
                 {
                     @Override
@@ -277,6 +272,12 @@ public class Main extends AbstractFrame
                     }
                 }, 3000);
             }
+        }
+
+        @Override
+        public void messageReceived(ConnectionEvent e)
+        {
+
         }
     }
 

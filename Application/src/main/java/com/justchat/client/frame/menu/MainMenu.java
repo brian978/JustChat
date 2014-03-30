@@ -1,6 +1,6 @@
 package com.justchat.client.frame.menu;
 
-import com.justchat.gui.menu.AbstractMenu;
+import com.acamar.gui.menu.AbstractMenu;
 
 import javax.swing.*;
 

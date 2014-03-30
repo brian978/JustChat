@@ -1,6 +1,7 @@
 package com.justchat.client.gui.panel;
 
-import com.justchat.gui.panel.AbstractPanel;
+
+import com.acamar.gui.panel.AbstractPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,21 +23,11 @@ public class ErrorPanel extends AbstractPanel
 
         this.message = message;
 
-        configure();
         populate();
     }
 
-    @Override
-    protected void configure()
-    {
-        super.configure();
-    }
-
-    @Override
     protected void populate()
     {
-        super.populate();
-
         GridBagConstraints c;
 
         JLabel errorMessage = new JLabel(this.message);

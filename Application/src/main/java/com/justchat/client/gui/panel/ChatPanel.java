@@ -1,10 +1,9 @@
 package com.justchat.client.gui.panel;
 
+import com.acamar.gui.panel.AbstractPanel;
+import com.acamar.websocket.Connection;
 import com.justchat.client.gui.panel.components.ChatBox;
 import com.justchat.model.user.identity.User;
-import com.justchat.client.websocket.Connection;
-import com.justchat.client.websocket.listeners.NewMessageListener;
-import com.justchat.gui.panel.AbstractPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -30,16 +29,12 @@ public class ChatPanel extends AbstractPanel
         this.connection = connection;
         this.currentUser = user;
 
-        configure();
         populate();
         setupEvents();
     }
 
-    @Override
     protected void populate()
     {
-        super.populate();
-
         GridBagConstraints c;
 
         /**
@@ -83,15 +78,7 @@ public class ChatPanel extends AbstractPanel
 
     protected void setupEvents()
     {
-        // The event will be triggered when a new message arrives
-        connection.getEndpoint().addMessageListener(new NewMessageListener()
-        {
-            @Override
-            public void onNewMessage(User user, String message)
-            {
-                chatBox.append(Color.BLUE, user, message);
-            }
-        });
+
     }
 
     private class SendListener implements KeyListener, ActionListener
@@ -111,7 +98,7 @@ public class ChatPanel extends AbstractPanel
 
             if (message.length() > 0) {
                 chatBoxPanel.append(Color.RED, currentUser, message);
-                connection.sendMessage(message);
+                connection.send(message);
             }
         }
 

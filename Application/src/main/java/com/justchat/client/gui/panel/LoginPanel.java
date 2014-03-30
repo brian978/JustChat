@@ -1,7 +1,6 @@
 package com.justchat.client.gui.panel;
 
-import com.justchat.service.AuthenticationInterface;
-import com.justchat.gui.panel.AbstractPanel;
+import com.acamar.gui.panel.AbstractPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,7 +20,6 @@ public class LoginPanel extends AbstractPanel
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        configure();
         populate();
     }
 
@@ -43,8 +41,6 @@ public class LoginPanel extends AbstractPanel
 
     protected void populate()
     {
-        super.populate();
-
         Dimension sectionSeparator = new Dimension(0, 20);
         Dimension fieldSeparator = new Dimension(0, 7);
         Insets fieldMargin = new Insets(3, 3, 3, 3);

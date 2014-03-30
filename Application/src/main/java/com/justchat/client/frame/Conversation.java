@@ -1,14 +1,13 @@
 package com.justchat.client.frame;
 
-import com.justchat.event.EventsManager;
-import com.justchat.gui.frame.AbstractFrame;
-import com.justchat.gui.menu.AbstractMenu;
+import com.acamar.gui.frame.AbstractFrame;
+import com.acamar.gui.menu.AbstractMenu;
+import com.acamar.websocket.AsyncConnection;
+import com.acamar.websocket.Connection;
 import com.justchat.client.frame.menu.ChatMenu;
 import com.justchat.client.gui.panel.ChatPanel;
 import com.justchat.client.gui.panel.ErrorPanel;
 import com.justchat.model.user.identity.User;
-import com.justchat.client.websocket.Connection;
-import com.justchat.client.websocket.factory.ConnectionFactory;
 
 import javax.swing.*;
 import javax.websocket.DeploymentException;
@@ -28,7 +27,7 @@ import java.io.IOException;
 public class Conversation extends AbstractFrame
 {
     User user;
-    Connection connection = null;
+    AsyncConnection connection = null;
     String connectionMessage = null;
 
     public Conversation()
@@ -37,12 +36,8 @@ public class Conversation extends AbstractFrame
 
         user = new User("adsad", "Current user", true);
 
-        try {
-            connection = ConnectionFactory.factory(new EventsManager());
-            connection.connect();
-        } catch (IOException | DeploymentException e) {
-            connectionMessage = e.getMessage();
-        }
+        connection = new AsyncConnection();
+        connection.connect();
 
         configureFrame();
         populateFrame();
@@ -122,7 +117,7 @@ public class Conversation extends AbstractFrame
          * -----------------------
          */
         item = menu.findItemByName("sendFileItem");
-        if(item != null) {
+        if (item != null) {
             item.addActionListener(new ActionListener()
             {
                 @Override
@@ -139,7 +134,7 @@ public class Conversation extends AbstractFrame
          * -------------------------------
          */
         item = menu.findItemByName("conversationCloseItem");
-        if(item != null) {
+        if (item != null) {
             item.addActionListener(new ActionListener()
             {
                 @Override

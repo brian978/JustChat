@@ -1,7 +1,7 @@
 package com.justchat.client.gui.panel;
 
+import com.acamar.gui.panel.AbstractPanel;
 import com.justchat.client.gui.list.UserList;
-import com.justchat.gui.panel.AbstractPanel;
 import com.justchat.model.user.identity.User;
 import com.justchat.model.user.manager.Users;
 
@@ -28,19 +28,11 @@ public class UserListPanel extends AbstractPanel
 
         this.users = users;
 
-        configure();
         populate();
-    }
-
-    protected void configure()
-    {
-        super.configure();
     }
 
     protected void populate()
     {
-        super.populate();
-
         // Creating the UserList object so we have something to display
         userList = new UserList();
 

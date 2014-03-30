@@ -1,6 +1,6 @@
 package com.justchat.model.user.identity;
 
-import com.justchat.client.websocket.Connection;
+import com.acamar.websocket.Connection;
 
 /**
  * JustChat
