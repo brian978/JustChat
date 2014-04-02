@@ -15,6 +15,8 @@ public class FacebookAuthentication extends AsyncAbstractAuthentication
     @Override
     protected void asyncAuthenticate(String identity, char[] password)
     {
+        LoginRequest loginRequest = new LoginRequest(identity, password);
+
         fireAuthenticationEvent(new AuthenticationEvent(true, 200));
     }
 }

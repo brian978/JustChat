@@ -3,6 +3,7 @@ package com.justchat.client.frame;
 import com.acamar.gui.frame.AbstractFrame;
 import com.acamar.gui.menu.AbstractMenu;
 import com.acamar.gui.panel.AbstractPanel;
+import com.acamar.service.authentication.AbstractAuthentication;
 import com.acamar.service.authentication.AuthenticationEvent;
 import com.acamar.service.authentication.AuthenticationListener;
 import com.acamar.service.provider.dummy.authentication.DummyAuthentication;
@@ -33,7 +34,7 @@ import java.util.*;
 public class Main extends AbstractFrame
 {
     MainFramePreferences preferences = new MainFramePreferences();
-    DummyAuthentication authentication = null;
+    AbstractAuthentication authentication = null;
     AsyncConnection connection = null;
 
     User user = null;
@@ -153,7 +154,7 @@ public class Main extends AbstractFrame
                 if (e.getClickCount() == 2) {
                     String value = list.getSelectedValue();
                     System.out.println("Selected value is " + value);
-                    startNewConveration();
+                    startNewConversation();
                 }
             }
         });
@@ -168,7 +169,7 @@ public class Main extends AbstractFrame
         repaint();
     }
 
-    private void startNewConveration()
+    private void startNewConversation()
     {
         new Conversation(connection);
     }
