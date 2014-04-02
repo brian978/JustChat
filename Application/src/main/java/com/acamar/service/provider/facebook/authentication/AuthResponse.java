@@ -15,18 +15,21 @@ import java.io.IOException;
  * @copyright Copyright (c) 2014
  * @license Creative Commons Attribution-ShareAlike 3.0
  */
-public class AuthResponse
+public class AuthResponse extends AuthXml
 {
-    DocumentBuilderFactory documentBuilderFactory;
-    Document response = null;
+//    public AuthResponse(String response)
+//    {
+//        try {
+//            DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+//            document = documentBuilder.parse(response);
+//        } catch (ParserConfigurationException | SAXException | IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
-    public AuthResponse(String response)
+    @Override
+    public void send()
     {
-        try {
-            DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-            this.response = documentBuilder.parse(response);
-        } catch (ParserConfigurationException | SAXException | IOException e) {
-            e.printStackTrace();
-        }
+
     }
 }

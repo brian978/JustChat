@@ -7,6 +7,7 @@ import com.acamar.service.authentication.AbstractAuthentication;
 import com.acamar.service.authentication.AuthenticationEvent;
 import com.acamar.service.authentication.AuthenticationListener;
 import com.acamar.service.provider.dummy.authentication.DummyAuthentication;
+import com.acamar.service.provider.facebook.authentication.FacebookAuthentication;
 import com.acamar.websocket.AsyncConnection;
 import com.acamar.websocket.ConnectionEvent;
 import com.acamar.websocket.ConnectionStatusListener;
@@ -44,7 +45,7 @@ public class Main extends AbstractFrame
     {
         super("JustChat");
 
-        authentication = new DummyAuthentication();
+        authentication = new FacebookAuthentication();
         connection = new AsyncConnection();
 
         // Adding the components on the frame
