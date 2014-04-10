@@ -6,6 +6,7 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 import java.io.IOException;
 
 /**
@@ -17,19 +18,32 @@ import java.io.IOException;
  */
 public class AuthResponse extends AuthXml
 {
-//    public AuthResponse(String response)
-//    {
-//        try {
-//            DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-//            document = documentBuilder.parse(response);
-//        } catch (ParserConfigurationException | SAXException | IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
-
-    @Override
-    public void send()
+    public AuthResponse()
     {
+    }
 
+    public AuthResponse(String response)
+    {
+        if(response.length() > 0) {
+            setResponse(response);
+        }
+    }
+
+    public void setResponse(String response)
+    {
+        try {
+            createDocument(response);
+        } catch (ParserConfigurationException | SAXException | IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String toString()
+    {
+        try {
+            return converToString();
+        } catch (TransformerException e) {
+            return "";
+        }
     }
 }

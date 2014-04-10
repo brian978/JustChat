@@ -264,6 +264,8 @@ public class Main extends AbstractFrame
                 infoLabel.setVisible(true);
                 loginBtn.setEnabled(false);
                 infoLabel.setText("<html><center>" + e.getMessage());
+
+                connection.connect();
             } else {
                 infoLabel.setText("<html><center>" + e.getMessage());
                 timer.schedule(new TimerTask()
