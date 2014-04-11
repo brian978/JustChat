@@ -1,11 +1,19 @@
 package com.acamar.service.provider.facebook.authentication;
 
-import com.acamar.util.ResourceResolver;
 import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilderFactory;
-import java.io.File;
-import java.net.URL;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.StringWriter;
 
 /**
  * JustChat
@@ -18,18 +26,24 @@ abstract public class AuthXml
 {
     protected DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
     protected Document document = null;
-    protected File xml = null;
 
-    public AuthXml()
+    protected void createDocument(String xml) throws ParserConfigurationException, IOException, SAXException
     {
-
+        document = documentBuilderFactory.newDocumentBuilder()
+                                         .parse(new InputSource(new ByteArrayInputStream(xml.getBytes("UTF-8"))));
     }
 
-    public void loadXml(String xmlName)
+    protected String converToString() throws TransformerException
     {
-        URL resource = ResourceResolver.getResource(AuthRequest.class, "/xml/" + xmlName + ".xml");
-        xml = new File(resource.getPath());
-    }
+        DOMSource domSource = new DOMSource(document);
+        StringWriter writer = new StringWriter();
+        StreamResult result = new StreamResult(writer);
+        TransformerFactory tf = TransformerFactory.newInstance();
 
-    abstract public void send();
+        // Trying to make the transformation
+        Transformer transformer = tf.newTransformer();
+        transformer.transform(domSource, result);
+
+        return writer.toString();
+    }
 }
