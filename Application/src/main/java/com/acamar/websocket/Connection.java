@@ -28,7 +28,11 @@ public class Connection extends Endpoint
 
     public Connection()
     {
-        this(Connection.config.get("host"), Integer.parseInt(Connection.config.get("port")));
+        this(
+                Connection.config.get("protocol", "ws"),
+                Connection.config.get("host"),
+                Integer.parseInt(Connection.config.get("port"))
+        );
     }
 
     public Connection(String host, int port)
@@ -171,7 +175,8 @@ public class Connection extends Endpoint
 
             if (!config.exists()) {
                 if (config.createNewFile()) {
-                    properties.setProperty("host", "brian.hopto.org");
+                    properties.setProperty("protocol", "ws");
+                    properties.setProperty("host", "127.0.0.1");
                     properties.setProperty("port", "7896");
                     properties.store();
                     fileCreated = true;
@@ -201,6 +206,17 @@ public class Connection extends Endpoint
         public String get(String property)
         {
             return properties.getProperty(property);
+        }
+
+        public String get(String property, String defaultValue)
+        {
+            String value = properties.getProperty(property);
+            if (value == null) {
+                properties.setProperty(property, defaultValue);
+                value = defaultValue;
+            }
+
+            return value;
         }
     }
 }
