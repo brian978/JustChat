@@ -3,11 +3,10 @@ package com.justchat.client.frame;
 import com.acamar.gui.frame.AbstractFrame;
 import com.acamar.gui.menu.AbstractMenu;
 import com.acamar.gui.panel.AbstractPanel;
-import com.acamar.service.authentication.AbstractAuthentication;
+import com.acamar.service.authentication.AsyncAbstractAuthentication;
 import com.acamar.service.authentication.AuthenticationEvent;
 import com.acamar.service.authentication.AuthenticationListener;
-import com.acamar.service.provider.dummy.authentication.DummyAuthentication;
-import com.acamar.service.provider.facebook.authentication.FacebookAuthentication;
+import com.acamar.service.provider.openfire.authentication.Authentication;
 import com.acamar.websocket.AsyncConnection;
 import com.acamar.websocket.ConnectionEvent;
 import com.acamar.websocket.ConnectionStatusListener;
@@ -35,7 +34,7 @@ import java.util.*;
 public class Main extends AbstractFrame
 {
     MainFramePreferences preferences = new MainFramePreferences();
-    AbstractAuthentication authentication = null;
+    AsyncAbstractAuthentication authentication = null;
     AsyncConnection connection = null;
 
     User user = null;
@@ -45,7 +44,7 @@ public class Main extends AbstractFrame
     {
         super("JustChat");
 
-        authentication = new FacebookAuthentication();
+        authentication = new Authentication();
         connection = new AsyncConnection();
 
         // Adding the components on the frame

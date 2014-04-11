@@ -15,7 +15,7 @@ import java.net.Socket;
  * @copyright Copyright (c) 2014
  * @license Creative Commons Attribution-ShareAlike 3.0
  */
-public class FacebookAuthentication extends AsyncAbstractAuthentication
+public class Authentication extends AsyncAbstractAuthentication
 {
     String server = "chat.facebook.com";
     int port = 5222;
@@ -25,7 +25,7 @@ public class FacebookAuthentication extends AsyncAbstractAuthentication
     AuthRequest request = new AuthRequest();
     AuthResponse response = new AuthResponse();
 
-    public FacebookAuthentication()
+    public Authentication()
     {
         try {
             connection = new Socket(server, port);

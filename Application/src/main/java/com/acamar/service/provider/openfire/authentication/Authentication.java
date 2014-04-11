@@ -1,4 +1,4 @@
-package com.acamar.service.provider.dummy.authentication;
+package com.acamar.service.provider.openfire.authentication;
 
 import com.acamar.service.authentication.AsyncAbstractAuthentication;
 import com.acamar.service.authentication.AuthenticationEvent;
@@ -10,7 +10,7 @@ import com.acamar.service.authentication.AuthenticationEvent;
  * @copyright Copyright (c) 2014
  * @license Creative Commons Attribution-ShareAlike 3.0
  */
-public class DummyAuthentication extends AsyncAbstractAuthentication
+public class Authentication extends AsyncAbstractAuthentication
 {
     @Override
     protected void asyncAuthenticate(String identity, char[] password)
