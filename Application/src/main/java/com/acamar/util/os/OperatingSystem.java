@@ -4,8 +4,6 @@ package com.acamar.util.os;
  * JustChat
  *
  * @link https://github.com/brian978/JustChat
- * @copyright Copyright (c) 2014
- * @license Creative Commons Attribution-ShareAlike 3.0
  */
 public enum OperatingSystem
 {
@@ -36,8 +34,8 @@ public enum OperatingSystem
     {
         String osName = System.getProperty("os.name").toLowerCase();
 
-        for(OperatingSystem os : OperatingSystem.values()) {
-            if(osName.contains(os.getLabel().toLowerCase())) {
+        for (OperatingSystem os : OperatingSystem.values()) {
+            if (osName.contains(os.getLabel().toLowerCase())) {
                 return os;
             }
         }

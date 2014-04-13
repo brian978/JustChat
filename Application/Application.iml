@@ -9,9 +9,27 @@
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
-    <orderEntry type="jdk" jdkName="1.7" jdkType="JavaSDK" />
+    <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Maven: org.glassfish.tyrus.bundles:tyrus-standalone-client:1.4" level="project" />
+    <orderEntry type="module-library">
+      <library name="Maven: org.jivesoftware:smack:3.4.1">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/smack.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Maven: org.jivesoftware:smackx:3.4.1">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/smackx.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>
 

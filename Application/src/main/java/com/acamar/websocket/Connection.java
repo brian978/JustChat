@@ -3,10 +3,10 @@ package com.acamar.websocket;
 import com.acamar.event.EventInterface;
 import com.acamar.event.EventManager;
 import com.acamar.event.FireEventCallback;
-import com.acamar.util.Properties;
+import com.acamar.net.ConnectionException;
+import com.acamar.net.ConnectionStatusListener;
 
 import javax.websocket.*;
-import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 
@@ -14,66 +14,42 @@ import java.net.URI;
  * JustChat
  *
  * @link https://github.com/brian978/JustChat
- * @copyright Copyright (c) 2014
- * @license Creative Commons Attribution-ShareAlike 3.0
  */
-public class Connection extends Endpoint
+public class Connection extends com.acamar.net.Connection
 {
-    protected Session session = null;
-    protected static Config config = Connection.getConfig();
+    protected Config config = getConfig("socket.properties");
 
-    protected String protocol = "wss";
-    protected String host = "";
-    protected int port = 0;
+    protected Session session = null;
+    protected Endpoint endpoint = new ConnectionEndoint();
 
     public Connection()
     {
-        this(
-                Connection.config.get("protocol", "ws"),
-                Connection.config.get("host"),
-                Integer.parseInt(Connection.config.get("port"))
-        );
+        setup(getOption("protocol", "ws"), getOption("host"), Integer.parseInt(getOption("port")));
     }
 
-    public Connection(String host, int port)
+    public void connect() throws ConnectionException
     {
-        this.host = host;
-        this.port = port;
-    }
-
-    public Connection(String protocol, String host, int port)
-    {
-        this(host, port);
-        this.protocol = protocol;
-    }
-
-    private static Config getConfig()
-    {
-        if (Connection.config == null) {
-            try {
-                Connection.config = new Config();
-            } catch (IOException e) {
-                // We will handle this using an event
-                e.printStackTrace();
-            }
+        try {
+            session = ContainerProvider.getWebSocketContainer().connectToServer(
+                    endpoint,
+                    ClientEndpointConfig.Builder.create().build(),
+                    URI.create(protocol + "://" + host + ":" + port)
+            );
+        } catch (DeploymentException | IOException e) {
+            throw new ConnectionException(e);
         }
-
-        return Connection.config;
     }
 
-    public void connect() throws IOException, DeploymentException
+    public void disconnect() throws ConnectionException
     {
-        session = ContainerProvider.getWebSocketContainer().connectToServer(
-                this,
-                ClientEndpointConfig.Builder.create().build(),
-                URI.create(protocol + "://" + host + ":" + port)
-        );
-    }
+        super.disconnect();
 
-    public void disconnect() throws IOException
-    {
         if (session != null) {
-            session.close();
+            try {
+                session.close();
+            } catch (IOException e) {
+                throw new ConnectionException(e);
+            }
         }
     }
 
@@ -84,139 +60,69 @@ public class Connection extends Endpoint
         }
     }
 
-    public Connection addConnectionStatusListener(ConnectionStatusListener listener)
-    {
-        EventManager.add(ConnectionStatusListener.class, listener);
-
-        return this;
-    }
-
-    @Override
-    public void onOpen(Session session, EndpointConfig endpointConfig)
-    {
-        System.out.println("Opened connection to server");
-
-        fireConnectionEvent("Connection OK", session, ConnectionEvent.CONNECTION_OPENED);
-    }
-
-    @OnError
-    public void onError(Session session, Throwable t)
-    {
-        t.printStackTrace();
-
-        fireConnectionEvent(t.getMessage(), session, ConnectionEvent.ERROR_OCCURED);
-    }
-
-    @OnMessage
-    public void onMessage(String message)
-    {
-        System.out.println("Received message " + message);
-    }
-
-    @OnClose
-    public void onClose(Session session, CloseReason closeReason)
-    {
-        System.out.println("Closed connection to server because " + closeReason.getReasonPhrase());
-
-        fireConnectionEvent(closeReason.getReasonPhrase(), session, ConnectionEvent.CONNECTION_CLOSED);
-
-        try {
-            Connection.config.save();
-        } catch (IOException e) {
-            // We will handle this using an event
-            e.printStackTrace();
-        }
-    }
-
     protected void fireConnectionEvent(String message, Session session, int statusCode)
     {
         EventManager.fireEvent(
                 ConnectionStatusListener.class,
-                new ConnectionEvent(message, session, statusCode),
-                new StatusChangedCallback()
+                new SocketConnectionEvent(message, session, statusCode),
+                new FireEventCallback()
+                {
+                    @Override
+                    public void fireEvent(Object listener, EventInterface e)
+                    {
+                        ((ConnectionStatusListener) listener).statusChanged((SocketConnectionEvent) e);
+                    }
+                }
         );
     }
 
     /**
-     * The callback is used when the status of the connection changes to call the appropriate method
+     * Client endpoint for the current connection
      */
-    protected class StatusChangedCallback implements FireEventCallback
+    private class ConnectionEndoint extends Endpoint
     {
         @Override
-        public void fireEvent(Object listener, EventInterface e)
+        public void onOpen(Session session, EndpointConfig endpointConfig)
         {
-            ((ConnectionStatusListener) listener).statusChanged((ConnectionEvent) e);
-        }
-    }
+            System.out.println("Opened connection to server");
 
-    /**
-     * Configuration class for the connection
-     */
-    public static class Config
-    {
-        File config = new File("socket.properties");
-        Properties properties = new Properties(config);
-
-        public Config() throws IOException
-        {
-            this(true);
+            fireConnectionEvent("Connection OK", session, SocketConnectionEvent.CONNECTION_OPENED);
         }
 
-        public Config(boolean autoload) throws IOException
+        @OnError
+        public void onError(Session session, Throwable t)
         {
-            if (!createFile() && autoload) {
-                load();
-            }
+            t.printStackTrace();
+
+            fireConnectionEvent(t.getMessage(), session, SocketConnectionEvent.ERROR_OCCURED);
         }
 
-        private boolean createFile() throws IOException
+        @OnMessage
+        public void onMessage(final String message)
         {
-            boolean fileCreated = false;
-
-            if (!config.exists()) {
-                if (config.createNewFile()) {
-                    properties.setProperty("protocol", "ws");
-                    properties.setProperty("host", "127.0.0.1");
-                    properties.setProperty("port", "7896");
-                    properties.store();
-                    fileCreated = true;
-                } else {
-                    throw new IOException("Cannot create file.");
+            EventManager.fireEvent(SocketMessageListener.class, new MessageEvent(message), new FireEventCallback()
+            {
+                @Override
+                public void fireEvent(Object listener, EventInterface e)
+                {
+                    ((SocketMessageListener) listener).processMessage(message);
                 }
+            });
+        }
+
+        @OnClose
+        public void onClose(Session session, CloseReason closeReason)
+        {
+            System.out.println("Closed connection to server because " + closeReason.getReasonPhrase());
+
+            fireConnectionEvent(closeReason.getReasonPhrase(), session, SocketConnectionEvent.CONNECTION_CLOSED);
+
+            try {
+                config.save();
+            } catch (IOException e) {
+                // We will handle this using an event
+                e.printStackTrace();
             }
-
-            return fileCreated;
-        }
-
-        public void load() throws IOException
-        {
-            properties.load();
-        }
-
-        public void save() throws IOException
-        {
-            properties.store();
-        }
-
-        public void set(String name, String property)
-        {
-            properties.setProperty(name, property);
-        }
-
-        public String get(String property)
-        {
-            return properties.getProperty(property);
-        }
-
-        public String get(String property, String defaultValue)
-        {
-            String value = properties.getProperty(property);
-            if (value == null) {
-                properties.setProperty(property, defaultValue);
-                value = defaultValue;
-            }
-
-            return value;
         }
     }
 }

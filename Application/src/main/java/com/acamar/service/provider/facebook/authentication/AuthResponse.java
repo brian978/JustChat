@@ -13,8 +13,6 @@ import java.io.IOException;
  * JustChat
  *
  * @link https://github.com/brian978/JustChat
- * @copyright Copyright (c) 2014
- * @license Creative Commons Attribution-ShareAlike 3.0
  */
 public class AuthResponse extends AuthXml
 {
@@ -24,7 +22,7 @@ public class AuthResponse extends AuthXml
 
     public AuthResponse(String response)
     {
-        if(response.length() > 0) {
+        if (response.length() > 0) {
             setResponse(response);
         }
     }

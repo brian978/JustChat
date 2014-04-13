@@ -7,8 +7,6 @@ import java.awt.*;
  * JustChat
  *
  * @link https://github.com/brian978/JustChat
- * @copyright Copyright (c) 2014
- * @license Creative Commons Attribution-ShareAlike 3.0
  */
 abstract public class AbstractFrame extends JFrame implements FrameInterface
 {
@@ -46,9 +44,9 @@ abstract public class AbstractFrame extends JFrame implements FrameInterface
         Component[] components = getContentPane().getComponents();
 
         String componentName;
-        for(Component component : components) {
+        for (Component component : components) {
             componentName = component.getName();
-            if(componentName != null && componentName.equals(name)) {
+            if (componentName != null && componentName.equals(name)) {
                 return component;
             }
         }

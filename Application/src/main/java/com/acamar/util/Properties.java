@@ -7,8 +7,6 @@ import java.nio.charset.Charset;
  * JustChat
  *
  * @link https://github.com/brian978/JustChat
- * @copyright Copyright (c) 2014
- * @license Creative Commons Attribution-ShareAlike 3.0
  */
 public class Properties extends java.util.Properties
 {
@@ -35,7 +33,7 @@ public class Properties extends java.util.Properties
 
         if (!file.exists()) {
             try {
-                if(file.createNewFile()) {
+                if (file.createNewFile()) {
                     store();
                     fileLoaded = true;
                 }

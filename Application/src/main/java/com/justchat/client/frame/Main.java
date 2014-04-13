@@ -3,13 +3,15 @@ package com.justchat.client.frame;
 import com.acamar.gui.frame.AbstractFrame;
 import com.acamar.gui.menu.AbstractMenu;
 import com.acamar.gui.panel.AbstractPanel;
+import com.acamar.net.ConnectionEvent;
+import com.acamar.net.ConnectionException;
 import com.acamar.service.authentication.AsyncAbstractAuthentication;
 import com.acamar.service.authentication.AuthenticationEvent;
 import com.acamar.service.authentication.AuthenticationListener;
 import com.acamar.service.provider.openfire.authentication.Authentication;
 import com.acamar.websocket.AsyncConnection;
-import com.acamar.websocket.ConnectionEvent;
-import com.acamar.websocket.ConnectionStatusListener;
+import com.acamar.websocket.SocketConnectionEvent;
+import com.acamar.net.ConnectionStatusListener;
 import com.justchat.client.gui.list.UserList;
 import com.justchat.client.gui.panel.UserListPanel;
 import com.justchat.client.frame.preferences.MainFramePreferences;
@@ -36,6 +38,7 @@ public class Main extends AbstractFrame
     MainFramePreferences preferences = new MainFramePreferences();
     AsyncAbstractAuthentication authentication = null;
     AsyncConnection connection = null;
+    com.acamar.xmpp.AsyncConnection xmppConnection = null;
 
     User user = null;
     Users users = new Users();
@@ -44,8 +47,9 @@ public class Main extends AbstractFrame
     {
         super("JustChat");
 
-        authentication = new Authentication();
         connection = new AsyncConnection();
+        xmppConnection = new com.acamar.xmpp.AsyncConnection();
+        authentication = new Authentication(xmppConnection.getEndpoint());
 
         // Adding the components on the frame
         configureFrame();
@@ -62,6 +66,8 @@ public class Main extends AbstractFrame
 
         // Finishing the rest of the tasks
         connectToServer();
+
+        xmppConnection.connect();
     }
 
     protected void configureFrame()
@@ -176,18 +182,20 @@ public class Main extends AbstractFrame
 
     private void setupEvents()
     {
+        // Buttons and fields events
         final AbstractPanel loginPanel = (AbstractPanel) findComponent("loginPanel");
 
         final JTextField identifier = (JTextField) loginPanel.findComponent("identifierField");
         final JPasswordField password = (JPasswordField) loginPanel.findComponent("passwordField");
         final JButton loginBtn = (JButton) loginPanel.findComponent("loginBtn");
 
-        loginBtn.addActionListener(new ActionListener()
+        password.addKeyListener(new KeyAdapter()
         {
             @Override
-            public void actionPerformed(ActionEvent e)
+            public void keyReleased(KeyEvent e)
             {
-                if (e.getActionCommand().equals("doLogin")) {
+                if (e.getKeyCode() == 10) {
+                    // Let's do some code duplication :|
                     loginBtn.setEnabled(false);
                     authentication.authenticate(identifier.getText(), password.getPassword());
                     password.setText("");
@@ -195,6 +203,21 @@ public class Main extends AbstractFrame
             }
         });
 
+        loginBtn.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                if (e.getActionCommand().equals("doLogin")) {
+                    // Let's do some code duplication :|
+                    loginBtn.setEnabled(false);
+                    authentication.authenticate(identifier.getText(), password.getPassword());
+                    password.setText("");
+                }
+            }
+        });
+
+        // Frame events
         addWindowListener(new SaveOnExitListener());
     }
 
@@ -256,10 +279,10 @@ public class Main extends AbstractFrame
         @Override
         public void statusChanged(ConnectionEvent e)
         {
-            if (e.getStatusCode() == ConnectionEvent.CONNECTION_OPENED) {
+            if (e.getStatusCode() == SocketConnectionEvent.CONNECTION_OPENED) {
                 infoLabel.setVisible(false);
                 loginBtn.setEnabled(true);
-            } else if (e.getStatusCode() == ConnectionEvent.CONNECTION_CLOSED) {
+            } else if (e.getStatusCode() == SocketConnectionEvent.CONNECTION_CLOSED) {
                 infoLabel.setVisible(true);
                 loginBtn.setEnabled(false);
                 infoLabel.setText("<html><center>" + e.getMessage());
@@ -276,12 +299,6 @@ public class Main extends AbstractFrame
                     }
                 }, 3000);
             }
-        }
-
-        @Override
-        public void messageReceived(ConnectionEvent e)
-        {
-
         }
     }
 
@@ -307,6 +324,18 @@ public class Main extends AbstractFrame
         @Override
         public void windowClosing(WindowEvent e)
         {
+            try {
+                connection.disconnect();
+            } catch (ConnectionException e1) {
+                e1.printStackTrace();
+            }
+
+            try {
+                xmppConnection.disconnect();
+            } catch (ConnectionException e1) {
+                e1.printStackTrace();
+            }
+
             Dimension size = ((AbstractFrame) e.getSource()).getSize();
             preferences.set("MainWidth", String.valueOf((int) size.getWidth()));
             preferences.set("MainHeight", String.valueOf((int) size.getHeight()));

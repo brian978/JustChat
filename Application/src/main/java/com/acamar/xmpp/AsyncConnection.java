@@ -1,5 +1,6 @@
-package com.acamar.websocket;
+package com.acamar.xmpp;
 
+import com.acamar.net.ConnectionEvent;
 import com.acamar.net.ConnectionException;
 
 /**
@@ -25,7 +26,7 @@ public class AsyncConnection extends Connection
                 try {
                     asyncConnect();
                 } catch (ConnectionException e) {
-                    fireConnectionEvent(e.getCause().getMessage(), session, SocketConnectionEvent.ERROR_OCCURED);
+                    fireConnectionEvent(e.getCause().getMessage(), ConnectionEvent.ERROR_OCCURED);
                 }
             }
         });

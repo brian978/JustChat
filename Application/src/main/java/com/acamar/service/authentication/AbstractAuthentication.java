@@ -8,8 +8,6 @@ import com.acamar.event.FireEventCallback;
  * JustChat
  *
  * @link https://github.com/brian978/JustChat
- * @copyright Copyright (c) 2014
- * @license Creative Commons Attribution-ShareAlike 3.0
  */
 public abstract class AbstractAuthentication implements AuthenticationInterface
 {

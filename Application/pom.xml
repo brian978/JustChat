@@ -12,6 +12,20 @@
             <artifactId>tyrus-standalone-client</artifactId>
             <version>1.4</version>
         </dependency>
+        <dependency>
+            <groupId>org.jivesoftware</groupId>
+            <artifactId>smack</artifactId>
+            <version>3.4.1</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/smack.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>org.jivesoftware</groupId>
+            <artifactId>smackx</artifactId>
+            <version>3.4.1</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/smackx.jar</systemPath>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -41,6 +55,31 @@
                                     <mainClass>com.justchat.client.Launcher</mainClass>
                                 </transformer>
                             </transformers>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>2.8</version>
+                <executions>
+                    <execution>
+                        <id>copy-installed</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>${project.groupId}</groupId>
+                                    <artifactId>${project.artifactId}</artifactId>
+                                    <version>${project.version}</version>
+                                    <type>${project.packaging}</type>
+                                </artifactItem>
+                            </artifactItems>
+                            <outputDirectory>./bin/</outputDirectory>
                         </configuration>
                     </execution>
                 </executions>

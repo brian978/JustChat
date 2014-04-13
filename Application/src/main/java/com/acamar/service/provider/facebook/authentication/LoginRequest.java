@@ -14,8 +14,6 @@ import java.io.IOException;
  * JustChat
  *
  * @link https://github.com/brian978/JustChat
- * @copyright Copyright (c) 2014
- * @license Creative Commons Attribution-ShareAlike 3.0
  */
 public class LoginRequest extends AuthRequest
 {

@@ -7,14 +7,12 @@ import java.util.HashMap;
  * JustChat
  *
  * @link https://github.com/brian978/JustChat
- * @copyright Copyright (c) 2014
- * @license Creative Commons Attribution-ShareAlike 3.0
  */
 public class EventManager
 {
-    private static HashMap<Object, ArrayList<Object>> listeners = new HashMap<>();
+    private static HashMap<Class, ArrayList<Object>> listeners = new HashMap<>();
 
-    public static void add(Object listenerClass, Object listener)
+    public static void add(Class listenerClass, Object listener)
     {
         ArrayList<Object> listeners = EventManager.listeners.get(listenerClass);
 
@@ -27,7 +25,15 @@ public class EventManager
         listeners.add(listener);
     }
 
-    public static ArrayList<Object> getListeners(Object listenerClass)
+    public static void remove(Class listenerClass, Object listener)
+    {
+        ArrayList<Object> listeners = EventManager.getListeners(listenerClass);
+        if (listeners != null) {
+            listeners.remove(listener);
+        }
+    }
+
+    public static ArrayList<Object> getListeners(Class listenerClass)
     {
         ArrayList<Object> listeners = EventManager.listeners.get(listenerClass);
 
@@ -35,7 +41,7 @@ public class EventManager
     }
 
 
-    public static void fireEvent(Object listenerClass, EventInterface e, FireEventCallback fireEventCallback)
+    public static void fireEvent(Class listenerClass, EventInterface e, FireEventCallback fireEventCallback)
     {
         ArrayList<Object> listeners = EventManager.getListeners(listenerClass);
         if (!listeners.isEmpty()) {

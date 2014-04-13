@@ -1,9 +1,11 @@
 package com.justchat.client.frame;
 
+import com.acamar.event.EventManager;
 import com.acamar.gui.frame.AbstractFrame;
 import com.acamar.gui.menu.AbstractMenu;
 import com.acamar.websocket.AsyncConnection;
 import com.acamar.websocket.Connection;
+import com.acamar.websocket.SocketMessageListener;
 import com.justchat.client.frame.menu.ChatMenu;
 import com.justchat.client.gui.panel.ChatPanel;
 import com.justchat.client.gui.panel.ErrorPanel;
@@ -15,6 +17,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.IOException;
 
 /**
@@ -29,6 +32,7 @@ public class Conversation extends AbstractFrame
     User user;
     Connection connection = null;
     String connectionMessage = null;
+    SocketMessageListener messageListener = new MessageListener();
 
     public Conversation(Connection connection)
     {
@@ -40,6 +44,7 @@ public class Conversation extends AbstractFrame
 
         configureFrame();
         populateFrame();
+        setupEvents();
         showFrame();
         ensureMinimumSize();
     }
@@ -97,6 +102,15 @@ public class Conversation extends AbstractFrame
         add(chatPanel, c);
     }
 
+    private void setupEvents()
+    {
+        // Message event listeners
+        EventManager.add(SocketMessageListener.class, messageListener);
+
+        // Frame events
+        addWindowListener(new CleanupWindowListener());
+    }
+
     protected void showErrorPanel()
     {
         GridBagConstraints c;
@@ -150,6 +164,63 @@ public class Conversation extends AbstractFrame
                     currentFrame.dispatchEvent(new WindowEvent(currentFrame, WindowEvent.WINDOW_CLOSING));
                 }
             });
+        }
+    }
+
+    private class CleanupWindowListener implements WindowListener
+    {
+        @Override
+        public void windowOpened(WindowEvent e)
+        {
+
+        }
+
+        @Override
+        public void windowClosing(WindowEvent e)
+        {
+            System.out.println("Cleaning up the frame");
+
+            // Removing the event listeners
+            EventManager.remove(SocketMessageListener.class, messageListener);
+        }
+
+        @Override
+        public void windowClosed(WindowEvent e)
+        {
+
+        }
+
+        @Override
+        public void windowIconified(WindowEvent e)
+        {
+
+        }
+
+        @Override
+        public void windowDeiconified(WindowEvent e)
+        {
+
+        }
+
+        @Override
+        public void windowActivated(WindowEvent e)
+        {
+
+        }
+
+        @Override
+        public void windowDeactivated(WindowEvent e)
+        {
+
+        }
+    }
+
+    private class MessageListener implements SocketMessageListener
+    {
+        @Override
+        public void processMessage(String message)
+        {
+            System.out.println("Received message: " + message);
         }
     }
 }
