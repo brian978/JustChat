@@ -16,7 +16,6 @@ import java.io.IOException;
 abstract public class Connection
 {
     protected Config config = null;
-
     protected String protocol = "";
     protected String host = "";
     protected int port = 0;
@@ -125,10 +124,6 @@ abstract public class Connection
 
             if (!config.exists()) {
                 if (config.createNewFile()) {
-                    properties.setProperty("protocol", "ws");
-                    properties.setProperty("host", "127.0.0.1");
-                    properties.setProperty("port", "7896");
-                    properties.store();
                     fileCreated = true;
                 } else {
                     throw new IOException("Cannot create file.");

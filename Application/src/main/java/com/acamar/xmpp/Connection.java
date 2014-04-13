@@ -11,11 +11,11 @@ import org.jivesoftware.smack.XMPPException;
  */
 public class Connection extends com.acamar.net.Connection
 {
-    protected Config config = getConfig("xmpp.properties");
     protected XMPPConnection endpoint = null;
 
     public Connection()
     {
+        config = getConfig("xmpp.properties");
         setup(null, getOption("host", "127.0.0.1"), Integer.parseInt(getOption("port", "5222")));
 
         endpoint = new XMPPConnection(host);

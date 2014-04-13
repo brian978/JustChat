@@ -18,7 +18,6 @@ import java.net.URI;
 public class Connection extends com.acamar.net.Connection
 {
     protected Config config = getConfig("socket.properties");
-
     protected Session session = null;
     protected Endpoint endpoint = new ConnectionEndoint();
 
