@@ -3,22 +3,22 @@ package com.justchat.client.frame;
 import com.acamar.event.EventManager;
 import com.acamar.gui.frame.AbstractFrame;
 import com.acamar.gui.menu.AbstractMenu;
-import com.acamar.websocket.AsyncConnection;
-import com.acamar.websocket.Connection;
 import com.acamar.websocket.SocketMessageListener;
+import com.acamar.xmpp.AsyncConnection;
 import com.justchat.client.frame.menu.ChatMenu;
 import com.justchat.client.gui.panel.ChatPanel;
 import com.justchat.client.gui.panel.ErrorPanel;
 import com.justchat.model.user.identity.User;
+import org.jivesoftware.smack.Chat;
+import org.jivesoftware.smack.ChatManager;
+import org.jivesoftware.smack.packet.Message;
 
 import javax.swing.*;
-import javax.websocket.DeploymentException;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.io.IOException;
 
 /**
  * JustChat
@@ -30,11 +30,11 @@ import java.io.IOException;
 public class Conversation extends AbstractFrame
 {
     User user;
-    Connection connection = null;
+    AsyncConnection connection = null;
     String connectionMessage = null;
-    SocketMessageListener messageListener = new MessageListener();
+    Chat chat = null;
 
-    public Conversation(Connection connection)
+    public Conversation(AsyncConnection connection)
     {
         super("JustChat - conversation");
 
@@ -42,6 +42,11 @@ public class Conversation extends AbstractFrame
 
         this.connection = connection;
 
+        // Creating the chat session
+        ChatManager chatmanager = connection.getEndpoint().getChatManager();
+        chat = chatmanager.createChat("asf", new MessageListener());
+
+        // Setting up the new frame
         configureFrame();
         populateFrame();
         setupEvents();
@@ -97,7 +102,7 @@ public class Conversation extends AbstractFrame
         c.fill = GridBagConstraints.BOTH;
         c.anchor = GridBagConstraints.FIRST_LINE_START;
 
-        ChatPanel chatPanel = new ChatPanel(connection, user);
+        ChatPanel chatPanel = new ChatPanel(user);
         chatPanel.setName("ChatPanel");
         add(chatPanel, c);
     }
@@ -105,7 +110,6 @@ public class Conversation extends AbstractFrame
     private void setupEvents()
     {
         // Message event listeners
-        EventManager.add(SocketMessageListener.class, messageListener);
 
         // Frame events
         addWindowListener(new CleanupWindowListener());
@@ -167,6 +171,11 @@ public class Conversation extends AbstractFrame
         }
     }
 
+    public Chat getChat()
+    {
+        return chat;
+    }
+
     private class CleanupWindowListener implements WindowListener
     {
         @Override
@@ -179,9 +188,6 @@ public class Conversation extends AbstractFrame
         public void windowClosing(WindowEvent e)
         {
             System.out.println("Cleaning up the frame");
-
-            // Removing the event listeners
-            EventManager.remove(SocketMessageListener.class, messageListener);
         }
 
         @Override
@@ -215,12 +221,12 @@ public class Conversation extends AbstractFrame
         }
     }
 
-    private class MessageListener implements SocketMessageListener
+    private class MessageListener implements org.jivesoftware.smack.MessageListener
     {
         @Override
-        public void processMessage(String message)
+        public void processMessage(Chat chat, Message message)
         {
-            System.out.println("Received message: " + message);
+            System.out.println("Received message " + message.getBody() + " from " + message.getFrom());
         }
     }
 }

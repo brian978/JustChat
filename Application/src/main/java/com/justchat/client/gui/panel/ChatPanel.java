@@ -2,8 +2,10 @@ package com.justchat.client.gui.panel;
 
 import com.acamar.gui.panel.AbstractPanel;
 import com.acamar.websocket.Connection;
+import com.justchat.client.frame.Conversation;
 import com.justchat.client.gui.panel.components.ChatBox;
 import com.justchat.model.user.identity.User;
+import org.jivesoftware.smack.XMPPException;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,15 +20,13 @@ import java.awt.event.*;
  */
 public class ChatPanel extends AbstractPanel
 {
-    Connection connection;
     ChatBox chatBox;
     User currentUser;
 
-    public ChatPanel(Connection connection, User user)
+    public ChatPanel(User user)
     {
         super();
 
-        this.connection = connection;
         this.currentUser = user;
 
         populate();
@@ -64,7 +64,7 @@ public class ChatPanel extends AbstractPanel
         messageBox.setName("MessageBox");
         messageBox.setPreferredSize(new Dimension(300, 30));
         messageBox.setMaximumSize(messageBox.getPreferredSize());
-        messageBox.addKeyListener(new SendListener(chatBox));
+        messageBox.addKeyListener(new SendListener(this, chatBox));
 
         c = new GridBagConstraints();
         c.gridx = 0;
@@ -84,9 +84,11 @@ public class ChatPanel extends AbstractPanel
     private class SendListener implements KeyListener, ActionListener
     {
         private ChatBox chatBoxPanel;
+        private ChatPanel panel;
 
-        public SendListener(ChatBox chatBox)
+        public SendListener(ChatPanel chatPanel, ChatBox chatBox)
         {
+            panel = chatPanel;
             chatBoxPanel = chatBox;
         }
 
@@ -98,7 +100,12 @@ public class ChatPanel extends AbstractPanel
 
             if (message.length() > 0) {
                 chatBoxPanel.append(Color.RED, currentUser, message);
-                connection.send(message);
+
+                try {
+                    ((Conversation) SwingUtilities.getWindowAncestor(panel)).getChat().sendMessage(message);
+                } catch (XMPPException e1) {
+                    e1.printStackTrace();
+                }
             }
         }
 

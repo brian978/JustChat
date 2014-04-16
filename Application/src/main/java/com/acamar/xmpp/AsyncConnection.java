@@ -1,5 +1,6 @@
 package com.acamar.xmpp;
 
+import com.acamar.net.AsyncConnectionInterface;
 import com.acamar.net.ConnectionEvent;
 import com.acamar.net.ConnectionException;
 
@@ -8,7 +9,7 @@ import com.acamar.net.ConnectionException;
  *
  * @link https://github.com/brian978/JustChat
  */
-public class AsyncConnection extends Connection
+public class AsyncConnection extends Connection implements AsyncConnectionInterface
 {
     public AsyncConnection()
     {
@@ -34,7 +35,7 @@ public class AsyncConnection extends Connection
         thread.start();
     }
 
-    private void asyncConnect() throws ConnectionException
+    public void asyncConnect() throws ConnectionException
     {
         super.connect();
     }

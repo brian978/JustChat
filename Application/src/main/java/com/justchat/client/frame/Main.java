@@ -9,9 +9,9 @@ import com.acamar.service.authentication.AsyncAbstractAuthentication;
 import com.acamar.service.authentication.AuthenticationEvent;
 import com.acamar.service.authentication.AuthenticationListener;
 import com.acamar.service.provider.openfire.authentication.Authentication;
-import com.acamar.websocket.AsyncConnection;
 import com.acamar.websocket.SocketConnectionEvent;
 import com.acamar.net.ConnectionStatusListener;
+import com.acamar.xmpp.AsyncConnection;
 import com.justchat.client.gui.list.UserList;
 import com.justchat.client.gui.panel.UserListPanel;
 import com.justchat.client.frame.preferences.MainFramePreferences;
@@ -37,8 +37,7 @@ public class Main extends AbstractFrame
 {
     MainFramePreferences preferences = new MainFramePreferences();
     AsyncAbstractAuthentication authentication = null;
-    AsyncConnection connection = null;
-    com.acamar.xmpp.AsyncConnection xmppConnection = null;
+    AsyncConnection xmppConnection = null;
 
     User user = null;
     Users users = new Users();
@@ -47,8 +46,7 @@ public class Main extends AbstractFrame
     {
         super("JustChat");
 
-        connection = new AsyncConnection();
-        xmppConnection = new com.acamar.xmpp.AsyncConnection();
+        xmppConnection = new AsyncConnection();
         authentication = new Authentication(xmppConnection.getEndpoint());
 
         // Adding the components on the frame
@@ -58,7 +56,7 @@ public class Main extends AbstractFrame
 
         // Adding the listeners to our objects
         authentication.addAuthenticationListener(new AuthenticationStatusListener());
-        connection.addConnectionStatusListener(new ConnectionStatus());
+        xmppConnection.addConnectionStatusListener(new ConnectionStatus());
 
         // Displaying the frame
         showFrame();
@@ -66,8 +64,6 @@ public class Main extends AbstractFrame
 
         // Finishing the rest of the tasks
         connectToServer();
-
-        xmppConnection.connect();
     }
 
     protected void configureFrame()
@@ -177,7 +173,7 @@ public class Main extends AbstractFrame
 
     private void startNewConversation()
     {
-        new Conversation(connection);
+        new Conversation(xmppConnection);
     }
 
     private void setupEvents()
@@ -232,7 +228,7 @@ public class Main extends AbstractFrame
         JLabel infoLabel = (JLabel) loginPanel.findComponent("infoLabel");
         infoLabel.setText("<html><center>Connecting, please wait...");
 
-        connection.connect();
+        xmppConnection.connect();
     }
 
     private class AuthenticationStatusListener implements AuthenticationListener
@@ -287,7 +283,7 @@ public class Main extends AbstractFrame
                 loginBtn.setEnabled(false);
                 infoLabel.setText("<html><center>" + e.getMessage());
 
-                connection.connect();
+                connectToServer();
             } else {
                 infoLabel.setText("<html><center>" + e.getMessage());
                 timer.schedule(new TimerTask()
@@ -324,12 +320,6 @@ public class Main extends AbstractFrame
         @Override
         public void windowClosing(WindowEvent e)
         {
-            try {
-                connection.disconnect();
-            } catch (ConnectionException e1) {
-                e1.printStackTrace();
-            }
-
             try {
                 xmppConnection.disconnect();
             } catch (ConnectionException e1) {

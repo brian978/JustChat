@@ -13,7 +13,7 @@ import java.io.IOException;
  *
  * @link https://github.com/brian978/JustChat
  */
-abstract public class Connection
+abstract public class Connection implements ConnectionInterface
 {
     protected Config config = null;
     protected String protocol = "";

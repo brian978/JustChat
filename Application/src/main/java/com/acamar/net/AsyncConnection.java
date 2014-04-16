@@ -12,5 +12,22 @@ abstract public class AsyncConnection extends Connection implements AsyncConnect
         super(protocol, host, port);
     }
 
-    abstract public void asyncConnect();
+    @Override
+    public void connect() throws ConnectionException
+    {
+        Thread thread = new Thread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                try {
+                    asyncConnect();
+                } catch (ConnectionException e) {
+                    fireConnectionEvent(e.getCause().getMessage(), ConnectionEvent.ERROR_OCCURED);
+                }
+            }
+        });
+
+        thread.start();
+    }
 }

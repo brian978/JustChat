@@ -7,7 +7,7 @@ package com.acamar.net;
  * @copyright Copyright (c) 2014
  * @license Creative Commons Attribution-ShareAlike 3.0
  */
-public interface AsyncConnectionInterface
+public interface AsyncConnectionInterface extends ConnectionInterface
 {
-    public void asyncConnect();
+    public void asyncConnect() throws ConnectionException;
 }
