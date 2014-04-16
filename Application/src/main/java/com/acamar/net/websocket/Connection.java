@@ -1,8 +1,10 @@
-package com.acamar.websocket;
+package com.acamar.net.websocket;
 
 import com.acamar.event.EventInterface;
 import com.acamar.event.EventManager;
 import com.acamar.event.FireEventCallback;
+import com.acamar.net.AsyncConnection;
+import com.acamar.net.ConnectionEvent;
 import com.acamar.net.ConnectionException;
 import com.acamar.net.ConnectionStatusListener;
 
@@ -15,7 +17,7 @@ import java.net.URI;
  *
  * @link https://github.com/brian978/JustChat
  */
-public class Connection extends com.acamar.net.Connection
+public class Connection extends AsyncConnection
 {
     protected Config config = getConfig("socket.properties");
     protected Session session = null;
@@ -26,7 +28,7 @@ public class Connection extends com.acamar.net.Connection
         setup(getOption("protocol", "ws"), getOption("host"), Integer.parseInt(getOption("port")));
     }
 
-    public void connect() throws ConnectionException
+    public void connect()
     {
         try {
             session = ContainerProvider.getWebSocketContainer().connectToServer(
@@ -35,7 +37,7 @@ public class Connection extends com.acamar.net.Connection
                     URI.create(protocol + "://" + host + ":" + port)
             );
         } catch (DeploymentException | IOException e) {
-            throw new ConnectionException(e);
+            fireConnectionEvent(e.getCause().getMessage(), ConnectionEvent.ERROR_OCCURED);
         }
     }
 

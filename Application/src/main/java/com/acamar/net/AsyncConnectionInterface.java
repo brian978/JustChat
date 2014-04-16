@@ -3,11 +3,11 @@ package com.acamar.net;
 /**
  * JustChat
  *
+ * @version 1.0
  * @link https://github.com/brian978/JustChat
- * @copyright Copyright (c) 2014
- * @license Creative Commons Attribution-ShareAlike 3.0
+ * @since 2014-04-16
  */
 public interface AsyncConnectionInterface extends ConnectionInterface
 {
-    public void asyncConnect() throws ConnectionException;
+    public void connectAsync() throws ConnectionException;
 }

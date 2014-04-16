@@ -1,9 +1,8 @@
-package com.acamar.service.provider.openfire.authentication;
+package com.acamar.authentication.xmpp;
 
-import com.acamar.service.authentication.AsyncAbstractAuthentication;
-import com.acamar.service.authentication.AuthenticationEvent;
+import com.acamar.authentication.AbstractAsyncAuthentication;
+import com.acamar.authentication.AuthenticationEvent;
 import org.jivesoftware.smack.*;
-import org.jivesoftware.smack.packet.Message;
 
 import java.util.Arrays;
 
@@ -12,7 +11,7 @@ import java.util.Arrays;
  *
  * @link https://github.com/brian978/JustChat
  */
-public class Authentication extends AsyncAbstractAuthentication
+public class Authentication extends AbstractAsyncAuthentication
 {
     XMPPConnection connection = null;
 
@@ -22,7 +21,7 @@ public class Authentication extends AsyncAbstractAuthentication
     }
 
     @Override
-    protected void asyncAuthenticate(String identity, char[] password)
+    public void authenticate(String identity, char[] password)
     {
         boolean success = false;
         String message = "Incorrect login";

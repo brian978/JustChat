@@ -1,4 +1,4 @@
-package com.acamar.service.authentication;
+package com.acamar.authentication;
 
 /**
  * JustChat

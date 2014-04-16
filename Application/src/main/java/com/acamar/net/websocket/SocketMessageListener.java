@@ -1,4 +1,4 @@
-package com.acamar.websocket;
+package com.acamar.net.websocket;
 
 /**
  * JustChat

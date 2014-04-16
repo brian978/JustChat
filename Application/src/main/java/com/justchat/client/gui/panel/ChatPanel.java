@@ -1,7 +1,6 @@
 package com.justchat.client.gui.panel;
 
 import com.acamar.gui.panel.AbstractPanel;
-import com.acamar.websocket.Connection;
 import com.justchat.client.frame.Conversation;
 import com.justchat.client.gui.panel.components.ChatBox;
 import com.justchat.model.user.identity.User;
@@ -14,9 +13,9 @@ import java.awt.event.*;
 /**
  * JustChat
  *
+ * @version 1.0
  * @link https://github.com/brian978/JustChat
- * @copyright Copyright (c) 2014
- * @license Creative Commons Attribution-ShareAlike 3.0
+ * @since 2014-04-16
  */
 public class ChatPanel extends AbstractPanel
 {

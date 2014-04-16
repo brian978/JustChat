@@ -1,29 +1,17 @@
 package com.justchat.model.user.identity;
 
-import com.acamar.websocket.Connection;
-
 /**
  * JustChat
  *
+ * @version 1.0
  * @link https://github.com/brian978/JustChat
- * @copyright Copyright (c) 2014
- * @license Creative Commons Attribution-ShareAlike 3.0
+ * @since 2014-04-16
  */
 public class User
 {
     private String id = "";
     private String username = "";
     private boolean isCurrent = false;
-    private Token token = null;
-    private Connection connection = null;
-
-    public User(String id, String username, Token token, Connection connection)
-    {
-        this.id = id;
-        this.username = username;
-        this.token = token;
-        this.connection = connection;
-    }
 
     public User(String id, String username, boolean isCurrent)
     {
@@ -35,13 +23,6 @@ public class User
     public User(String id, String username)
     {
         this(id, username, false);
-    }
-
-    public User setConnection(Connection connection)
-    {
-        this.connection = connection;
-
-        return this;
     }
 
     public String getId()
@@ -57,15 +38,5 @@ public class User
     public boolean isCurrent()
     {
         return isCurrent;
-    }
-
-    public Token getToken()
-    {
-        return token;
-    }
-
-    public Connection getConnection()
-    {
-        return connection;
     }
 }

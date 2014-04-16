@@ -1,6 +1,4 @@
-package com.acamar.websocket;
-
-import com.acamar.event.AbstractEvent;
+package com.acamar.net.websocket;
 
 import javax.websocket.Session;
 

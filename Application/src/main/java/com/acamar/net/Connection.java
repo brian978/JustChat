@@ -36,8 +36,6 @@ abstract public class Connection implements ConnectionInterface
         this.port = port;
     }
 
-    abstract public void connect() throws ConnectionException;
-
     public void disconnect() throws ConnectionException
     {
         try {

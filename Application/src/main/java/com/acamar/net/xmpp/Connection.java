@@ -1,6 +1,9 @@
-package com.acamar.xmpp;
+package com.acamar.net.xmpp;
 
+import com.acamar.net.AsyncConnection;
+import com.acamar.net.ConnectionEvent;
 import com.acamar.net.ConnectionException;
+import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 
@@ -9,7 +12,7 @@ import org.jivesoftware.smack.XMPPException;
  *
  * @link https://github.com/brian978/JustChat
  */
-public class Connection extends com.acamar.net.Connection
+public class Connection extends AsyncConnection
 {
     protected XMPPConnection endpoint = null;
 
@@ -18,16 +21,19 @@ public class Connection extends com.acamar.net.Connection
         config = getConfig("xmpp.properties");
         setup(null, getOption("host", "127.0.0.1"), Integer.parseInt(getOption("port", "5222")));
 
-        endpoint = new XMPPConnection(host);
+        ConnectionConfiguration connectionConfiguration = new ConnectionConfiguration(host, port);
+
+        endpoint = new XMPPConnection(connectionConfiguration);
     }
 
     @Override
-    public void connect() throws ConnectionException
+    public void connect()
     {
         try {
             endpoint.connect();
+            fireConnectionEvent("", ConnectionEvent.CONNECTION_OPENED);
         } catch (XMPPException e) {
-            throw new ConnectionException(e);
+            fireConnectionEvent(e.getMessage(), ConnectionEvent.ERROR_OCCURED);
         }
     }
 

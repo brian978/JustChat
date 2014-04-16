@@ -1,4 +1,4 @@
-package com.acamar.service.authentication;
+package com.acamar.authentication;
 
 import com.acamar.event.EventInterface;
 import com.acamar.event.EventManager;
@@ -11,7 +11,6 @@ import com.acamar.event.FireEventCallback;
  */
 public abstract class AbstractAuthentication implements AuthenticationInterface
 {
-    @Override
     public AuthenticationInterface addAuthenticationListener(AuthenticationListener listener)
     {
         EventManager.add(AuthenticationListener.class, listener);

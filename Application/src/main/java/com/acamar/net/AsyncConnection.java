@@ -7,13 +7,17 @@ package com.acamar.net;
  */
 abstract public class AsyncConnection extends Connection implements AsyncConnectionInterface
 {
+    protected AsyncConnection()
+    {
+    }
+
     public AsyncConnection(String protocol, String host, int port)
     {
         super(protocol, host, port);
     }
 
     @Override
-    public void connect() throws ConnectionException
+    public void connectAsync()
     {
         Thread thread = new Thread(new Runnable()
         {
@@ -21,7 +25,7 @@ abstract public class AsyncConnection extends Connection implements AsyncConnect
             public void run()
             {
                 try {
-                    asyncConnect();
+                    connect();
                 } catch (ConnectionException e) {
                     fireConnectionEvent(e.getCause().getMessage(), ConnectionEvent.ERROR_OCCURED);
                 }

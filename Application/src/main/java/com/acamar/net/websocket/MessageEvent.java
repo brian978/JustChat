@@ -1,4 +1,4 @@
-package com.acamar.websocket;
+package com.acamar.net.websocket;
 
 import com.acamar.event.AbstractEvent;
 

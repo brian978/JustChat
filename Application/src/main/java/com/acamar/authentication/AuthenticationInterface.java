@@ -1,4 +1,4 @@
-package com.acamar.service.authentication;
+package com.acamar.authentication;
 
 /**
  * JustChat
@@ -8,6 +8,4 @@ package com.acamar.service.authentication;
 public interface AuthenticationInterface
 {
     public void authenticate(String identity, char[] password);
-
-    public AuthenticationInterface addAuthenticationListener(AuthenticationListener listener);
 }

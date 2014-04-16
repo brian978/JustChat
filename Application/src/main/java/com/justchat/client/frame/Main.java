@@ -5,13 +5,12 @@ import com.acamar.gui.menu.AbstractMenu;
 import com.acamar.gui.panel.AbstractPanel;
 import com.acamar.net.ConnectionEvent;
 import com.acamar.net.ConnectionException;
-import com.acamar.service.authentication.AsyncAbstractAuthentication;
-import com.acamar.service.authentication.AuthenticationEvent;
-import com.acamar.service.authentication.AuthenticationListener;
-import com.acamar.service.provider.openfire.authentication.Authentication;
-import com.acamar.websocket.SocketConnectionEvent;
+import com.acamar.authentication.AbstractAsyncAuthentication;
+import com.acamar.authentication.AuthenticationEvent;
+import com.acamar.authentication.AuthenticationListener;
+import com.acamar.authentication.xmpp.Authentication;
 import com.acamar.net.ConnectionStatusListener;
-import com.acamar.xmpp.AsyncConnection;
+import com.acamar.net.xmpp.Connection;
 import com.justchat.client.gui.list.UserList;
 import com.justchat.client.gui.panel.UserListPanel;
 import com.justchat.client.frame.preferences.MainFramePreferences;
@@ -29,15 +28,15 @@ import java.util.*;
 /**
  * JustChat
  *
+ * @version 1.0
  * @link https://github.com/brian978/JustChat
- * @copyright Copyright (c) 2014
- * @license Creative Commons Attribution-ShareAlike 3.0
+ * @since 2014-04-16
  */
 public class Main extends AbstractFrame
 {
     MainFramePreferences preferences = new MainFramePreferences();
-    AsyncAbstractAuthentication authentication = null;
-    AsyncConnection xmppConnection = null;
+    AbstractAsyncAuthentication authentication = null;
+    Connection xmppConnection = null;
 
     User user = null;
     Users users = new Users();
@@ -46,7 +45,7 @@ public class Main extends AbstractFrame
     {
         super("JustChat");
 
-        xmppConnection = new AsyncConnection();
+        xmppConnection = new Connection();
         authentication = new Authentication(xmppConnection.getEndpoint());
 
         // Adding the components on the frame
@@ -185,36 +184,39 @@ public class Main extends AbstractFrame
         final JPasswordField password = (JPasswordField) loginPanel.findComponent("passwordField");
         final JButton loginBtn = (JButton) loginPanel.findComponent("loginBtn");
 
+        // Password field key actions
         password.addKeyListener(new KeyAdapter()
         {
             @Override
             public void keyReleased(KeyEvent e)
             {
                 if (e.getKeyCode() == 10) {
-                    // Let's do some code duplication :|
-                    loginBtn.setEnabled(false);
-                    authentication.authenticate(identifier.getText(), password.getPassword());
-                    password.setText("");
+                    handleAuthenticateAction(loginBtn, identifier, password);
                 }
             }
         });
 
+        // Login btn action
         loginBtn.addActionListener(new ActionListener()
         {
             @Override
             public void actionPerformed(ActionEvent e)
             {
                 if (e.getActionCommand().equals("doLogin")) {
-                    // Let's do some code duplication :|
-                    loginBtn.setEnabled(false);
-                    authentication.authenticate(identifier.getText(), password.getPassword());
-                    password.setText("");
+                    handleAuthenticateAction(loginBtn, identifier, password);
                 }
             }
         });
 
         // Frame events
         addWindowListener(new SaveOnExitListener());
+    }
+
+    private void handleAuthenticateAction(JButton loginBtn, JTextField indentityField, JPasswordField passwordField)
+    {
+        loginBtn.setEnabled(false);
+        authentication.authenticate(indentityField.getText(), passwordField.getPassword());
+        passwordField.setText("");
     }
 
     private void setUser(User user)
@@ -228,7 +230,7 @@ public class Main extends AbstractFrame
         JLabel infoLabel = (JLabel) loginPanel.findComponent("infoLabel");
         infoLabel.setText("<html><center>Connecting, please wait...");
 
-        xmppConnection.connect();
+        xmppConnection.connectAsync();
     }
 
     private class AuthenticationStatusListener implements AuthenticationListener
@@ -275,16 +277,17 @@ public class Main extends AbstractFrame
         @Override
         public void statusChanged(ConnectionEvent e)
         {
-            if (e.getStatusCode() == SocketConnectionEvent.CONNECTION_OPENED) {
+            if (e.getStatusCode() == ConnectionEvent.CONNECTION_OPENED) {
                 infoLabel.setVisible(false);
                 loginBtn.setEnabled(true);
-            } else if (e.getStatusCode() == SocketConnectionEvent.CONNECTION_CLOSED) {
+            } else if (e.getStatusCode() == ConnectionEvent.CONNECTION_CLOSED) {
                 infoLabel.setVisible(true);
                 loginBtn.setEnabled(false);
                 infoLabel.setText("<html><center>" + e.getMessage());
 
                 connectToServer();
             } else {
+                infoLabel.setVisible(true);
                 infoLabel.setText("<html><center>" + e.getMessage());
                 timer.schedule(new TimerTask()
                 {
@@ -298,24 +301,13 @@ public class Main extends AbstractFrame
         }
     }
 
-    private class SaveOnExitListener implements WindowListener
+    private class SaveOnExitListener extends WindowAdapter
     {
-        /**
-         * Invoked the first time a window is made visible.
-         *
-         * @param e
-         */
-        @Override
-        public void windowOpened(WindowEvent e)
-        {
-
-        }
-
         /**
          * Invoked when the user attempts to close the window
          * from the window's system menu.
          *
-         * @param e
+         * @param e WindowEvent object used to determine properties of the window
          */
         @Override
         public void windowClosing(WindowEvent e)
@@ -335,77 +327,6 @@ public class Main extends AbstractFrame
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
-        }
-
-        /**
-         * Invoked when a window has been closed as the result
-         * of calling dispose on the window.
-         *
-         * @param e
-         */
-        @Override
-        public void windowClosed(WindowEvent e)
-        {
-
-        }
-
-        /**
-         * Invoked when a window is changed from a normal to a
-         * minimized state. For many platforms, a minimized window
-         * is displayed as the icon specified in the window's
-         * iconImage property.
-         *
-         * @param e
-         * @see java.awt.Frame#setIconImage
-         */
-        @Override
-        public void windowIconified(WindowEvent e)
-        {
-
-        }
-
-        /**
-         * Invoked when a window is changed from a minimized
-         * to a normal state.
-         *
-         * @param e
-         */
-        @Override
-        public void windowDeiconified(WindowEvent e)
-        {
-
-        }
-
-        /**
-         * Invoked when the Window is set to be the active Window. Only a Frame or
-         * a Dialog can be the active Window. The native windowing system may
-         * denote the active Window or its children with special decorations, such
-         * as a highlighted title bar. The active Window is always either the
-         * focused Window, or the first Frame or Dialog that is an owner of the
-         * focused Window.
-         *
-         * @param e
-         */
-        @Override
-        public void windowActivated(WindowEvent e)
-        {
-
-        }
-
-        /**
-         * Invoked when a Window is no longer the active Window. Only a Frame or a
-         * Dialog can be the active Window. The native windowing system may denote
-         * the active Window or its children with special decorations, such as a
-         * highlighted title bar. The active Window is always either the focused
-         * Window, or the first Frame or Dialog that is an owner of the focused
-         * Window.
-         *
-         * @param e
-         */
-        @Override
-        public void windowDeactivated(WindowEvent e)
-        {
-
         }
     }
 }

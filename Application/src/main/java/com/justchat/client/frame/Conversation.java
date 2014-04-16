@@ -1,10 +1,8 @@
 package com.justchat.client.frame;
 
-import com.acamar.event.EventManager;
 import com.acamar.gui.frame.AbstractFrame;
 import com.acamar.gui.menu.AbstractMenu;
-import com.acamar.websocket.SocketMessageListener;
-import com.acamar.xmpp.AsyncConnection;
+import com.acamar.net.xmpp.Connection;
 import com.justchat.client.frame.menu.ChatMenu;
 import com.justchat.client.gui.panel.ChatPanel;
 import com.justchat.client.gui.panel.ErrorPanel;
@@ -23,18 +21,18 @@ import java.awt.event.WindowListener;
 /**
  * JustChat
  *
+ * @version 1.0
  * @link https://github.com/brian978/JustChat
- * @copyright Copyright (c) 2014
- * @license Creative Commons Attribution-ShareAlike 3.0
+ * @since 2014-04-16
  */
 public class Conversation extends AbstractFrame
 {
     User user;
-    AsyncConnection connection = null;
+    Connection connection = null;
     String connectionMessage = null;
     Chat chat = null;
 
-    public Conversation(AsyncConnection connection)
+    public Conversation(Connection connection)
     {
         super("JustChat - conversation");
 
