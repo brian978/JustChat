@@ -3,7 +3,6 @@ package com.justchat.client.gui.panel;
 import com.acamar.gui.panel.AbstractPanel;
 import com.justchat.client.frame.Conversation;
 import com.justchat.client.gui.panel.components.ChatBox;
-import com.justchat.model.user.identity.User;
 import org.jivesoftware.smack.XMPPException;
 
 import javax.swing.*;
@@ -20,13 +19,10 @@ import java.awt.event.*;
 public class ChatPanel extends AbstractPanel
 {
     ChatBox chatBox;
-    User currentUser;
 
-    public ChatPanel(User user)
+    public ChatPanel()
     {
         super();
-
-        this.currentUser = user;
 
         populate();
         setupEvents();
@@ -98,7 +94,7 @@ public class ChatPanel extends AbstractPanel
             field.setText("");
 
             if (message.length() > 0) {
-                chatBoxPanel.append(Color.RED, currentUser, message);
+                chatBoxPanel.append(Color.RED, null, message);
 
                 try {
                     ((Conversation) SwingUtilities.getWindowAncestor(panel)).getChat().sendMessage(message);

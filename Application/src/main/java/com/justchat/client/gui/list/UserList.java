@@ -1,7 +1,7 @@
 package com.justchat.client.gui.list;
 
-import com.justchat.model.user.identity.User;
-import com.justchat.model.user.manager.observer.UsersActionsObserver;
+import com.acamar.users.User;
+import com.acamar.users.UserListListener;
 
 import javax.swing.*;
 
@@ -12,7 +12,7 @@ import javax.swing.*;
  * @copyright Copyright (c) 2014
  * @license Creative Commons Attribution-ShareAlike 3.0
  */
-public class UserList extends JList<String> implements UsersActionsObserver
+public class UserList extends JList<String> implements UserListListener
 {
     public UserList()
     {
@@ -25,12 +25,12 @@ public class UserList extends JList<String> implements UsersActionsObserver
     @Override
     public void addedUser(User user)
     {
-        ((DefaultListModel<String>) getModel()).addElement(user.getUsername());
+        ((DefaultListModel<String>) getModel()).addElement(user.getName());
     }
 
     @Override
-    public void removeduser(User user)
+    public void removedUser(User user)
     {
-        ((DefaultListModel<String>) getModel()).removeElement(user.getUsername());
+        ((DefaultListModel<String>) getModel()).removeElement(user.getName());
     }
 }

@@ -9,4 +9,7 @@ package com.acamar.users;
  */
 public interface UserListListener
 {
+    public void addedUser(User user);
+
+    public void removedUser(User user);
 }

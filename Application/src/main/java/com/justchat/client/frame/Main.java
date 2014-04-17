@@ -14,10 +14,8 @@ import com.acamar.net.xmpp.Connection;
 import com.justchat.client.gui.list.UserList;
 import com.justchat.client.gui.panel.UserListPanel;
 import com.justchat.client.frame.preferences.MainFramePreferences;
-import com.justchat.model.user.identity.User;
 import com.justchat.client.frame.menu.MainMenu;
 import com.justchat.client.gui.panel.LoginPanel;
-import com.justchat.model.user.manager.Users;
 
 import javax.swing.*;
 import java.awt.*;
@@ -37,9 +35,6 @@ public class Main extends AbstractFrame
     MainFramePreferences preferences = new MainFramePreferences();
     AbstractAsyncAuthentication authentication = null;
     Connection xmppConnection = null;
-
-    User user = null;
-    Users users = new Users();
 
     public Main()
     {
@@ -133,7 +128,7 @@ public class Main extends AbstractFrame
         }
 
         // Adding the UserList in place of the login panel
-        UserListPanel userListPanel = new UserListPanel(users);
+        UserListPanel userListPanel = new UserListPanel();
         userListPanel.setName("userListPanel");
 
         add(userListPanel);
@@ -219,11 +214,6 @@ public class Main extends AbstractFrame
         passwordField.setText("");
     }
 
-    private void setUser(User user)
-    {
-        this.user = user;
-    }
-
     private void connectToServer()
     {
         AbstractPanel loginPanel = (AbstractPanel) findComponent("loginPanel");
@@ -250,7 +240,6 @@ public class Main extends AbstractFrame
         public void authenticationPerformed(AuthenticationEvent e)
         {
             if (e.isAuthenticated()) {
-                setUser(new User("asdsa", "asdf"));
                 showUserList();
             } else {
                 loginBtn.setEnabled(true);

@@ -2,8 +2,6 @@ package com.justchat.client.gui.panel;
 
 import com.acamar.gui.panel.AbstractPanel;
 import com.justchat.client.gui.list.UserList;
-import com.justchat.model.user.identity.User;
-import com.justchat.model.user.manager.Users;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,15 +16,12 @@ import java.awt.*;
 public class UserListPanel extends AbstractPanel
 {
     UserList userList;
-    Users users;
 
-    public UserListPanel(Users users)
+    public UserListPanel()
     {
         super();
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         setPreferredSize(new Dimension(300, 500));
-
-        this.users = users;
 
         populate();
     }
@@ -41,16 +36,6 @@ public class UserListPanel extends AbstractPanel
 
         // Adding the UserList to the panel
         add(userListScroller);
-
-        // Setting up some dependencies
-        users.addObserver(userList);
-
-        // Adding some dummy users
-        User usr;
-        for (int i = 0; i < 50; i++) {
-            usr = new User(Integer.toString(i), Double.toString(Math.random()) + "--" + Integer.toString(i));
-            users.add(usr);
-        }
     }
 
     public UserList getUserList()

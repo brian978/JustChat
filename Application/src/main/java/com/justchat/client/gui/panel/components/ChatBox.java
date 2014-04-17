@@ -1,6 +1,6 @@
 package com.justchat.client.gui.panel.components;
 
-import com.justchat.model.user.identity.User;
+import com.acamar.users.User;
 
 import javax.swing.*;
 import javax.swing.text.*;
@@ -40,7 +40,7 @@ public class ChatBox extends JTextPane
             // Inserting the sender
             attributeSet = styleContext.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Foreground, color);
             attributeSet = styleContext.addAttribute(attributeSet, StyleConstants.Bold, true);
-            doc.insertString(doc.getLength(), from.getUsername() + ": ", attributeSet);
+            doc.insertString(doc.getLength(), from.getName() + ": ", attributeSet);
 
             // Inserting the message
             styleContext = StyleContext.getDefaultStyleContext();

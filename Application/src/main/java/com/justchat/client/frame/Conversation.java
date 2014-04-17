@@ -6,7 +6,6 @@ import com.acamar.net.xmpp.Connection;
 import com.justchat.client.frame.menu.ChatMenu;
 import com.justchat.client.gui.panel.ChatPanel;
 import com.justchat.client.gui.panel.ErrorPanel;
-import com.justchat.model.user.identity.User;
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.ChatManager;
 import org.jivesoftware.smack.packet.Message;
@@ -27,7 +26,6 @@ import java.awt.event.WindowListener;
  */
 public class Conversation extends AbstractFrame
 {
-    User user;
     Connection connection = null;
     String connectionMessage = null;
     Chat chat = null;
@@ -35,8 +33,6 @@ public class Conversation extends AbstractFrame
     public Conversation(Connection connection)
     {
         super("JustChat - conversation");
-
-        user = new User("adsad", "Current user", true);
 
         this.connection = connection;
 
@@ -100,7 +96,7 @@ public class Conversation extends AbstractFrame
         c.fill = GridBagConstraints.BOTH;
         c.anchor = GridBagConstraints.FIRST_LINE_START;
 
-        ChatPanel chatPanel = new ChatPanel(user);
+        ChatPanel chatPanel = new ChatPanel();
         chatPanel.setName("ChatPanel");
         add(chatPanel, c);
     }
