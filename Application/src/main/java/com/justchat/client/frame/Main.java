@@ -1,27 +1,31 @@
 package com.justchat.client.frame;
 
+import com.acamar.authentication.AbstractAsyncAuthentication;
+import com.acamar.authentication.AuthenticationEvent;
+import com.acamar.authentication.AuthenticationListener;
+import com.acamar.authentication.xmpp.Authentication;
 import com.acamar.gui.frame.AbstractFrame;
 import com.acamar.gui.menu.AbstractMenu;
 import com.acamar.gui.panel.AbstractPanel;
 import com.acamar.net.ConnectionEvent;
 import com.acamar.net.ConnectionException;
-import com.acamar.authentication.AbstractAsyncAuthentication;
-import com.acamar.authentication.AuthenticationEvent;
-import com.acamar.authentication.AuthenticationListener;
-import com.acamar.authentication.xmpp.Authentication;
 import com.acamar.net.ConnectionStatusListener;
 import com.acamar.net.xmpp.Connection;
-import com.justchat.client.gui.list.UserList;
-import com.justchat.client.gui.panel.UserListPanel;
-import com.justchat.client.frame.preferences.MainFramePreferences;
+import com.acamar.users.User;
+import com.acamar.users.UsersManager;
 import com.justchat.client.frame.menu.MainMenu;
+import com.justchat.client.frame.preferences.MainFramePreferences;
 import com.justchat.client.gui.panel.LoginPanel;
+import com.justchat.client.gui.panel.UserListPanel;
+import com.justchat.client.gui.panel.components.UserList;
+import org.jivesoftware.smack.RosterEntry;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
-import java.util.*;
+import java.util.Collection;
+import java.util.TimerTask;
 
 /**
  * JustChat
@@ -35,6 +39,7 @@ public class Main extends AbstractFrame
     MainFramePreferences preferences = new MainFramePreferences();
     AbstractAsyncAuthentication authentication = null;
     Connection xmppConnection = null;
+    UsersManager usersManager = new UsersManager();
 
     public Main()
     {
@@ -148,12 +153,13 @@ public class Main extends AbstractFrame
                 super.mouseClicked(e);
 
                 if (e.getClickCount() == 2) {
-                    String value = list.getSelectedValue();
-                    System.out.println("Selected value is " + value);
-                    startNewConversation();
+                    startNewConversation(list.getSelectedValue());
                 }
             }
         });
+
+        // Adding a listener to the UsersManager
+        usersManager.addListener(list);
 
         // Since the login is pretty standard we didn't care about the windows dimensions that were set by the user
         // but now...
@@ -163,11 +169,17 @@ public class Main extends AbstractFrame
         revalidate();
         pack();
         repaint();
+
+        // Getting the users and adding them to the list
+        Collection<RosterEntry> buddylist = xmppConnection.getEndpoint().getRoster().getEntries();
+        for (RosterEntry buddy : buddylist) {
+            usersManager.add(new User(buddy.getUser(), buddy.getName()));
+        }
     }
 
-    private void startNewConversation()
+    private void startNewConversation(User user)
     {
-        new Conversation(xmppConnection);
+        new Conversation(xmppConnection, user);
     }
 
     private void setupEvents()

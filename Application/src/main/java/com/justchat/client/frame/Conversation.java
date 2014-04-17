@@ -3,6 +3,7 @@ package com.justchat.client.frame;
 import com.acamar.gui.frame.AbstractFrame;
 import com.acamar.gui.menu.AbstractMenu;
 import com.acamar.net.xmpp.Connection;
+import com.acamar.users.User;
 import com.justchat.client.frame.menu.ChatMenu;
 import com.justchat.client.gui.panel.ChatPanel;
 import com.justchat.client.gui.panel.ErrorPanel;
@@ -29,16 +30,19 @@ public class Conversation extends AbstractFrame
     Connection connection = null;
     String connectionMessage = null;
     Chat chat = null;
+    ChatPanel chatPanel = null;
+    User user;
 
-    public Conversation(Connection connection)
+    public Conversation(Connection connection, User user)
     {
         super("JustChat - conversation");
 
         this.connection = connection;
+        this.user = user;
 
         // Creating the chat session
         ChatManager chatmanager = connection.getEndpoint().getChatManager();
-        chat = chatmanager.createChat("asf", new MessageListener());
+        chat = chatmanager.createChat(user.getIdentity(), new MessageListener());
 
         // Setting up the new frame
         configureFrame();
@@ -96,7 +100,7 @@ public class Conversation extends AbstractFrame
         c.fill = GridBagConstraints.BOTH;
         c.anchor = GridBagConstraints.FIRST_LINE_START;
 
-        ChatPanel chatPanel = new ChatPanel();
+        chatPanel = new ChatPanel();
         chatPanel.setName("ChatPanel");
         add(chatPanel, c);
     }
@@ -220,7 +224,7 @@ public class Conversation extends AbstractFrame
         @Override
         public void processMessage(Chat chat, Message message)
         {
-            System.out.println("Received message " + message.getBody() + " from " + message.getFrom());
+            chatPanel.getChatBox().append(Color.BLUE, user, message.getBody());
         }
     }
 }

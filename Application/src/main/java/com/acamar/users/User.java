@@ -7,7 +7,7 @@ package com.acamar.users;
  * @link https://github.com/brian978/JustChat
  * @since 2014-04-17
  */
-public class User
+public class User implements UserInterface
 {
     private String identity = "";
     private String name = "";
@@ -24,23 +24,47 @@ public class User
         this.name = name;
     }
 
+    @Override
     public void setState(UserState state)
     {
         this.state = state;
     }
 
+    @Override
     public String getIdentity()
     {
         return identity;
     }
 
+    @Override
     public String getName()
     {
         return name;
     }
 
+    @Override
     public UserState getState()
     {
         return state;
+    }
+
+    @Override
+    public String toString()
+    {
+        return name;
+    }
+
+    /**
+     * JustChat
+     *
+     * @version 1.0
+     * @link https://github.com/brian978/JustChat
+     * @since 2014-04-17
+     */
+    public static enum UserState
+    {
+        ONLINE,
+        UNAVAILABLE,
+        OFFLINE
     }
 }

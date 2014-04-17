@@ -7,7 +7,7 @@ package com.acamar.users;
  * @link https://github.com/brian978/JustChat
  * @since 2014-04-16
  */
-public interface UserListListener
+public interface UsersManagerListener
 {
     public void addedUser(User user);
 

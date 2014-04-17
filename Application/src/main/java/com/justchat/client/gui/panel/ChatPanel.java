@@ -1,6 +1,7 @@
 package com.justchat.client.gui.panel;
 
 import com.acamar.gui.panel.AbstractPanel;
+import com.acamar.users.User;
 import com.justchat.client.frame.Conversation;
 import com.justchat.client.gui.panel.components.ChatBox;
 import org.jivesoftware.smack.XMPPException;
@@ -25,7 +26,6 @@ public class ChatPanel extends AbstractPanel
         super();
 
         populate();
-        setupEvents();
     }
 
     protected void populate()
@@ -71,9 +71,9 @@ public class ChatPanel extends AbstractPanel
         add(messageBox, c);
     }
 
-    protected void setupEvents()
+    public ChatBox getChatBox()
     {
-
+        return chatBox;
     }
 
     private class SendListener implements KeyListener, ActionListener
@@ -94,7 +94,7 @@ public class ChatPanel extends AbstractPanel
             field.setText("");
 
             if (message.length() > 0) {
-                chatBoxPanel.append(Color.RED, null, message);
+                chatBoxPanel.append(Color.RED, new User("someone", "test"), message);
 
                 try {
                     ((Conversation) SwingUtilities.getWindowAncestor(panel)).getChat().sendMessage(message);

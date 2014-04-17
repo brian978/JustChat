@@ -9,27 +9,27 @@ import java.util.ArrayList;
  * @link https://github.com/brian978/JustChat
  * @since 2014-04-16
  */
-public class UserList
+public class UsersManager
 {
     ArrayList<User> users = new ArrayList<>();
-    ArrayList<UserListListener> listeners = new ArrayList<>();
+    ArrayList<UsersManagerListener> listeners = new ArrayList<>();
 
-    public UserList add(User user)
+    public UsersManager add(User user)
     {
         users.add(user);
 
-        for (UserListListener listener : listeners) {
+        for (UsersManagerListener listener : listeners) {
             listener.addedUser(user);
         }
 
         return this;
     }
 
-    public UserList remove(User user)
+    public UsersManager remove(User user)
     {
         users.remove(user);
 
-        for (UserListListener listener : listeners) {
+        for (UsersManagerListener listener : listeners) {
             listener.removedUser(user);
         }
 
@@ -45,5 +45,10 @@ public class UserList
         }
 
         return null;
+    }
+
+    public void addListener(UsersManagerListener listener)
+    {
+        listeners.add(listener);
     }
 }

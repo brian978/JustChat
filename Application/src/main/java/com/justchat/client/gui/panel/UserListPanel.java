@@ -1,7 +1,7 @@
 package com.justchat.client.gui.panel;
 
 import com.acamar.gui.panel.AbstractPanel;
-import com.justchat.client.gui.list.UserList;
+import com.justchat.client.gui.panel.components.UserList;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,7 +15,7 @@ import java.awt.*;
  */
 public class UserListPanel extends AbstractPanel
 {
-    UserList userList;
+    UserList userList = new UserList();
 
     public UserListPanel()
     {
@@ -28,9 +28,6 @@ public class UserListPanel extends AbstractPanel
 
     protected void populate()
     {
-        // Creating the UserList object so we have something to display
-        userList = new UserList();
-
         // Adding a scroll panel to the list
         JScrollPane userListScroller = new JScrollPane(userList);
 
