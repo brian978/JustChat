@@ -15,6 +15,7 @@ import java.io.IOException;
  */
 abstract public class Connection implements ConnectionInterface
 {
+    protected String configFilename = null;
     protected Config config = null;
     protected String protocol = "";
     protected String host = "";
@@ -69,11 +70,11 @@ abstract public class Connection implements ConnectionInterface
         );
     }
 
-    protected Config getConfig(String filename)
+    protected Config getConfig()
     {
         if (config == null) {
             try {
-                config = new Config(filename);
+                config = new Config(configFilename);
             } catch (IOException e) {
                 // We will handle this using an event
                 e.printStackTrace();
@@ -90,6 +91,10 @@ abstract public class Connection implements ConnectionInterface
 
     protected String getOption(String name, String defaultValue)
     {
+        if (config == null) {
+            config = getConfig();
+        }
+
         return config.get(name, defaultValue);
     }
 

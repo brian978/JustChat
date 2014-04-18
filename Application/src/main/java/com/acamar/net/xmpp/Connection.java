@@ -18,17 +18,26 @@ public class Connection extends AsyncConnection
 
     public Connection()
     {
-        config = getConfig("xmpp.properties");
-        setup(null, getOption("host", "127.0.0.1"), Integer.parseInt(getOption("port", "5222")));
+        // We need the filename so we can get the options
+        configFilename = "xmpp.properties";
 
+        //        setup(null, getOption("host", "127.0.0.1"), Integer.parseInt(getOption("port", "5222")));
+    }
+
+    protected void initializeEndpoint()
+    {
         ConnectionConfiguration connectionConfiguration = new ConnectionConfiguration(host, port);
-
         endpoint = new XMPPConnection(connectionConfiguration);
     }
 
     @Override
     public void connect()
     {
+        // Lazy initialization
+        if (endpoint == null) {
+            initializeEndpoint();
+        }
+
         try {
             endpoint.connect();
             fireConnectionEvent("", ConnectionEvent.CONNECTION_OPENED);
@@ -41,7 +50,6 @@ public class Connection extends AsyncConnection
     public void disconnect() throws ConnectionException
     {
         super.disconnect();
-
         endpoint.disconnect();
     }
 

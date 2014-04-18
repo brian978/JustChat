@@ -19,7 +19,7 @@ import java.net.URI;
  */
 public class Connection extends AsyncConnection
 {
-    protected Config config = getConfig("socket.properties");
+    protected Config config = null;
     protected Session session = null;
     protected Endpoint endpoint = new ConnectionEndoint();
 

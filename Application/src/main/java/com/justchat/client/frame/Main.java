@@ -45,24 +45,25 @@ public class Main extends AbstractFrame
     {
         super("JustChat");
 
-        xmppConnection = new Connection();
-        authentication = new Authentication(xmppConnection.getEndpoint());
-
         // Adding the components on the frame
         configureFrame();
         populateFrame();
         setupEvents();
 
-        // Adding the listeners to our objects
-        authentication.addAuthenticationListener(new AuthenticationStatusListener());
-        xmppConnection.addConnectionStatusListener(new ConnectionStatus());
-
         // Displaying the frame
         showFrame();
         ensureMinimumSize();
 
+        // Creating the connection objects
+        xmppConnection = new Connection();
+        xmppConnection.addConnectionStatusListener(new ConnectionStatus());
+
         // Finishing the rest of the tasks
         connectToServer();
+
+        // Creating the authentication objects (we must first connect to the server before we can do this
+        authentication = new Authentication(xmppConnection.getEndpoint());
+        authentication.addAuthenticationListener(new AuthenticationStatusListener());
     }
 
     protected void configureFrame()
@@ -234,7 +235,7 @@ public class Main extends AbstractFrame
         JLabel infoLabel = (JLabel) loginPanel.findComponent("infoLabel");
         infoLabel.setText("<html><center>Connecting, please wait...");
 
-        xmppConnection.connectAsync();
+        xmppConnection.connect();
     }
 
     private class AuthenticationStatusListener implements AuthenticationListener

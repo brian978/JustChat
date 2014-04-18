@@ -1,14 +1,10 @@
 package com.justchat.client.gui.panel;
 
 import com.acamar.gui.panel.AbstractPanel;
-import com.acamar.users.User;
-import com.justchat.client.frame.Conversation;
 import com.justchat.client.gui.panel.components.ChatBox;
-import org.jivesoftware.smack.XMPPException;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 
 /**
  * JustChat

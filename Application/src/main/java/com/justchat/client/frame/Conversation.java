@@ -4,13 +4,12 @@ import com.acamar.gui.frame.AbstractFrame;
 import com.acamar.gui.menu.AbstractMenu;
 import com.acamar.net.xmpp.Connection;
 import com.acamar.users.User;
-import com.acamar.users.UsersManager;
 import com.justchat.client.frame.menu.ChatMenu;
 import com.justchat.client.gui.panel.ChatPanel;
-import com.justchat.client.gui.panel.ErrorPanel;
 import com.justchat.client.gui.panel.components.ChatBox;
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.ChatManager;
+import org.jivesoftware.smack.MessageListener;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Message;
 
@@ -27,10 +26,8 @@ import java.awt.event.*;
  */
 public class Conversation extends AbstractFrame
 {
-    private Connection connection;
     private User localUser;
     private User remoteUser;
-    private String connectionMessage = "";
     private Chat chat;
     private ChatPanel chatPanel;
 
@@ -38,11 +35,10 @@ public class Conversation extends AbstractFrame
     {
         super("JustChat - conversation");
 
-        this.connection = connection;
         this.remoteUser = remoteUser;
 
         // Creating the chat session
-        ChatManager chatmanager = this.connection.getEndpoint().getChatManager();
+        ChatManager chatmanager = connection.getEndpoint().getChatManager();
         chat = chatmanager.createChat(remoteUser.getIdentity(), new InboundMessageListener());
 
         // Setting up the new frame
@@ -69,11 +65,6 @@ public class Conversation extends AbstractFrame
     @Override
     protected void populateFrame()
     {
-        if (connectionMessage != null) {
-            showErrorPanel();
-            return;
-        }
-
         GridBagConstraints c;
 
         /**
@@ -114,8 +105,7 @@ public class Conversation extends AbstractFrame
     private void setupEvents()
     {
         // Message event listeners
-        ChatBox chatBox = chatPanel.getChatBox();
-        chatPanel.getMessageBox().addKeyListener(new OutboundMessageListener(chatBox));
+        chatPanel.getMessageBox().addKeyListener(new OutboundMessageListener(chatPanel.getChatBox()));
 
         // Frame events
         addWindowListener(new CleanupWindowListener());
@@ -123,18 +113,18 @@ public class Conversation extends AbstractFrame
 
     protected void showErrorPanel()
     {
-        GridBagConstraints c;
-
-        c = new GridBagConstraints();
-        c.weightx = 1.0;
-        c.weighty = 1.0;
-        c.gridx = 0;
-        c.gridy = 0;
-        c.fill = GridBagConstraints.BOTH;
-        c.anchor = GridBagConstraints.FIRST_LINE_START;
-
-        ErrorPanel errorPanel = new ErrorPanel(connectionMessage);
-        add(errorPanel, c);
+        //        GridBagConstraints c;
+        //
+        //        c = new GridBagConstraints();
+        //        c.weightx = 1.0;
+        //        c.weighty = 1.0;
+        //        c.gridx = 0;
+        //        c.gridy = 0;
+        //        c.fill = GridBagConstraints.BOTH;
+        //        c.anchor = GridBagConstraints.FIRST_LINE_START;
+        //
+        //        ErrorPanel errorPanel = new ErrorPanel(connectionMessage);
+        //        add(errorPanel, c);
     }
 
     protected void attachMenuListeners(AbstractMenu menu)
@@ -277,12 +267,16 @@ public class Conversation extends AbstractFrame
         }
     }
 
-    private class InboundMessageListener implements org.jivesoftware.smack.MessageListener
+    private class InboundMessageListener implements MessageListener
     {
         @Override
         public void processMessage(Chat chat, Message message)
         {
-            chatPanel.getChatBox().append(Color.BLUE, remoteUser, message.getBody());
+            // For now we ignore notification messages
+            String messageBody = message.getBody();
+            if (messageBody != null) {
+                chatPanel.getChatBox().append(Color.BLUE, remoteUser, message.getBody());
+            }
         }
     }
 }

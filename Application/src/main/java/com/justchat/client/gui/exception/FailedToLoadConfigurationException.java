@@ -11,7 +11,8 @@ import java.io.IOException;
  */
 public class FailedToLoadConfigurationException extends IOException
 {
-    public FailedToLoadConfigurationException(String message, Throwable cause) {
+    public FailedToLoadConfigurationException(String message, Throwable cause)
+    {
         super(message, cause);
     }
 }

@@ -5,7 +5,6 @@ import com.acamar.gui.menu.AbstractMenu;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;
-import java.util.HashMap;
 
 /**
  * JustChat
