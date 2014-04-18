@@ -171,15 +171,17 @@ public class Main extends AbstractFrame
         repaint();
 
         // Getting the users and adding them to the list
-        Collection<RosterEntry> buddylist = xmppConnection.getEndpoint().getRoster().getEntries();
-        for (RosterEntry buddy : buddylist) {
+        Collection<RosterEntry> buddyList = xmppConnection.getEndpoint().getRoster().getEntries();
+        for (RosterEntry buddy : buddyList) {
             usersManager.add(new User(buddy.getUser(), buddy.getName()));
         }
     }
 
     private void startNewConversation(User user)
     {
-        new Conversation(xmppConnection, user);
+
+        Conversation conversationFrame = new Conversation(xmppConnection, user);
+        conversationFrame.setLocalUser(usersManager.getCurrentUser());
     }
 
     private void setupEvents()
@@ -219,10 +221,10 @@ public class Main extends AbstractFrame
         addWindowListener(new SaveOnExitListener());
     }
 
-    private void handleAuthenticateAction(JButton loginBtn, JTextField indentityField, JPasswordField passwordField)
+    private void handleAuthenticateAction(JButton loginBtn, JTextField identityField, JPasswordField passwordField)
     {
         loginBtn.setEnabled(false);
-        authentication.authenticate(indentityField.getText(), passwordField.getPassword());
+        authentication.authenticate(identityField.getText(), passwordField.getPassword());
         passwordField.setText("");
     }
 
@@ -252,6 +254,7 @@ public class Main extends AbstractFrame
         public void authenticationPerformed(AuthenticationEvent e)
         {
             if (e.isAuthenticated()) {
+                usersManager.setCurrentUser(e.getUser());
                 showUserList();
             } else {
                 loginBtn.setEnabled(true);

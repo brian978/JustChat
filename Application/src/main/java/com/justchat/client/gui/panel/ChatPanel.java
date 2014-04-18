@@ -20,6 +20,7 @@ import java.awt.event.*;
 public class ChatPanel extends AbstractPanel
 {
     ChatBox chatBox;
+    JTextField messageBox;
 
     public ChatPanel()
     {
@@ -38,6 +39,7 @@ public class ChatPanel extends AbstractPanel
          * -----------------
          */
         chatBox = new ChatBox();
+        chatBox.setName("ChatTextPane");
 
         c = new GridBagConstraints();
         c.weightx = 1.0;
@@ -55,11 +57,10 @@ public class ChatPanel extends AbstractPanel
          * chat message box
          * -----------------
          */
-        final JTextField messageBox = new JTextField();
+        messageBox = new JTextField();
         messageBox.setName("MessageBox");
         messageBox.setPreferredSize(new Dimension(300, 30));
         messageBox.setMaximumSize(messageBox.getPreferredSize());
-        messageBox.addKeyListener(new SendListener(this, chatBox));
 
         c = new GridBagConstraints();
         c.gridx = 0;
@@ -76,60 +77,8 @@ public class ChatPanel extends AbstractPanel
         return chatBox;
     }
 
-    private class SendListener implements KeyListener, ActionListener
+    public JTextField getMessageBox()
     {
-        private ChatBox chatBoxPanel;
-        private ChatPanel panel;
-
-        public SendListener(ChatPanel chatPanel, ChatBox chatBox)
-        {
-            panel = chatPanel;
-            chatBoxPanel = chatBox;
-        }
-
-        private void sendFieldContents(AWTEvent e)
-        {
-            JTextField field = (JTextField) e.getSource();
-            String message = field.getText();
-            field.setText("");
-
-            if (message.length() > 0) {
-                chatBoxPanel.append(Color.RED, new User("someone", "test"), message);
-
-                try {
-                    ((Conversation) SwingUtilities.getWindowAncestor(panel)).getChat().sendMessage(message);
-                } catch (XMPPException e1) {
-                    e1.printStackTrace();
-                }
-            }
-        }
-
-        @Override
-        public void actionPerformed(ActionEvent e)
-        {
-            if (e.getActionCommand().equals("send")) {
-                sendFieldContents(e);
-            }
-        }
-
-        @Override
-        public void keyTyped(KeyEvent e)
-        {
-
-        }
-
-        @Override
-        public void keyPressed(KeyEvent e)
-        {
-            if (e.getKeyCode() == 10) {
-                sendFieldContents(e);
-            }
-        }
-
-        @Override
-        public void keyReleased(KeyEvent e)
-        {
-
-        }
+        return messageBox;
     }
 }

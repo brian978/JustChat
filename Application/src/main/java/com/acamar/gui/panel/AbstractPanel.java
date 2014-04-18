@@ -30,4 +30,9 @@ public abstract class AbstractPanel extends JPanel
 
         return null;
     }
+
+    public Window getParentContainer()
+    {
+        return SwingUtilities.getWindowAncestor(this);
+    }
 }

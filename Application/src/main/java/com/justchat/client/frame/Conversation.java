@@ -4,19 +4,19 @@ import com.acamar.gui.frame.AbstractFrame;
 import com.acamar.gui.menu.AbstractMenu;
 import com.acamar.net.xmpp.Connection;
 import com.acamar.users.User;
+import com.acamar.users.UsersManager;
 import com.justchat.client.frame.menu.ChatMenu;
 import com.justchat.client.gui.panel.ChatPanel;
 import com.justchat.client.gui.panel.ErrorPanel;
+import com.justchat.client.gui.panel.components.ChatBox;
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.ChatManager;
+import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Message;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
+import java.awt.event.*;
 
 /**
  * JustChat
@@ -27,22 +27,23 @@ import java.awt.event.WindowListener;
  */
 public class Conversation extends AbstractFrame
 {
-    Connection connection = null;
-    String connectionMessage = null;
-    Chat chat = null;
-    ChatPanel chatPanel = null;
-    User user;
+    private Connection connection;
+    private User localUser;
+    private User remoteUser;
+    private String connectionMessage = "";
+    private Chat chat;
+    private ChatPanel chatPanel;
 
-    public Conversation(Connection connection, User user)
+    public Conversation(Connection connection, User remoteUser)
     {
         super("JustChat - conversation");
 
         this.connection = connection;
-        this.user = user;
+        this.remoteUser = remoteUser;
 
         // Creating the chat session
-        ChatManager chatmanager = connection.getEndpoint().getChatManager();
-        chat = chatmanager.createChat(user.getIdentity(), new MessageListener());
+        ChatManager chatmanager = this.connection.getEndpoint().getChatManager();
+        chat = chatmanager.createChat(remoteUser.getIdentity(), new InboundMessageListener());
 
         // Setting up the new frame
         configureFrame();
@@ -50,6 +51,11 @@ public class Conversation extends AbstractFrame
         setupEvents();
         showFrame();
         ensureMinimumSize();
+    }
+
+    public void setLocalUser(User localUser)
+    {
+        this.localUser = localUser;
     }
 
     @Override
@@ -108,6 +114,8 @@ public class Conversation extends AbstractFrame
     private void setupEvents()
     {
         // Message event listeners
+        ChatBox chatBox = chatPanel.getChatBox();
+        chatPanel.getMessageBox().addKeyListener(new OutboundMessageListener(chatBox));
 
         // Frame events
         addWindowListener(new CleanupWindowListener());
@@ -169,11 +177,6 @@ public class Conversation extends AbstractFrame
         }
     }
 
-    public Chat getChat()
-    {
-        return chat;
-    }
-
     private class CleanupWindowListener implements WindowListener
     {
         @Override
@@ -219,12 +222,67 @@ public class Conversation extends AbstractFrame
         }
     }
 
-    private class MessageListener implements org.jivesoftware.smack.MessageListener
+    private class OutboundMessageListener implements KeyListener, ActionListener
+    {
+        private ChatBox chatPane;
+
+        public OutboundMessageListener(ChatBox chatBox)
+        {
+            chatPane = chatBox;
+        }
+
+        private void sendFieldContents(AWTEvent e)
+        {
+            JTextField field = (JTextField) e.getSource();
+            String message = field.getText();
+            field.setText("");
+
+            if (message.length() > 0) {
+                chatPane.append(Color.RED, localUser, message);
+
+                try {
+                    chat.sendMessage(message);
+                } catch (XMPPException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e)
+        {
+            if (e.getActionCommand().equals("send")) {
+                sendFieldContents(e);
+            }
+        }
+
+        @Override
+        public void keyTyped(KeyEvent e)
+        {
+
+        }
+
+        @Override
+        public void keyPressed(KeyEvent e)
+        {
+            if (e.getKeyCode() == 10) {
+                sendFieldContents(e);
+            }
+        }
+
+        @Override
+        public void keyReleased(KeyEvent e)
+        {
+
+        }
+    }
+
+    private class InboundMessageListener implements org.jivesoftware.smack.MessageListener
     {
         @Override
         public void processMessage(Chat chat, Message message)
         {
-            chatPanel.getChatBox().append(Color.BLUE, user, message.getBody());
+            chatPanel.getChatBox().append(Color.BLUE, remoteUser, message.getBody());
         }
     }
 }

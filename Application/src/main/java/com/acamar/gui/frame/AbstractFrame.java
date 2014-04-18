@@ -53,4 +53,9 @@ abstract public class AbstractFrame extends JFrame implements FrameInterface
 
         return null;
     }
+
+    public Window getParentContainer()
+    {
+        return SwingUtilities.getWindowAncestor(this);
+    }
 }

@@ -13,6 +13,7 @@ public class UsersManager
 {
     ArrayList<User> users = new ArrayList<>();
     ArrayList<UsersManagerListener> listeners = new ArrayList<>();
+    User currentUser = null;
 
     public UsersManager add(User user)
     {
@@ -50,5 +51,15 @@ public class UsersManager
     public void addListener(UsersManagerListener listener)
     {
         listeners.add(listener);
+    }
+
+    public User getCurrentUser()
+    {
+        return currentUser;
+    }
+
+    public void setCurrentUser(User currentUser)
+    {
+        this.currentUser = currentUser;
     }
 }
