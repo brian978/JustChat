@@ -6,6 +6,7 @@ import com.acamar.net.ConnectionException;
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smack.packet.Presence;
 
 /**
  * JustChat
@@ -59,6 +60,12 @@ public class Connection extends AsyncConnection
     public void disconnect() throws ConnectionException
     {
         super.disconnect();
+
+        // Sending an offline presence to let everyone know we disconnected
+        Presence offline = new Presence(Presence.Type.unavailable);
+        endpoint.sendPacket(offline);
+
+        // Disconnecting the socket
         endpoint.disconnect();
     }
 

@@ -1,4 +1,4 @@
-package com.justchat.client.net.facebook;
+package com.acamar.net.xmpp.facebook;
 
 /**
  * JustChat

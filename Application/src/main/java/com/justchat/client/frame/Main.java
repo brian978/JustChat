@@ -17,7 +17,7 @@ import com.justchat.client.frame.preferences.MainFramePreferences;
 import com.justchat.client.gui.panel.LoginPanel;
 import com.justchat.client.gui.panel.UserListPanel;
 import com.justchat.client.gui.panel.components.UserList;
-import com.justchat.client.net.facebook.Connection;
+import com.acamar.net.xmpp.facebook.Connection;
 import org.jivesoftware.smack.RosterEntry;
 
 import javax.swing.*;
