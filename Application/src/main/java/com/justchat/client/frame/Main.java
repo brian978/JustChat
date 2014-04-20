@@ -139,6 +139,15 @@ public class Main extends AbstractFrame
 
         add(userListPanel);
 
+        // Since the login is pretty standard we didn't care about the windows dimensions that were set by the user
+        // but now...
+        setPreferredSize(preferences.getPreferedSize(getPreferredSize()));
+
+        // Repainting
+        revalidate();
+        pack();
+        repaint();
+
         // Listeners for the panel
         final UserList list = userListPanel.getUserList();
         list.addMouseListener(new MouseAdapter()
@@ -170,15 +179,6 @@ public class Main extends AbstractFrame
 
         // Sorting the list by name
         usersManager.sort();
-
-        // Since the login is pretty standard we didn't care about the windows dimensions that were set by the user
-        // but now...
-        setPreferredSize(preferences.getPreferedSize(getPreferredSize()));
-
-        // Repainting
-        revalidate();
-        pack();
-        repaint();
     }
 
     private void startNewConversation(User user)
@@ -231,7 +231,7 @@ public class Main extends AbstractFrame
         loginBtn.setEnabled(false);
         passwordField.setEnabled(false);
 
-        authentication.authenticateAsync(identityField.getText(), passwordField.getPassword());
+        authentication.authenticate(identityField.getText(), passwordField.getPassword());
         passwordField.setText("");
     }
 

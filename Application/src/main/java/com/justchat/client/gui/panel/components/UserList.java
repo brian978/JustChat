@@ -48,6 +48,5 @@ public class UserList extends JList<User> implements UsersManagerListener
             dataModel.addElement(user);
         }
 
-        revalidate();
     }
 }
