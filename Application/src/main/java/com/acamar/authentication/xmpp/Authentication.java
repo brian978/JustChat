@@ -2,6 +2,7 @@ package com.acamar.authentication.xmpp;
 
 import com.acamar.authentication.AbstractAsyncAuthentication;
 import com.acamar.authentication.AuthenticationEvent;
+import com.acamar.net.xmpp.Connection;
 import com.acamar.users.User;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
@@ -15,11 +16,13 @@ import java.util.Arrays;
  */
 public class Authentication extends AbstractAsyncAuthentication
 {
-    protected XMPPConnection connection = null;
+    protected Connection connection = null;
+    protected XMPPConnection endpoint = null;
 
-    public Authentication(XMPPConnection connection)
+    public Authentication(Connection connection)
     {
         this.connection = connection;
+        this.endpoint = connection.getEndpoint();
     }
 
     @Override
@@ -28,6 +31,10 @@ public class Authentication extends AbstractAsyncAuthentication
         boolean success = false;
         String message = "Incorrect login";
 
+        if (!endpoint.isConnected()) {
+            connection.connect();
+        }
+
         if (identity.length() > 0 && password.length > 0) {
             try {
                 doLogin(identity, password);
@@ -35,6 +42,7 @@ public class Authentication extends AbstractAsyncAuthentication
                 message = "";
 
             } catch (XMPPException e) {
+                endpoint.disconnect();
                 e.printStackTrace();
             }
         } else {
@@ -48,6 +56,6 @@ public class Authentication extends AbstractAsyncAuthentication
 
     protected void doLogin(String identity, char[] password) throws XMPPException
     {
-        connection.login(identity, new String(password));
+        endpoint.login(identity, new String(password));
     }
 }

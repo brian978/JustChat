@@ -4,6 +4,7 @@ import com.acamar.users.User;
 import com.acamar.users.UsersManagerListener;
 
 import javax.swing.*;
+import java.util.ArrayList;
 
 /**
  * JustChat
@@ -14,9 +15,13 @@ import javax.swing.*;
  */
 public class UserList extends JList<User> implements UsersManagerListener
 {
+    private DefaultListModel<User> dataModel;
+
     public UserList()
     {
-        setModel(new DefaultListModel<User>());
+        dataModel = new DefaultListModel<User>();
+
+        setModel(dataModel);
         setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         setVisibleRowCount(-1);
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -25,12 +30,24 @@ public class UserList extends JList<User> implements UsersManagerListener
     @Override
     public void addedUser(User user)
     {
-        ((DefaultListModel<User>) getModel()).addElement(user);
+        dataModel.addElement(user);
     }
 
     @Override
     public void removedUser(User user)
     {
-        ((DefaultListModel<User>) getModel()).removeElement(user);
+        dataModel.removeElement(user);
+    }
+
+    @Override
+    public void sorted(ArrayList<User> list)
+    {
+        dataModel.removeAllElements();
+
+        for (User user : list) {
+            dataModel.addElement(user);
+        }
+
+        revalidate();
     }
 }

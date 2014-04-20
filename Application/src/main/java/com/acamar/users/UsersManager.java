@@ -1,6 +1,8 @@
 package com.acamar.users;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * JustChat
@@ -61,5 +63,14 @@ public class UsersManager
     public void setCurrentUser(User currentUser)
     {
         this.currentUser = currentUser;
+    }
+
+    public void sort()
+    {
+        Collections.sort(users);
+
+        for (UsersManagerListener listener : listeners) {
+            listener.sorted(users);
+        }
     }
 }

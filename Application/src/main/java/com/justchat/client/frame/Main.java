@@ -10,6 +10,7 @@ import com.acamar.gui.panel.AbstractPanel;
 import com.acamar.net.ConnectionEvent;
 import com.acamar.net.ConnectionException;
 import com.acamar.net.ConnectionStatusListener;
+import com.acamar.net.xmpp.facebook.Connection;
 import com.acamar.users.User;
 import com.acamar.users.UsersManager;
 import com.justchat.client.frame.menu.MainMenu;
@@ -17,7 +18,6 @@ import com.justchat.client.frame.preferences.MainFramePreferences;
 import com.justchat.client.gui.panel.LoginPanel;
 import com.justchat.client.gui.panel.UserListPanel;
 import com.justchat.client.gui.panel.components.UserList;
-import com.acamar.net.xmpp.facebook.Connection;
 import org.jivesoftware.smack.RosterEntry;
 
 import javax.swing.*;
@@ -41,6 +41,9 @@ public class Main extends AbstractFrame
     Connection xmppConnection = null;
     UsersManager usersManager = new UsersManager();
 
+    // Panels
+    LoginPanel loginPanel;
+
     public Main()
     {
         super("JustChat");
@@ -58,11 +61,8 @@ public class Main extends AbstractFrame
         xmppConnection = new Connection();
         xmppConnection.addConnectionStatusListener(new ConnectionStatus());
 
-        // Finishing the rest of the tasks
-        connectToServer();
-
         // Creating the authentication objects (we must first connect to the server before we can do this
-        authentication = new Authentication(xmppConnection.getEndpoint());
+        authentication = new Authentication(xmppConnection);
         authentication.addAuthenticationListener(new AuthenticationStatusListener());
     }
 
@@ -96,7 +96,7 @@ public class Main extends AbstractFrame
          * Login panel
          * -------------
          */
-        LoginPanel loginPanel = new LoginPanel();
+        loginPanel = new LoginPanel();
         loginPanel.setName("loginPanel");
 
         add(loginPanel);
@@ -162,6 +162,15 @@ public class Main extends AbstractFrame
         // Adding a listener to the UsersManager
         usersManager.addListener(list);
 
+        // Getting the users and adding them to the list
+        Collection<RosterEntry> buddyList = xmppConnection.getEndpoint().getRoster().getEntries();
+        for (RosterEntry buddy : buddyList) {
+            usersManager.add(new User(buddy.getUser(), buddy.getName()));
+        }
+
+        // Sorting the list by name
+        usersManager.sort();
+
         // Since the login is pretty standard we didn't care about the windows dimensions that were set by the user
         // but now...
         setPreferredSize(preferences.getPreferedSize(getPreferredSize()));
@@ -170,12 +179,6 @@ public class Main extends AbstractFrame
         revalidate();
         pack();
         repaint();
-
-        // Getting the users and adding them to the list
-        Collection<RosterEntry> buddyList = xmppConnection.getEndpoint().getRoster().getEntries();
-        for (RosterEntry buddy : buddyList) {
-            usersManager.add(new User(buddy.getUser(), buddy.getName()));
-        }
     }
 
     private void startNewConversation(User user)
@@ -188,8 +191,6 @@ public class Main extends AbstractFrame
     private void setupEvents()
     {
         // Buttons and fields events
-        final AbstractPanel loginPanel = (AbstractPanel) findComponent("loginPanel");
-
         final JTextField identifier = (JTextField) loginPanel.findComponent("identifierField");
         final JPasswordField password = (JPasswordField) loginPanel.findComponent("passwordField");
         final JButton loginBtn = (JButton) loginPanel.findComponent("loginBtn");
@@ -224,12 +225,13 @@ public class Main extends AbstractFrame
 
     private void handleAuthenticateAction(JButton loginBtn, JTextField identityField, JPasswordField passwordField)
     {
-        if(!xmppConnection.getEndpoint().isConnected()) {
-            connectToServer();
-        }
+        JLabel infoLabel = (JLabel) loginPanel.findComponent("infoLabel");
+        infoLabel.setText("<html><center>Logging you in, please wait...");
 
         loginBtn.setEnabled(false);
-        authentication.authenticate(identityField.getText(), passwordField.getPassword());
+        passwordField.setEnabled(false);
+
+        authentication.authenticateAsync(identityField.getText(), passwordField.getPassword());
         passwordField.setText("");
     }
 
@@ -238,14 +240,13 @@ public class Main extends AbstractFrame
         AbstractPanel loginPanel = (AbstractPanel) findComponent("loginPanel");
         JLabel infoLabel = (JLabel) loginPanel.findComponent("infoLabel");
         infoLabel.setText("<html><center>Connecting, please wait...");
-
-        xmppConnection.connect();
     }
 
     private class AuthenticationStatusListener implements AuthenticationListener
     {
         JLabel infoLabel;
         JButton loginBtn;
+        JPasswordField password;
 
         public AuthenticationStatusListener()
         {
@@ -253,6 +254,7 @@ public class Main extends AbstractFrame
 
             infoLabel = (JLabel) loginPanel.findComponent("infoLabel");
             loginBtn = (JButton) loginPanel.findComponent("loginBtn");
+            password = (JPasswordField) loginPanel.findComponent("passwordField");
         }
 
         @Override
@@ -263,6 +265,7 @@ public class Main extends AbstractFrame
                 showUserList();
             } else {
                 loginBtn.setEnabled(true);
+                password.setEnabled(true);
                 infoLabel.setVisible(true);
                 infoLabel.setText("<html><center>" + e.getMessage());
             }
@@ -321,10 +324,12 @@ public class Main extends AbstractFrame
         @Override
         public void windowClosing(WindowEvent e)
         {
-            try {
-                xmppConnection.disconnect();
-            } catch (ConnectionException e1) {
-                e1.printStackTrace();
+            if (xmppConnection.getEndpoint().isConnected()) {
+                try {
+                    xmppConnection.disconnect();
+                } catch (ConnectionException e1) {
+                    e1.printStackTrace();
+                }
             }
 
             Dimension size = ((AbstractFrame) e.getSource()).getSize();

@@ -19,6 +19,7 @@ public class Connection extends AsyncConnection
 
     public Connection()
     {
+        initializeEndpoint();
     }
 
     @Override
@@ -43,11 +44,6 @@ public class Connection extends AsyncConnection
     @Override
     public void connect()
     {
-        // Lazy initialization
-        if (endpoint == null) {
-            initializeEndpoint();
-        }
-
         try {
             endpoint.connect();
             fireConnectionEvent("", ConnectionEvent.CONNECTION_OPENED);

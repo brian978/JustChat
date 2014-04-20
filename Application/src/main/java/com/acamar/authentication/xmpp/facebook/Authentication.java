@@ -1,5 +1,6 @@
 package com.acamar.authentication.xmpp.facebook;
 
+import com.acamar.net.xmpp.Connection;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 
@@ -12,13 +13,13 @@ import org.jivesoftware.smack.XMPPException;
  */
 public class Authentication extends com.acamar.authentication.xmpp.Authentication
 {
-    public Authentication(XMPPConnection connection)
+    public Authentication(Connection connection)
     {
         super(connection);
     }
 
     protected void doLogin(String identity, char[] password) throws XMPPException
     {
-        connection.login(identity, new String(password), "Pidgin");
+        endpoint.login(identity, new String(password), "Pidgin");
     }
 }

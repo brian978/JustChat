@@ -1,5 +1,7 @@
 package com.acamar.users;
 
+import java.util.ArrayList;
+
 /**
  * JustChat
  *
@@ -12,4 +14,6 @@ public interface UsersManagerListener
     public void addedUser(User user);
 
     public void removedUser(User user);
+
+    public void sorted(ArrayList<User> list);
 }

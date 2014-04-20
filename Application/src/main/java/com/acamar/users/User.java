@@ -1,5 +1,8 @@
 package com.acamar.users;
 
+import java.text.Collator;
+import java.util.Comparator;
+
 /**
  * JustChat
  *
@@ -7,8 +10,9 @@ package com.acamar.users;
  * @link https://github.com/brian978/JustChat
  * @since 2014-04-17
  */
-public class User implements UserInterface
+public class User implements UserInterface, Comparable<User>
 {
+    private Collator collator = Collator.getInstance();
     private String identity = "";
     private String name = "";
     private UserState state = UserState.OFFLINE;
@@ -52,6 +56,12 @@ public class User implements UserInterface
     public String toString()
     {
         return name;
+    }
+
+    @Override
+    public int compareTo(User o)
+    {
+        return collator.compare(getName(), o.getName());
     }
 
     public static enum UserState
