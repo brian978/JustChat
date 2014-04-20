@@ -11,9 +11,17 @@ public class Connection extends com.acamar.net.xmpp.Connection
 {
     public Connection()
     {
-        // We need the filename so we can get the options
-        configFilename = "facebook.xmpp.properties";
+    }
 
+    @Override
+    protected String getConfigFilename()
+    {
+        return "facebook.xmpp.properties";
+    }
+
+    @Override
+    protected void setup()
+    {
         setup(null, getOption("host", "chat.facebook.com"), Integer.parseInt(getOption("port", "5222")));
     }
 }

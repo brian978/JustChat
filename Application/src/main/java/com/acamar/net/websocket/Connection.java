@@ -28,6 +28,12 @@ public class Connection extends AsyncConnection
         setup(getOption("protocol", "ws"), getOption("host"), Integer.parseInt(getOption("port")));
     }
 
+    @Override
+    protected String getConfigFilename()
+    {
+        return null;
+    }
+
     public void connect()
     {
         try {

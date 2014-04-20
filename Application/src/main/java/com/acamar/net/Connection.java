@@ -15,7 +15,7 @@ import java.io.IOException;
  */
 abstract public class Connection implements ConnectionInterface
 {
-    protected String configFilename = null;
+    protected String configFilename = getConfigFilename();
     protected Config config = null;
     protected String protocol = "";
     protected String host = "";
@@ -23,12 +23,15 @@ abstract public class Connection implements ConnectionInterface
 
     protected Connection()
     {
+        getConfig();
     }
 
     public Connection(String protocol, String host, int port)
     {
         setup(protocol, host, port);
     }
+
+    abstract protected String getConfigFilename();
 
     public void setup(String protocol, String host, int port)
     {

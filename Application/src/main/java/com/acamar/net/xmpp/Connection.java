@@ -18,12 +18,22 @@ public class Connection extends AsyncConnection
 
     public Connection()
     {
-        configFilename = "xmpp.properties";
+    }
+
+    @Override
+    protected String getConfigFilename()
+    {
+        return "xmpp.properties";
+    }
+
+    protected void setup()
+    {
+        setup(null, getOption("host", "127.0.0.1"), Integer.parseInt(getOption("port", "5222")));
     }
 
     protected void initializeEndpoint()
     {
-        setup(null, getOption("host", "127.0.0.1"), Integer.parseInt(getOption("port", "5222")));
+        setup();
 
         ConnectionConfiguration connectionConfiguration = new ConnectionConfiguration(host, port);
         endpoint = new XMPPConnection(connectionConfiguration);

@@ -10,7 +10,6 @@ import com.acamar.gui.panel.AbstractPanel;
 import com.acamar.net.ConnectionEvent;
 import com.acamar.net.ConnectionException;
 import com.acamar.net.ConnectionStatusListener;
-import com.acamar.net.xmpp.Connection;
 import com.acamar.users.User;
 import com.acamar.users.UsersManager;
 import com.justchat.client.frame.menu.MainMenu;
@@ -18,6 +17,7 @@ import com.justchat.client.frame.preferences.MainFramePreferences;
 import com.justchat.client.gui.panel.LoginPanel;
 import com.justchat.client.gui.panel.UserListPanel;
 import com.justchat.client.gui.panel.components.UserList;
+import com.justchat.client.net.facebook.Connection;
 import org.jivesoftware.smack.RosterEntry;
 
 import javax.swing.*;
@@ -224,6 +224,10 @@ public class Main extends AbstractFrame
 
     private void handleAuthenticateAction(JButton loginBtn, JTextField identityField, JPasswordField passwordField)
     {
+        if(!xmppConnection.getEndpoint().isConnected()) {
+            connectToServer();
+        }
+
         loginBtn.setEnabled(false);
         authentication.authenticate(identityField.getText(), passwordField.getPassword());
         passwordField.setText("");
