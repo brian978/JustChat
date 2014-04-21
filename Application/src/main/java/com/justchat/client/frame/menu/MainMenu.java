@@ -19,6 +19,8 @@ public class MainMenu extends AbstractMenu
 
         addMenuItem(menu, "Preferences", "preferencesItem");
         menu.addSeparator();
+        addMenuItem(menu, "Logout", "logoutItem");
+        menu.addSeparator();
         addMenuItem(menu, "Exit", "exitItem");
     }
 }

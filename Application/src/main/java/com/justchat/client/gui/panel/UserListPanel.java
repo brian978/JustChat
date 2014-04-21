@@ -1,10 +1,15 @@
 package com.justchat.client.gui.panel;
 
 import com.acamar.gui.panel.AbstractPanel;
+import com.acamar.users.User;
+import com.acamar.users.UsersManager;
 import com.justchat.client.gui.panel.components.UserList;
+import org.jivesoftware.smack.RosterEntry;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseListener;
+import java.util.Collection;
 
 /**
  * JustChat
@@ -16,10 +21,15 @@ import java.awt.*;
 public class UserListPanel extends AbstractPanel
 {
     UserList userList = new UserList();
+    UsersManager usersManager = null;
 
-    public UserListPanel()
+    public UserListPanel(UsersManager usersManager)
     {
         super();
+
+        this.usersManager = usersManager;
+        this.usersManager.addListener(userList);
+
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         setPreferredSize(new Dimension(300, 500));
 
@@ -35,8 +45,17 @@ public class UserListPanel extends AbstractPanel
         add(userListScroller);
     }
 
-    public UserList getUserList()
+    public void addUsers(Collection<RosterEntry> buddyList)
     {
-        return userList;
+        for (RosterEntry buddy : buddyList) {
+            usersManager.add(new User(buddy.getUser(), buddy.getName()));
+        }
+
+        usersManager.sort();
+    }
+
+    public void addMouseListener(MouseListener mouseListener)
+    {
+        userList.addMouseListener(mouseListener);
     }
 }

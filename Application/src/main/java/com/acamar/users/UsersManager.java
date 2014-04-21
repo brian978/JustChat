@@ -2,7 +2,6 @@ package com.acamar.users;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 
 /**
  * JustChat
@@ -17,7 +16,7 @@ public class UsersManager
     ArrayList<UsersManagerListener> listeners = new ArrayList<>();
     User currentUser = null;
 
-    public UsersManager add(User user)
+    public synchronized UsersManager add(User user)
     {
         users.add(user);
 
@@ -28,7 +27,7 @@ public class UsersManager
         return this;
     }
 
-    public UsersManager remove(User user)
+    public synchronized UsersManager remove(User user)
     {
         users.remove(user);
 
@@ -72,5 +71,16 @@ public class UsersManager
         for (UsersManagerListener listener : listeners) {
             listener.sorted(users);
         }
+    }
+
+    public synchronized void removeAll()
+    {
+        for (User user : users) {
+            for (UsersManagerListener listener : listeners) {
+                listener.removedUser(user);
+            }
+        }
+
+        users.clear();
     }
 }

@@ -10,7 +10,7 @@ import com.acamar.gui.panel.AbstractPanel;
 import com.acamar.net.ConnectionEvent;
 import com.acamar.net.ConnectionException;
 import com.acamar.net.ConnectionStatusListener;
-import com.acamar.net.xmpp.facebook.Connection;
+import com.acamar.net.xmpp.Connection;
 import com.acamar.users.User;
 import com.acamar.users.UsersManager;
 import com.justchat.client.frame.menu.MainMenu;
@@ -18,13 +18,11 @@ import com.justchat.client.frame.preferences.MainFramePreferences;
 import com.justchat.client.gui.panel.LoginPanel;
 import com.justchat.client.gui.panel.UserListPanel;
 import com.justchat.client.gui.panel.components.UserList;
-import org.jivesoftware.smack.RosterEntry;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.TimerTask;
 
 /**
@@ -42,7 +40,9 @@ public class Main extends AbstractFrame
     UsersManager usersManager = new UsersManager();
 
     // Panels
-    LoginPanel loginPanel;
+    MainMenu mainMenu = new MainMenu();
+    LoginPanel loginPanel = new LoginPanel();
+    UserListPanel userListPanel = new UserListPanel(usersManager);
 
     public Main()
     {
@@ -86,20 +86,15 @@ public class Main extends AbstractFrame
          * main menu
          * -------------
          */
-        MainMenu mainMenu = new MainMenu();
-
         setJMenuBar(mainMenu);
         attachMenuListeners(mainMenu);
 
-        /**
-         * -------------
-         * Login panel
-         * -------------
-         */
-        loginPanel = new LoginPanel();
+        // Updating panels
         loginPanel.setName("loginPanel");
+        userListPanel.setName("userListPanel");
 
-        add(loginPanel);
+        // By default we show the login panel
+        showLoginPanel();
     }
 
     protected void attachMenuListeners(AbstractMenu menu)
@@ -125,32 +120,36 @@ public class Main extends AbstractFrame
         }
     }
 
-    private void showUserList()
+    private void showLoginPanel()
     {
-        // First we need to remove the login panel
-        AbstractPanel loginPanel = (AbstractPanel) findComponent("loginPanel");
-        if (loginPanel != null) {
-            remove(loginPanel);
-        }
-
-        // Adding the UserList in place of the login panel
-        UserListPanel userListPanel = new UserListPanel();
-        userListPanel.setName("userListPanel");
-
-        add(userListPanel);
-
-        // Since the login is pretty standard we didn't care about the windows dimensions that were set by the user
-        // but now...
-        setPreferredSize(preferences.getPreferedSize(getPreferredSize()));
+        /**
+         * -------------
+         * Login panel
+         * -------------
+         */
+        add(loginPanel);
 
         // Repainting
         revalidate();
-        pack();
         repaint();
+    }
+
+    private void showUserList()
+    {
+        remove(loginPanel);
+
+        /**
+         * ----------------
+         * User list panel
+         * ----------------
+         */
+        add(userListPanel);
+
+        // Updating the window dimensions to what the user last set
+        setPreferredSize(preferences.getPreferedSize(getPreferredSize()));
 
         // Listeners for the panel
-        final UserList list = userListPanel.getUserList();
-        list.addMouseListener(new MouseAdapter()
+        userListPanel.addMouseListener(new MouseAdapter()
         {
             /**
              * {@inheritDoc}
@@ -163,22 +162,16 @@ public class Main extends AbstractFrame
                 super.mouseClicked(e);
 
                 if (e.getClickCount() == 2) {
-                    startNewConversation(list.getSelectedValue());
+                    startNewConversation(((UserList) e.getSource()).getSelectedValue());
                 }
             }
         });
 
-        // Adding a listener to the UsersManager
-        usersManager.addListener(list);
+        userListPanel.addUsers(xmppConnection.getEndpoint().getRoster().getEntries());
 
-        // Getting the users and adding them to the list
-        Collection<RosterEntry> buddyList = xmppConnection.getEndpoint().getRoster().getEntries();
-        for (RosterEntry buddy : buddyList) {
-            usersManager.add(new User(buddy.getUser(), buddy.getName()));
-        }
-
-        // Sorting the list by name
-        usersManager.sort();
+        // Repainting
+        revalidate();
+        repaint();
     }
 
     private void startNewConversation(User user)
@@ -219,6 +212,24 @@ public class Main extends AbstractFrame
             }
         });
 
+        // Menu handlers
+        mainMenu.findItemByName("logoutItem").addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                try {
+                    xmppConnection.disconnect();
+                } catch (ConnectionException e1) {
+                    e1.printStackTrace();
+                } finally {
+                    remove(userListPanel);
+                    usersManager.removeAll();
+                    showLoginPanel();
+                }
+            }
+        });
+
         // Frame events
         addWindowListener(new SaveOnExitListener());
     }
@@ -250,8 +261,6 @@ public class Main extends AbstractFrame
 
         public AuthenticationStatusListener()
         {
-            AbstractPanel loginPanel = (AbstractPanel) findComponent("loginPanel");
-
             infoLabel = (JLabel) loginPanel.findComponent("infoLabel");
             loginBtn = (JButton) loginPanel.findComponent("loginBtn");
             password = (JPasswordField) loginPanel.findComponent("passwordField");
@@ -263,6 +272,7 @@ public class Main extends AbstractFrame
             if (e.isAuthenticated()) {
                 usersManager.setCurrentUser(e.getUser());
                 showUserList();
+                password.setEnabled(true);
             } else {
                 loginBtn.setEnabled(true);
                 password.setEnabled(true);
@@ -280,8 +290,6 @@ public class Main extends AbstractFrame
 
         public ConnectionStatus()
         {
-            final AbstractPanel loginPanel = (AbstractPanel) findComponent("loginPanel");
-
             infoLabel = (JLabel) loginPanel.findComponent("infoLabel");
             loginBtn = (JButton) loginPanel.findComponent("loginBtn");
         }
