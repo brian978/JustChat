@@ -7,17 +7,19 @@ import javax.swing.*;
 /**
  * JustChat
  *
+ * @version 1.0
  * @link https://github.com/brian978/JustChat
- * @copyright Copyright (c) 2014
- * @license Creative Commons Attribution-ShareAlike 3.0
+ * @since 2014-04-22
  */
-public class MainMenu extends AbstractMenu
+public class ContactsMenu extends AbstractMenu
 {
-    public MainMenu()
+    public ContactsMenu()
     {
         JMenu menu = addMenu("File", "fileMenu");
 
         addMenuItem(menu, "Preferences", "preferencesItem");
+        menu.addSeparator();
+        addMenuItem(menu, "Logout", "logoutItem");
         menu.addSeparator();
         addMenuItem(menu, "Exit", "exitItem");
     }

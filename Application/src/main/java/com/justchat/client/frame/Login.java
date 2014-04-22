@@ -32,7 +32,7 @@ import java.util.TimerTask;
  * @link https://github.com/brian978/JustChat
  * @since 2014-04-16
  */
-public class Main extends AbstractFrame
+public class Login extends AbstractFrame
 {
     Properties preferences = new Properties("preferences.properties");
     AbstractAsyncAuthentication authentication = null;
@@ -44,7 +44,7 @@ public class Main extends AbstractFrame
     LoginPanel loginPanel = new LoginPanel();
     UserListPanel userListPanel = new UserListPanel(usersManager);
 
-    public Main()
+    public Login()
     {
         super("JustChat");
 
@@ -215,23 +215,23 @@ public class Main extends AbstractFrame
             }
         });
 
-        // Menu handlers
-        mainMenu.findItemByName("logoutItem").addActionListener(new ActionListener()
-        {
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                try {
-                    xmppConnection.disconnect();
-                } catch (ConnectionException e1) {
-                    e1.printStackTrace();
-                } finally {
-                    remove(userListPanel);
-                    usersManager.removeAll();
-                    showLoginPanel();
-                }
-            }
-        });
+//        // Menu handlers
+//        mainMenu.findItemByName("logoutItem").addActionListener(new ActionListener()
+//        {
+//            @Override
+//            public void actionPerformed(ActionEvent e)
+//            {
+//                try {
+//                    xmppConnection.disconnect();
+//                } catch (ConnectionException e1) {
+//                    e1.printStackTrace();
+//                } finally {
+//                    remove(userListPanel);
+//                    usersManager.removeAll();
+//                    showLoginPanel();
+//                }
+//            }
+//        });
 
         // Frame events
         addWindowListener(new SaveOnExitListener());
