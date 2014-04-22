@@ -55,14 +55,12 @@ public class Connection extends AsyncConnection
     @Override
     public void disconnect() throws ConnectionException
     {
-        super.disconnect();
-
         // Sending an offline presence to let everyone know we disconnected
         Presence offline = new Presence(Presence.Type.unavailable);
         endpoint.sendPacket(offline);
 
-        // Disconnecting the socket
         endpoint.disconnect();
+        super.disconnect();
     }
 
     public XMPPConnection getEndpoint()

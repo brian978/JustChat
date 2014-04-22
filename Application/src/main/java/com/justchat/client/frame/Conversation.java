@@ -62,7 +62,6 @@ public class Conversation extends AbstractFrame
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
     }
 
-    @Override
     protected void populateFrame()
     {
         GridBagConstraints c;

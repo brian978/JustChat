@@ -1,5 +1,7 @@
 package com.acamar.gui.frame;
 
+import java.awt.*;
+
 /**
  * JustChat
  *
@@ -7,4 +9,5 @@ package com.acamar.gui.frame;
  */
 public interface FrameInterface
 {
+    public Component findComponent(String name);
 }

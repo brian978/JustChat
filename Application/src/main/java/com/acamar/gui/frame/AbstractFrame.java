@@ -2,6 +2,7 @@ package com.acamar.gui.frame;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowEvent;
 
 /**
  * JustChat
@@ -13,6 +14,8 @@ abstract public class AbstractFrame extends JFrame implements FrameInterface
     public AbstractFrame(String title)
     {
         super(title);
+
+        ensureMinimumSize();
     }
 
     protected void configureFrame()
@@ -23,9 +26,7 @@ abstract public class AbstractFrame extends JFrame implements FrameInterface
         setIconImage(new ImageIcon(getClass().getResource("/com/justchat/client/logo/justchat.png")).getImage());
     }
 
-    abstract protected void populateFrame();
-
-    protected void showFrame()
+    public void showFrame()
     {
         // Activating the frame
         setVisible(true);
@@ -39,6 +40,7 @@ abstract public class AbstractFrame extends JFrame implements FrameInterface
         setMinimumSize(getSize());
     }
 
+    @Override
     public Component findComponent(String name)
     {
         Component[] components = getContentPane().getComponents();
@@ -52,6 +54,11 @@ abstract public class AbstractFrame extends JFrame implements FrameInterface
         }
 
         return null;
+    }
+
+    public void triggerClosingEvent()
+    {
+        dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
     }
 
     public Window getParentContainer()

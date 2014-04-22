@@ -5,19 +5,14 @@ import com.acamar.authentication.AuthenticationEvent;
 import com.acamar.authentication.AuthenticationListener;
 import com.acamar.authentication.xmpp.Authentication;
 import com.acamar.gui.frame.AbstractFrame;
-import com.acamar.gui.menu.AbstractMenu;
 import com.acamar.gui.panel.AbstractPanel;
 import com.acamar.net.ConnectionEvent;
 import com.acamar.net.ConnectionException;
 import com.acamar.net.ConnectionStatusListener;
 import com.acamar.net.xmpp.Connection;
-import com.acamar.users.User;
-import com.acamar.users.UsersManager;
 import com.acamar.util.Properties;
 import com.justchat.client.frame.menu.MainMenu;
 import com.justchat.client.gui.panel.LoginPanel;
-import com.justchat.client.gui.panel.UserListPanel;
-import com.justchat.client.gui.panel.components.UserList;
 
 import javax.swing.*;
 import java.awt.*;
@@ -37,12 +32,13 @@ public class Login extends AbstractFrame
     Properties preferences = new Properties("preferences.properties");
     AbstractAsyncAuthentication authentication = null;
     Connection xmppConnection = null;
-    UsersManager usersManager = new UsersManager();
+
+    // Frames
+    Contacts contactsFrame;
 
     // Panels
-    MainMenu mainMenu = new MainMenu();
+    MainMenu menu = new MainMenu();
     LoginPanel loginPanel = new LoginPanel();
-    UserListPanel userListPanel = new UserListPanel(usersManager);
 
     public Login()
     {
@@ -54,11 +50,9 @@ public class Login extends AbstractFrame
         // Adding the components on the frame
         configureFrame();
         populateFrame();
-        setupEvents();
 
         // Displaying the frame
         showFrame();
-        ensureMinimumSize();
 
         // Creating the connection objects
         xmppConnection = new Connection();
@@ -67,6 +61,12 @@ public class Login extends AbstractFrame
         // Creating the authentication objects (we must first connect to the server before we can do this
         authentication = new Authentication(xmppConnection);
         authentication.addAuthenticationListener(new AuthenticationStatusListener());
+
+        // Creating the other contacts frame
+        contactsFrame = new Contacts(preferences, xmppConnection);
+
+        // The setup events depends on the contacts frame
+        setupEvents();
     }
 
     protected void configureFrame()
@@ -81,7 +81,6 @@ public class Login extends AbstractFrame
         setMinimumSize(new Dimension(200, 500));
     }
 
-    @Override
     protected void populateFrame()
     {
         /**
@@ -89,99 +88,15 @@ public class Login extends AbstractFrame
          * main menu
          * -------------
          */
-        setJMenuBar(mainMenu);
-        attachMenuListeners(mainMenu);
+        setJMenuBar(menu);
 
-        // Updating panels
-        loginPanel.setName("loginPanel");
-        userListPanel.setName("userListPanel");
-
-        // By default we show the login panel
-        showLoginPanel();
-    }
-
-    protected void attachMenuListeners(AbstractMenu menu)
-    {
-        final JFrame currentFrame = this;
-        JMenuItem item;
-
-        /**
-         * -----------------------
-         * Listener exit command
-         * -----------------------
-         */
-        item = menu.findItemByName("exitItem");
-        if (item != null) {
-            item.addActionListener(new ActionListener()
-            {
-                @Override
-                public void actionPerformed(ActionEvent e)
-                {
-                    currentFrame.dispatchEvent(new WindowEvent(currentFrame, WindowEvent.WINDOW_CLOSING));
-                }
-            });
-        }
-    }
-
-    private void showLoginPanel()
-    {
         /**
          * -------------
          * Login panel
          * -------------
          */
+        loginPanel.setName("loginPanel");
         add(loginPanel);
-
-        // Repainting
-        revalidate();
-        repaint();
-    }
-
-    private void showUserList()
-    {
-        remove(loginPanel);
-
-        /**
-         * ----------------
-         * User list panel
-         * ----------------
-         */
-        add(userListPanel);
-
-        // Updating the window dimensions to what the user last set
-        setPreferredSize(getSizePreferences());
-
-        // Listeners for the panel
-        userListPanel.addMouseListener(new MouseAdapter()
-        {
-            /**
-             * {@inheritDoc}
-             *
-             * @param e
-             */
-            @Override
-            public void mouseClicked(MouseEvent e)
-            {
-                super.mouseClicked(e);
-
-                if (e.getClickCount() == 2) {
-                    startNewConversation(((UserList) e.getSource()).getSelectedValue());
-                }
-            }
-        });
-
-        userListPanel.addUsers(xmppConnection.getEndpoint().getRoster().getEntries());
-
-        // Repainting
-        revalidate();
-        repaint();
-    }
-
-    private void startNewConversation(User user)
-    {
-
-        Conversation conversationFrame = new Conversation(xmppConnection, user);
-        conversationFrame.setLocalUser(usersManager.getCurrentUser());
     }
 
     private void setupEvents()
@@ -215,23 +130,54 @@ public class Login extends AbstractFrame
             }
         });
 
-//        // Menu handlers
-//        mainMenu.findItemByName("logoutItem").addActionListener(new ActionListener()
-//        {
-//            @Override
-//            public void actionPerformed(ActionEvent e)
-//            {
-//                try {
-//                    xmppConnection.disconnect();
-//                } catch (ConnectionException e1) {
-//                    e1.printStackTrace();
-//                } finally {
-//                    remove(userListPanel);
-//                    usersManager.removeAll();
-//                    showLoginPanel();
-//                }
-//            }
-//        });
+        /**
+         * -----------------------
+         * Exit command
+         * -----------------------
+         */
+        JMenuItem item = menu.findItemByName("exitItem");
+        if (item != null) {
+            item.addActionListener(new ActionListener()
+            {
+                @Override
+                public void actionPerformed(ActionEvent e)
+                {
+                    triggerClosingEvent();
+                }
+            });
+        }
+
+        /**
+         * -----------------------
+         * Login frame
+         * -----------------------
+         */
+        addComponentListener(new ComponentAdapter()
+        {
+            @Override
+            public void componentHidden(ComponentEvent e)
+            {
+                super.componentHidden(e);
+                contactsFrame.loadUsers();
+                contactsFrame.showFrame();
+            }
+        });
+
+        /**
+         * -----------------------
+         * Contacts frame
+         * -----------------------
+         */
+        contactsFrame.addComponentListener(new ComponentAdapter()
+        {
+            @Override
+            public void componentHidden(ComponentEvent e)
+            {
+                super.componentHidden(e);
+                contactsFrame.invalidate();
+                setVisible(true);
+            }
+        });
 
         // Frame events
         addWindowListener(new SaveOnExitListener());
@@ -256,18 +202,6 @@ public class Login extends AbstractFrame
         infoLabel.setText("<html><center>Connecting, please wait...");
     }
 
-    private Dimension getSizePreferences()
-    {
-        Object width = preferences.get("MainWidth");
-        Object height = preferences.get("MainHeight");
-
-        if (width != null && height != null) {
-            return new Dimension(Integer.parseInt(width.toString()), Integer.parseInt(height.toString()));
-        }
-
-        return getPreferredSize();
-    }
-
     private class AuthenticationStatusListener implements AuthenticationListener
     {
         JLabel infoLabel;
@@ -285,9 +219,9 @@ public class Login extends AbstractFrame
         public void authenticationPerformed(AuthenticationEvent e)
         {
             if (e.isAuthenticated()) {
-                usersManager.setCurrentUser(e.getUser());
-                showUserList();
+                contactsFrame.getUsersManager().setCurrentUser(e.getUser());
                 password.setEnabled(true);
+                setVisible(false);
             } else {
                 loginBtn.setEnabled(true);
                 password.setEnabled(true);
@@ -347,6 +281,8 @@ public class Login extends AbstractFrame
         @Override
         public void windowClosing(WindowEvent e)
         {
+            System.out.println("Cleaning up the main program");
+
             if (xmppConnection.getEndpoint().isConnected()) {
                 try {
                     xmppConnection.disconnect();
