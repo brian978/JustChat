@@ -111,22 +111,6 @@ public class Conversation extends AbstractFrame
         addWindowListener(new CleanupWindowListener());
     }
 
-    protected void showErrorPanel()
-    {
-        //        GridBagConstraints c;
-        //
-        //        c = new GridBagConstraints();
-        //        c.weightx = 1.0;
-        //        c.weighty = 1.0;
-        //        c.gridx = 0;
-        //        c.gridy = 0;
-        //        c.fill = GridBagConstraints.BOTH;
-        //        c.anchor = GridBagConstraints.FIRST_LINE_START;
-        //
-        //        ErrorPanel errorPanel = new ErrorPanel(connectionMessage);
-        //        add(errorPanel, c);
-    }
-
     protected void attachMenuListeners(AbstractMenu menu)
     {
         final JFrame currentFrame = this;

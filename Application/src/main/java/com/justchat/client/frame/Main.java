@@ -13,8 +13,8 @@ import com.acamar.net.ConnectionStatusListener;
 import com.acamar.net.xmpp.Connection;
 import com.acamar.users.User;
 import com.acamar.users.UsersManager;
+import com.acamar.util.Properties;
 import com.justchat.client.frame.menu.MainMenu;
-import com.justchat.client.frame.preferences.MainFramePreferences;
 import com.justchat.client.gui.panel.LoginPanel;
 import com.justchat.client.gui.panel.UserListPanel;
 import com.justchat.client.gui.panel.components.UserList;
@@ -34,7 +34,7 @@ import java.util.TimerTask;
  */
 public class Main extends AbstractFrame
 {
-    MainFramePreferences preferences = new MainFramePreferences();
+    Properties preferences = new Properties("preferences.properties");
     AbstractAsyncAuthentication authentication = null;
     Connection xmppConnection = null;
     UsersManager usersManager = new UsersManager();
@@ -47,6 +47,9 @@ public class Main extends AbstractFrame
     public Main()
     {
         super("JustChat");
+
+        // First thing we need is have the preferences file loaded/created to be able to populate/configure the frame
+        preferences.checkAndLoad();
 
         // Adding the components on the frame
         configureFrame();
@@ -146,7 +149,7 @@ public class Main extends AbstractFrame
         add(userListPanel);
 
         // Updating the window dimensions to what the user last set
-        setPreferredSize(preferences.getPreferedSize(getPreferredSize()));
+        setPreferredSize(getSizePreferences());
 
         // Listeners for the panel
         userListPanel.addMouseListener(new MouseAdapter()
@@ -253,6 +256,18 @@ public class Main extends AbstractFrame
         infoLabel.setText("<html><center>Connecting, please wait...");
     }
 
+    private Dimension getSizePreferences()
+    {
+        Object width = preferences.get("MainWidth");
+        Object height = preferences.get("MainHeight");
+
+        if (width != null && height != null) {
+            return new Dimension(Integer.parseInt(width.toString()), Integer.parseInt(height.toString()));
+        }
+
+        return getPreferredSize();
+    }
+
     private class AuthenticationStatusListener implements AuthenticationListener
     {
         JLabel infoLabel;
@@ -345,7 +360,7 @@ public class Main extends AbstractFrame
             preferences.set("MainHeight", String.valueOf((int) size.getHeight()));
 
             try {
-                preferences.getStorage().store();
+                preferences.store();
             } catch (IOException e1) {
                 e1.printStackTrace();
             }

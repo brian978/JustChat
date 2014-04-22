@@ -52,6 +52,13 @@ public class Properties extends java.util.Properties
         return fileLoaded;
     }
 
+    public Properties set(String name, String value)
+    {
+        setProperty(name, value);
+
+        return this;
+    }
+
     public void store() throws IOException
     {
         FileOutputStream stream = new FileOutputStream(this.file);

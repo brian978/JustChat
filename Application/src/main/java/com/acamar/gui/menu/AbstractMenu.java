@@ -6,7 +6,9 @@ import java.util.HashMap;
 /**
  * JustChat
  *
+ * @version 1.0
  * @link https://github.com/brian978/JustChat
+ * @since 03-03-2014
  */
 public class AbstractMenu extends JMenuBar
 {
