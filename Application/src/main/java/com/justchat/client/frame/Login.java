@@ -27,46 +27,36 @@ import java.util.TimerTask;
  * @link https://github.com/brian978/JustChat
  * @since 2014-04-16
  */
-public class Login extends AbstractFrame
+public class Login extends AbstractMainFrame
 {
-    Properties preferences = new Properties("preferences.properties");
-    AbstractAsyncAuthentication authentication = null;
-    Connection xmppConnection = null;
-
-    // Frames
-    Contacts contactsFrame;
-
     // Panels
     MainMenu menu = new MainMenu();
     LoginPanel loginPanel = new LoginPanel();
 
-    public Login()
+    public Login(Properties settings)
     {
-        super("JustChat");
-
-        // First thing we need is have the preferences file loaded/created to be able to populate/configure the frame
-        preferences.checkAndLoad();
+        super("JustChat", settings);
 
         // Adding the components on the frame
         configureFrame();
         populateFrame();
 
-        // Displaying the frame
-        showFrame();
-
-        // Creating the connection objects
-        xmppConnection = new Connection();
-        xmppConnection.addConnectionStatusListener(new ConnectionStatus());
-
-        // Creating the authentication objects (we must first connect to the server before we can do this
-        authentication = new Authentication(xmppConnection);
-        authentication.addAuthenticationListener(new AuthenticationStatusListener());
-
-        // Creating the other contacts frame
-        contactsFrame = new Contacts(preferences, xmppConnection);
-
         // The setup events depends on the contacts frame
         setupEvents();
+    }
+
+    public Login addAuthenticationListeners()
+    {
+        xmppAuthentication.addAuthenticationListener(new AuthenticationStatusListener());
+
+        return this;
+    }
+
+    public Login addConnectionListeners()
+    {
+        xmppConnection.addConnectionStatusListener(new ConnectionStatus());
+
+        return this;
     }
 
     protected void configureFrame()
@@ -147,38 +137,6 @@ public class Login extends AbstractFrame
             });
         }
 
-        /**
-         * -----------------------
-         * Login frame
-         * -----------------------
-         */
-        addComponentListener(new ComponentAdapter()
-        {
-            @Override
-            public void componentHidden(ComponentEvent e)
-            {
-                super.componentHidden(e);
-                contactsFrame.loadUsers();
-                contactsFrame.showFrame();
-            }
-        });
-
-        /**
-         * -----------------------
-         * Contacts frame
-         * -----------------------
-         */
-        contactsFrame.addComponentListener(new ComponentAdapter()
-        {
-            @Override
-            public void componentHidden(ComponentEvent e)
-            {
-                super.componentHidden(e);
-                contactsFrame.invalidate();
-                setVisible(true);
-            }
-        });
-
         // Frame events
         addWindowListener(new SaveOnExitListener());
     }
@@ -191,7 +149,7 @@ public class Login extends AbstractFrame
         loginBtn.setEnabled(false);
         passwordField.setEnabled(false);
 
-        authentication.authenticate(identityField.getText(), passwordField.getPassword());
+        xmppAuthentication.authenticate(identityField.getText(), passwordField.getPassword());
         passwordField.setText("");
     }
 
@@ -219,7 +177,6 @@ public class Login extends AbstractFrame
         public void authenticationPerformed(AuthenticationEvent e)
         {
             if (e.isAuthenticated()) {
-                contactsFrame.getUsersManager().setCurrentUser(e.getUser());
                 password.setEnabled(true);
                 setVisible(false);
             } else {
@@ -291,12 +248,8 @@ public class Login extends AbstractFrame
                 }
             }
 
-            Dimension size = ((AbstractFrame) e.getSource()).getSize();
-            preferences.set("MainWidth", String.valueOf((int) size.getWidth()));
-            preferences.set("MainHeight", String.valueOf((int) size.getHeight()));
-
             try {
-                preferences.store();
+                settings.store();
             } catch (IOException e1) {
                 e1.printStackTrace();
             }

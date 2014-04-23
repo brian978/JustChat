@@ -1,5 +1,7 @@
 package com.justchat.client.frame;
 
+import com.acamar.authentication.AuthenticationEvent;
+import com.acamar.authentication.AuthenticationListener;
 import com.acamar.gui.frame.AbstractFrame;
 import com.acamar.net.ConnectionException;
 import com.acamar.net.xmpp.Connection;
@@ -24,41 +26,38 @@ import java.awt.event.MouseEvent;
  * @link https://github.com/brian978/JustChat
  * @since 2014-04-22
  */
-public class Contacts extends AbstractFrame
+public class Contacts extends AbstractMainFrame
 {
-    private Properties preferences;
-    private Connection xmppConnection;
-
     private ContactsMenu menu = new ContactsMenu();
     private UsersManager usersManager = new UsersManager();
 
     UserListPanel userListPanel = new UserListPanel(usersManager);
 
-    public Contacts(Properties preferences, Connection xmppConnection)
+    public Contacts(Properties settings)
     {
-        super("JustChat - Contacts");
-
-        this.preferences = preferences;
-        this.xmppConnection = xmppConnection;
+        super("JustChat - Contacts", settings);
 
         configureFrame();
         populateFrame();
         setupEvents();
-        setPreferredSize(getSizePreferences());
     }
 
     @Override
     public void showFrame()
     {
+        setMinimumSize(new Dimension(200, 300));
+
         // Updating the window dimensions to what the user last set
         setPreferredSize(getSizePreferences());
 
         super.showFrame();
     }
 
-    public UsersManager getUsersManager()
+    public Contacts addAuthenticationListeners()
     {
-        return usersManager;
+        xmppAuthentication.addAuthenticationListener(new AuthenticationStatusListener());
+
+        return this;
     }
 
     @Override
@@ -140,7 +139,7 @@ public class Contacts extends AbstractFrame
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                doLogout();
+                setVisible(false);
             }
         });
     }
@@ -154,7 +153,6 @@ public class Contacts extends AbstractFrame
         }
 
         usersManager.removeAll();
-        setVisible(false);
     }
 
     private void startNewConversation(User user)
@@ -165,13 +163,25 @@ public class Contacts extends AbstractFrame
 
     private Dimension getSizePreferences()
     {
-        Object width = preferences.get("ContactsWidth");
-        Object height = preferences.get("ContactsHeight");
+        Dimension size = getSize();
+        Object width = settings.get("ContactsWidth",  String.valueOf((int) size.getWidth()));
+        Object height = settings.get("ContactsHeight", String.valueOf((int) size.getHeight()));
 
         if (width != null && height != null) {
             return new Dimension(Integer.parseInt(width.toString()), Integer.parseInt(height.toString()));
         }
 
         return getPreferredSize();
+    }
+
+    private class AuthenticationStatusListener implements AuthenticationListener
+    {
+        @Override
+        public void authenticationPerformed(AuthenticationEvent e)
+        {
+            if (e.isAuthenticated()) {
+                usersManager.setCurrentUser(e.getUser());
+            }
+        }
     }
 }

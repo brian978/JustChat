@@ -59,6 +59,15 @@ public class Properties extends java.util.Properties
         return this;
     }
 
+    public String get(String name, String defaultValue)
+    {
+        if(!containsKey(name)) {
+            setProperty(name, defaultValue);
+        }
+
+        return getProperty(name);
+    }
+
     public void store() throws IOException
     {
         FileOutputStream stream = new FileOutputStream(this.file);
