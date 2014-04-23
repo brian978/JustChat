@@ -6,6 +6,7 @@ import com.acamar.util.Properties;
 import com.justchat.client.frame.Contacts;
 import com.justchat.client.frame.Login;
 
+import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
@@ -21,9 +22,9 @@ public class Launcher
     Connection xmppConnection;
     Authentication xmppAuthentication;
 
-    Properties preferences = new Properties("preferences.properties");
-    Login login = new Login(preferences);
-    Contacts contacts = new Contacts(preferences);
+    Properties settings = new Properties("preferences.properties");
+    Login login = new Login(settings);
+    Contacts contacts = new Contacts(settings);
 
     public static void main(String[] args)
     {
@@ -34,7 +35,7 @@ public class Launcher
     {
         // Loading (or creating) the preferences file
         // TODO: handle read/create file failed (maybe with an error popup?)
-        preferences.checkAndLoad();
+        settings.checkAndLoad();
 
         /**
          * --------------------------
@@ -93,6 +94,11 @@ public class Launcher
             public void componentHidden(ComponentEvent e)
             {
                 super.componentHidden(e);
+
+                Dimension size = contacts.getSize();
+                settings.set("ContactsWidth",  String.valueOf((int) size.getWidth()));
+                settings.set("ContactsHeight", String.valueOf((int) size.getHeight()));
+
                 contacts.doLogout();
                 contacts.invalidate();
                 login.setVisible(true);

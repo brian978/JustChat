@@ -2,9 +2,7 @@ package com.justchat.client.frame;
 
 import com.acamar.authentication.AuthenticationEvent;
 import com.acamar.authentication.AuthenticationListener;
-import com.acamar.gui.frame.AbstractFrame;
 import com.acamar.net.ConnectionException;
-import com.acamar.net.xmpp.Connection;
 import com.acamar.users.User;
 import com.acamar.users.UsersManager;
 import com.acamar.util.Properties;
@@ -14,10 +12,7 @@ import com.justchat.client.gui.panel.components.UserList;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 
 /**
  * JustChat
@@ -164,7 +159,7 @@ public class Contacts extends AbstractMainFrame
     private Dimension getSizePreferences()
     {
         Dimension size = getSize();
-        Object width = settings.get("ContactsWidth",  String.valueOf((int) size.getWidth()));
+        Object width = settings.get("ContactsWidth", String.valueOf((int) size.getWidth()));
         Object height = settings.get("ContactsHeight", String.valueOf((int) size.getHeight()));
 
         if (width != null && height != null) {
