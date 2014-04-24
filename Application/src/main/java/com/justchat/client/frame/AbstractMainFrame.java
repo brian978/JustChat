@@ -1,9 +1,10 @@
 package com.justchat.client.frame;
 
-import com.acamar.authentication.xmpp.Authentication;
 import com.acamar.authentication.AbstractAuthentication;
 import com.acamar.authentication.AuthenticationAwareInterface;
+import com.acamar.authentication.xmpp.Authentication;
 import com.acamar.gui.swing.frame.AbstractFrame;
+import com.acamar.gui.swing.menu.AbstractMenu;
 import com.acamar.net.ConnectionAwareInterface;
 import com.acamar.net.xmpp.Connection;
 import com.acamar.util.Properties;
@@ -18,6 +19,7 @@ import com.acamar.util.Properties;
 abstract public class AbstractMainFrame extends AbstractFrame
         implements AuthenticationAwareInterface, ConnectionAwareInterface
 {
+    protected AbstractMenu menu;
     protected Properties settings;
     protected Authentication xmppAuthentication;
     protected Connection xmppConnection;
@@ -43,5 +45,10 @@ abstract public class AbstractMainFrame extends AbstractFrame
         this.xmppConnection = (Connection) connection;
 
         return this;
+    }
+
+    public void setMenu(AbstractMenu menu)
+    {
+        this.menu = menu;
     }
 }

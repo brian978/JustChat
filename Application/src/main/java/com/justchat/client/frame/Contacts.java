@@ -6,7 +6,7 @@ import com.acamar.net.ConnectionException;
 import com.acamar.users.User;
 import com.acamar.users.UsersManager;
 import com.acamar.util.Properties;
-import com.justchat.client.frame.menu.ContactsMenu;
+import com.justchat.client.frame.menu.MainMenu;
 import com.justchat.client.gui.panel.UserListPanel;
 import com.justchat.client.gui.panel.components.UserList;
 
@@ -23,7 +23,6 @@ import java.awt.event.*;
  */
 public class Contacts extends AbstractMainFrame
 {
-    private ContactsMenu menu = new ContactsMenu();
     private UsersManager usersManager = new UsersManager();
 
     UserListPanel userListPanel = new UserListPanel(usersManager);
@@ -32,6 +31,7 @@ public class Contacts extends AbstractMainFrame
     {
         super("JustChat - Contacts", settings);
 
+        setMenu(new MainMenu());
         configureFrame();
         populateFrame();
         setupEvents();
@@ -72,6 +72,9 @@ public class Contacts extends AbstractMainFrame
          * -------------
          */
         setJMenuBar(menu);
+
+        menu.display(MainMenu.DEFAULT_ITEMS);
+        menu.display(MainMenu.AUTHENTICATED_ITEMS);
 
         /**
          * -------------

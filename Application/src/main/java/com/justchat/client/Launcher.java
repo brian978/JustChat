@@ -5,6 +5,7 @@ import com.acamar.net.xmpp.Connection;
 import com.acamar.util.Properties;
 import com.justchat.client.frame.Contacts;
 import com.justchat.client.frame.Login;
+import com.justchat.client.frame.menu.MainMenu;
 
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
@@ -58,13 +59,12 @@ public class Launcher
          */
         login.setConnection(xmppConnection)
              .setAuthentication(xmppAuthentication);
-
         login.addConnectionListeners()
              .addAuthenticationListeners();
 
+
         contacts.setConnection(xmppConnection)
                 .setAuthentication(xmppAuthentication);
-
         contacts.addAuthenticationListeners();
 
         /**
@@ -104,6 +104,12 @@ public class Launcher
                 login.setVisible(true);
             }
         });
+
+        /**
+         * -------------------------
+         * Menu setup
+         * -------------------------
+         */
 
         /**
          * -------------------------

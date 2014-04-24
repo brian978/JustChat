@@ -62,6 +62,20 @@ public class AbstractMenu extends JMenuBar
         }
     }
 
+    public void hide(String tagName)
+    {
+        ButtonGroup group;
+        Collection<JMenuItem> items = menuItems.values();
+
+        for (JMenuItem item : items) {
+            group = ((ButtonGroup) ((DefaultButtonModel) item.getModel()).getGroup());
+
+            if(group.tag.equals(tagName)){
+                item.setVisible(false);
+            }
+        }
+    }
+
     public JMenuItem findItemByName(String name)
     {
         return menuItems.get(name);

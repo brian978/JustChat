@@ -34,6 +34,7 @@ public class Login extends AbstractMainFrame
         super("JustChat", settings);
 
         // Adding the components on the frame
+        setMenu(new MainMenu());
         configureFrame();
         populateFrame();
 
@@ -75,6 +76,8 @@ public class Login extends AbstractMainFrame
          * -------------
          */
         setJMenuBar(menu);
+
+        menu.display(MainMenu.DEFAULT_ITEMS);
 
         /**
          * -------------
