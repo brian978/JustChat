@@ -26,20 +26,11 @@ import java.util.TimerTask;
 public class Login extends AbstractMainFrame
 {
     // Panels
-    MainMenu menu = new MainMenu();
-    LoginPanel loginPanel = new LoginPanel();
+    private LoginPanel loginPanel = new LoginPanel();
 
     public Login(Properties settings)
     {
         super("JustChat", settings);
-
-        // Adding the components on the frame
-        setMenu(new MainMenu());
-        configureFrame();
-        populateFrame();
-
-        // The setup events depends on the contacts frame
-        setupEvents();
     }
 
     public Login addAuthenticationListeners()
@@ -88,8 +79,11 @@ public class Login extends AbstractMainFrame
         add(loginPanel);
     }
 
-    private void setupEvents()
+    @Override
+    protected void setupEvents()
     {
+        super.setupEvents();
+
         // Buttons and fields events
         final JTextField identifier = (JTextField) loginPanel.findComponent("identifierField");
         final JPasswordField password = (JPasswordField) loginPanel.findComponent("passwordField");
@@ -118,26 +112,6 @@ public class Login extends AbstractMainFrame
                 }
             }
         });
-
-        /**
-         * -----------------------
-         * Exit command
-         * -----------------------
-         */
-        JMenuItem item = menu.findItemByName("exitItem");
-        if (item != null) {
-            item.addActionListener(new ActionListener()
-            {
-                @Override
-                public void actionPerformed(ActionEvent e)
-                {
-                    triggerClosingEvent();
-                }
-            });
-        }
-
-        // Frame events
-        addWindowListener(new SaveOnExitListener());
     }
 
     private void handleAuthenticateAction(JButton loginBtn, JTextField identityField, JPasswordField passwordField)
@@ -222,35 +196,6 @@ public class Login extends AbstractMainFrame
                         connectToServer();
                     }
                 }, 3000);
-            }
-        }
-    }
-
-    private class SaveOnExitListener extends WindowAdapter
-    {
-        /**
-         * Invoked when the user attempts to close the window
-         * from the window's system menu.
-         *
-         * @param e WindowEvent object used to determine properties of the window
-         */
-        @Override
-        public void windowClosing(WindowEvent e)
-        {
-            System.out.println("Cleaning up the main program");
-
-            if (xmppConnection.getEndpoint().isConnected()) {
-                try {
-                    xmppConnection.disconnect();
-                } catch (ConnectionException e1) {
-                    e1.printStackTrace();
-                }
-            }
-
-            try {
-                settings.store();
-            } catch (IOException e1) {
-                e1.printStackTrace();
             }
         }
     }

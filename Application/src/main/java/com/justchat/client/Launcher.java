@@ -1,6 +1,7 @@
 package com.justchat.client;
 
 import com.acamar.authentication.xmpp.Authentication;
+import com.acamar.net.ConnectionException;
 import com.acamar.net.xmpp.Connection;
 import com.acamar.util.Properties;
 import com.justchat.client.frame.Contacts;
@@ -10,6 +11,9 @@ import com.justchat.client.frame.menu.MainMenu;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.IOException;
 
 /**
  * JustChat
@@ -57,12 +61,22 @@ public class Launcher
          * Frames setup
          * --------------------------
          */
+        // Frame listeners
+        SaveOnExitListener exitListener = new SaveOnExitListener();
+
+        // Login frame
+        login.addWindowListener(exitListener);
+        login.setMenu(new MainMenu());
+        login.initialize();
         login.setConnection(xmppConnection)
              .setAuthentication(xmppAuthentication);
         login.addConnectionListeners()
              .addAuthenticationListeners();
 
-
+        // Contacts frame
+        contacts.addWindowListener(exitListener);
+        contacts.setMenu(new MainMenu());
+        contacts.initialize();
         contacts.setConnection(xmppConnection)
                 .setAuthentication(xmppAuthentication);
         contacts.addAuthenticationListeners();
@@ -96,7 +110,7 @@ public class Launcher
                 super.componentHidden(e);
 
                 Dimension size = contacts.getSize();
-                settings.set("ContactsWidth",  String.valueOf((int) size.getWidth()));
+                settings.set("ContactsWidth", String.valueOf((int) size.getWidth()));
                 settings.set("ContactsHeight", String.valueOf((int) size.getHeight()));
 
                 contacts.doLogout();
@@ -107,15 +121,38 @@ public class Launcher
 
         /**
          * -------------------------
-         * Menu setup
-         * -------------------------
-         */
-
-        /**
-         * -------------------------
          * Loading the software
          * -------------------------
          */
         login.showFrame();
+    }
+
+    private class SaveOnExitListener extends WindowAdapter
+    {
+        /**
+         * Invoked when the user attempts to close the window
+         * from the window's system menu.
+         *
+         * @param e WindowEvent object used to determine properties of the window
+         */
+        @Override
+        public void windowClosing(WindowEvent e)
+        {
+            System.out.println("Cleaning up the main program");
+
+            if (xmppConnection.getEndpoint().isConnected()) {
+                try {
+                    xmppConnection.disconnect();
+                } catch (ConnectionException e1) {
+                    e1.printStackTrace();
+                }
+            }
+
+            try {
+                settings.store();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        }
     }
 }

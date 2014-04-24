@@ -12,7 +12,10 @@ import com.justchat.client.gui.panel.components.UserList;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 /**
  * JustChat
@@ -24,17 +27,11 @@ import java.awt.event.*;
 public class Contacts extends AbstractMainFrame
 {
     private UsersManager usersManager = new UsersManager();
-
-    UserListPanel userListPanel = new UserListPanel(usersManager);
+    private UserListPanel userListPanel = new UserListPanel(usersManager);
 
     public Contacts(Properties settings)
     {
         super("JustChat - Contacts", settings);
-
-        setMenu(new MainMenu());
-        configureFrame();
-        populateFrame();
-        setupEvents();
     }
 
     @Override
@@ -61,7 +58,6 @@ public class Contacts extends AbstractMainFrame
         super.configureFrame();
 
         setLayout(new BoxLayout(getContentPane(), BoxLayout.PAGE_AXIS));
-        setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
     }
 
     protected void populateFrame()
@@ -84,13 +80,11 @@ public class Contacts extends AbstractMainFrame
         add(userListPanel);
     }
 
-    public void loadUsers()
+    @Override
+    protected void setupEvents()
     {
-        userListPanel.addUsers(xmppConnection.getEndpoint().getRoster().getEntries());
-    }
+        super.setupEvents();
 
-    private void setupEvents()
-    {
         /**
          * -----------------------
          * Contacts list handlers
@@ -118,19 +112,6 @@ public class Contacts extends AbstractMainFrame
          * Menu handlers
          * -----------------------
          */
-        // Exit action
-        JMenuItem item = menu.findItemByName("exitItem");
-        if (item != null) {
-            item.addActionListener(new ActionListener()
-            {
-                @Override
-                public void actionPerformed(ActionEvent e)
-                {
-                    triggerClosingEvent();
-                }
-            });
-        }
-
         // Logout action
         menu.findItemByName("logoutItem").addActionListener(new ActionListener()
         {
@@ -170,6 +151,11 @@ public class Contacts extends AbstractMainFrame
         }
 
         return getPreferredSize();
+    }
+
+    public void loadUsers()
+    {
+        userListPanel.addUsers(xmppConnection.getEndpoint().getRoster().getEntries());
     }
 
     private class AuthenticationStatusListener implements AuthenticationListener

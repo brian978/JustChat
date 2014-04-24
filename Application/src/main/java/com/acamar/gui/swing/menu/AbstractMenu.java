@@ -1,6 +1,7 @@
 package com.acamar.gui.swing.menu;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.Collection;
 import java.util.HashMap;
 
@@ -74,6 +75,14 @@ public class AbstractMenu extends JMenuBar
                 item.setVisible(false);
             }
         }
+    }
+
+    public Window getParentWindow(JMenuItem item)
+    {
+        JPopupMenu popupMenu = (JPopupMenu) item.getParent();
+        JMenu jMenu = (JMenu) popupMenu.getInvoker();
+
+        return SwingUtilities.getWindowAncestor(jMenu);
     }
 
     public JMenuItem findItemByName(String name)

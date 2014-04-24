@@ -1,14 +1,14 @@
 package com.justchat.client.frame.menu;
 
-import com.acamar.gui.swing.menu.*;
+import com.acamar.gui.swing.menu.AbstractMenu;
 
 import javax.swing.*;
 
 /**
  * JustChat
  *
- * @link https://github.com/brian978/JustChat
  * @version 1.1
+ * @link https://github.com/brian978/JustChat
  * @since 2014-03-03
  */
 public class MainMenu extends AbstractMenu

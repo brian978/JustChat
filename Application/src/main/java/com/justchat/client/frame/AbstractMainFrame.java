@@ -9,6 +9,10 @@ import com.acamar.net.ConnectionAwareInterface;
 import com.acamar.net.xmpp.Connection;
 import com.acamar.util.Properties;
 
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 /**
  * JustChat
  *
@@ -29,6 +33,47 @@ abstract public class AbstractMainFrame extends AbstractFrame
         super(title);
 
         this.settings = settings;
+    }
+
+    abstract protected void populateFrame();
+
+    protected void setupEvents()
+    {
+        /**
+         * -----------------
+         * Menu setup
+         * ----------------
+         */
+        // Preferences action
+        menu.findItemByName("preferencesItem").addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                System.out.println("Launching preferences window from " + AbstractMainFrame.this.getTitle());
+            }
+        });
+
+        // Exit action
+        menu.findItemByName("exitItem").addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                if (menu.getParentWindow((JMenuItem) e.getSource()) == AbstractMainFrame.this) {
+                    triggerClosingEvent();
+                }
+            }
+        });
+    }
+
+    public AbstractMainFrame initialize()
+    {
+        configureFrame();
+        populateFrame();
+        setupEvents();
+
+        return this;
     }
 
     @Override
