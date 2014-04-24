@@ -8,6 +8,7 @@ import com.acamar.gui.swing.menu.AbstractMenu;
 import com.acamar.net.ConnectionAwareInterface;
 import com.acamar.net.xmpp.Connection;
 import com.acamar.util.Properties;
+import com.justchat.client.frame.menu.MainMenu;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -23,7 +24,7 @@ import java.awt.event.ActionListener;
 abstract public class AbstractMainFrame extends AbstractFrame
         implements AuthenticationAwareInterface, ConnectionAwareInterface
 {
-    protected AbstractMenu menu;
+    protected MainMenu menu;
     protected Properties settings;
     protected Authentication xmppAuthentication;
     protected Connection xmppConnection;
@@ -92,7 +93,7 @@ abstract public class AbstractMainFrame extends AbstractFrame
         return this;
     }
 
-    public void setMenu(AbstractMenu menu)
+    public void setMenu(MainMenu menu)
     {
         this.menu = menu;
     }
