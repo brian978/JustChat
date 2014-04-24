@@ -1,6 +1,7 @@
 package com.justchat.client.frame.menu;
 
-import com.acamar.gui.menu.AbstractMenu;
+import com.acamar.gui.swing.menu.*;
+import com.acamar.gui.swing.menu.ButtonGroup;
 
 import javax.swing.*;
 
@@ -13,14 +14,25 @@ import javax.swing.*;
  */
 public class ContactsMenu extends AbstractMenu
 {
+    JMenu menu = addMenu("File", "fileMenu");
+
     public ContactsMenu()
     {
-        JMenu menu = addMenu("File", "fileMenu");
+        // Buttons that show up when the user is authenticated
+        ButtonGroup authGroup = new ButtonGroup();
+        authGroup.setTag("authenticated");
 
-        addMenuItem(menu, "Preferences", "preferencesItem");
-        menu.addSeparator();
-        addMenuItem(menu, "Logout", "logoutItem");
-        menu.addSeparator();
-        addMenuItem(menu, "Exit", "exitItem");
+        // Buttons that show up all the time
+        ButtonGroup defaultGroup = new ButtonGroup();
+        authGroup.setTag("default");
+
+        JMenuItem settingsBtn = createMenuItem("Preferences", "preferencesItem", defaultGroup);
+        JMenuItem logoutBtn = createMenuItem("Logout", "logoutItem", authGroup);
+        JMenuItem exitBtn = createMenuItem("Exit", "exitItem", defaultGroup);
+
+        // Populating the menu
+        menu.add(settingsBtn);
+        menu.add(logoutBtn);
+        menu.add(exitBtn);
     }
 }

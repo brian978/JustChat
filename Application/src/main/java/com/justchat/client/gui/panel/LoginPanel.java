@@ -1,6 +1,6 @@
 package com.justchat.client.gui.panel;
 
-import com.acamar.gui.panel.AbstractPanel;
+import com.acamar.gui.swing.panel.AbstractPanel;
 
 import javax.swing.*;
 import java.awt.*;

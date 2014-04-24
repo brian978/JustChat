@@ -1,4 +1,4 @@
-package com.acamar.gui.panel;
+package com.acamar.gui.swing.panel;
 
 import javax.swing.*;
 import java.awt.*;

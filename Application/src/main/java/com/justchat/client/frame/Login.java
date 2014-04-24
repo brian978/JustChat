@@ -1,15 +1,11 @@
 package com.justchat.client.frame;
 
-import com.acamar.authentication.AbstractAsyncAuthentication;
 import com.acamar.authentication.AuthenticationEvent;
 import com.acamar.authentication.AuthenticationListener;
-import com.acamar.authentication.xmpp.Authentication;
-import com.acamar.gui.frame.AbstractFrame;
-import com.acamar.gui.panel.AbstractPanel;
+import com.acamar.gui.swing.panel.AbstractPanel;
 import com.acamar.net.ConnectionEvent;
 import com.acamar.net.ConnectionException;
 import com.acamar.net.ConnectionStatusListener;
-import com.acamar.net.xmpp.Connection;
 import com.acamar.util.Properties;
 import com.justchat.client.frame.menu.MainMenu;
 import com.justchat.client.gui.panel.LoginPanel;

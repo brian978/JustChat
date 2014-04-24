@@ -1,7 +1,7 @@
 package com.justchat.client.frame;
 
-import com.acamar.gui.frame.AbstractFrame;
-import com.acamar.gui.menu.AbstractMenu;
+import com.acamar.gui.swing.frame.AbstractFrame;
+import com.acamar.gui.swing.menu.AbstractMenu;
 import com.acamar.net.xmpp.Connection;
 import com.acamar.users.User;
 import com.justchat.client.frame.menu.ChatMenu;

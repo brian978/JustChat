@@ -1,6 +1,6 @@
 package com.justchat.client.gui.panel;
 
-import com.acamar.gui.panel.AbstractPanel;
+import com.acamar.gui.swing.panel.AbstractPanel;
 import com.justchat.client.gui.panel.components.ChatBox;
 
 import javax.swing.*;
