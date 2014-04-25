@@ -13,7 +13,7 @@ import java.io.IOException;
  *
  * @link https://github.com/brian978/JustChat
  */
-abstract public class Connection implements ConnectionInterface
+abstract public class Connection implements ConnectionInterface, ConnectionAsyncInterface
 {
     protected String configFilename = getConfigFilename();
     protected Config config = null;
@@ -32,6 +32,25 @@ abstract public class Connection implements ConnectionInterface
     }
 
     abstract protected String getConfigFilename();
+
+    @Override
+    public void connectAsync()
+    {
+        Thread thread = new Thread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                try {
+                    connect();
+                } catch (ConnectionException e) {
+                    fireConnectionEvent(e.getCause().getMessage(), ConnectionEvent.ERROR_OCCURED);
+                }
+            }
+        });
+
+        thread.start();
+    }
 
     public void setup(String protocol, String host, int port)
     {

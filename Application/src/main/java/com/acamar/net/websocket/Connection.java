@@ -3,7 +3,6 @@ package com.acamar.net.websocket;
 import com.acamar.event.EventInterface;
 import com.acamar.event.EventManager;
 import com.acamar.event.FireEventCallback;
-import com.acamar.net.AsyncConnection;
 import com.acamar.net.ConnectionEvent;
 import com.acamar.net.ConnectionException;
 import com.acamar.net.ConnectionStatusListener;
@@ -17,7 +16,7 @@ import java.net.URI;
  *
  * @link https://github.com/brian978/JustChat
  */
-public class Connection extends AsyncConnection
+public class Connection extends com.acamar.net.Connection
 {
     protected Config config = null;
     protected Session session = null;

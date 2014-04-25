@@ -14,6 +14,10 @@ import java.awt.*;
  */
 public class LoginPanel extends AbstractPanel
 {
+    Dimension sectionSeparator = new Dimension(0, 20);
+    Dimension fieldSeparator = new Dimension(0, 7);
+    Insets fieldMargin = new Insets(3, 3, 3, 3);
+
     public LoginPanel()
     {
         super();
@@ -28,22 +32,9 @@ public class LoginPanel extends AbstractPanel
         add(Box.createRigidArea(size));
     }
 
-    private JTextField configureStandardField(JTextField field, String name, Insets margin)
-    {
-        field.setAlignmentX(Component.LEFT_ALIGNMENT);
-        field.setColumns(10);
-        field.setMargin(margin);
-        field.setMaximumSize(field.getPreferredSize());
-        field.setName(name);
-
-        return field;
-    }
-
     protected void populate()
     {
-        Dimension sectionSeparator = new Dimension(0, 20);
-        Dimension fieldSeparator = new Dimension(0, 7);
-        Insets fieldMargin = new Insets(3, 3, 3, 3);
+
 
         /**
          * --------------------
@@ -59,33 +50,13 @@ public class LoginPanel extends AbstractPanel
 
         /**
          * -----------------
-         * Username / email
+         * Fields
          * -----------------
          */
-        // Label
-        JLabel identityLabel = new JLabel("Username / Email:");
-
-        add(identityLabel);
-        addSeparator(fieldSeparator);
-
-        // Field
-        add(configureStandardField(new JTextField(), "identifierField", fieldMargin));
-        addSeparator(sectionSeparator);
-
-        /**
-         * -----------------
-         * Password
-         * -----------------
-         */
-        // Label
-        JLabel passwordLabel = new JLabel("Password:");
-
-        add(passwordLabel);
-        addSeparator(fieldSeparator);
-
-        // Field
-        add(configureStandardField(new JPasswordField(), "passwordField", fieldMargin));
-        addSeparator(sectionSeparator);
+        createRow("Username / Email:", new JTextField(), "identifierField", fieldMargin);
+        createRow("Password:", new JPasswordField(), "passwordField", fieldMargin);
+        createRow("Server:", new JTextField(), "serverField", fieldMargin);
+        createRow("Port:", new JTextField(), "portField", fieldMargin);
 
         /**
          * -----------------
@@ -98,5 +69,25 @@ public class LoginPanel extends AbstractPanel
         loginBtn.setName("loginBtn");
 
         add(loginBtn);
+    }
+
+    private void createRow(String label, JTextField fieldObject, String fieldName, Insets fieldMargin)
+    {
+        add(new JLabel(label));
+        addSeparator(fieldSeparator);
+
+        add(configureStandardField(fieldObject, fieldName, fieldMargin));
+        addSeparator(sectionSeparator);
+    }
+
+    private JTextField configureStandardField(JTextField field, String name, Insets margin)
+    {
+        field.setAlignmentX(Component.LEFT_ALIGNMENT);
+        field.setColumns(10);
+        field.setMargin(margin);
+        field.setMaximumSize(field.getPreferredSize());
+        field.setName(name);
+
+        return field;
     }
 }

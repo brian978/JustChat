@@ -9,9 +9,9 @@ package com.acamar.net.xmpp.facebook;
  */
 public class Connection extends com.acamar.net.xmpp.Connection
 {
-    public Connection()
-    {
-    }
+    // Connection defaults
+    final public String defaultHost = "chat.facebook.com";
+    final public String defaultPort = "5222";
 
     @Override
     protected String getConfigFilename()
@@ -22,6 +22,6 @@ public class Connection extends com.acamar.net.xmpp.Connection
     @Override
     protected void setup()
     {
-        setup(null, getOption("host", "chat.facebook.com"), Integer.parseInt(getOption("port", "5222")));
+        setup(null, getOption("host", defaultHost), Integer.parseInt(getOption("port", defaultPort)));
     }
 }

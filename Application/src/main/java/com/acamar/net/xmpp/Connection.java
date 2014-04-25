@@ -1,6 +1,5 @@
 package com.acamar.net.xmpp;
 
-import com.acamar.net.AsyncConnection;
 import com.acamar.net.ConnectionEvent;
 import com.acamar.net.ConnectionException;
 import org.jivesoftware.smack.ConnectionConfiguration;
@@ -13,9 +12,13 @@ import org.jivesoftware.smack.packet.Presence;
  *
  * @link https://github.com/brian978/JustChat
  */
-public class Connection extends AsyncConnection
+public class Connection extends com.acamar.net.Connection
 {
     protected XMPPConnection endpoint = null;
+
+    // Connection defaults
+    final public String defaultHost = "127.0.0.1";
+    final public String defaultPort = "5222";
 
     public Connection()
     {
@@ -30,7 +33,7 @@ public class Connection extends AsyncConnection
 
     protected void setup()
     {
-        setup(null, getOption("host", "127.0.0.1"), Integer.parseInt(getOption("port", "5222")));
+        setup(null, getOption("host", defaultHost), Integer.parseInt(getOption("port", defaultPort)));
     }
 
     protected void initializeEndpoint()
