@@ -57,7 +57,7 @@ public class AbstractMenu extends JMenuBar
         for (JMenuItem item : items) {
             group = ((ButtonGroup) ((DefaultButtonModel) item.getModel()).getGroup());
 
-            if(group.tag.equals(tagName)){
+            if (group.tag.equals(tagName)) {
                 item.setVisible(true);
             }
         }
@@ -71,7 +71,7 @@ public class AbstractMenu extends JMenuBar
         for (JMenuItem item : items) {
             group = ((ButtonGroup) ((DefaultButtonModel) item.getModel()).getGroup());
 
-            if(group.tag.equals(tagName)){
+            if (group.tag.equals(tagName)) {
                 item.setVisible(false);
             }
         }

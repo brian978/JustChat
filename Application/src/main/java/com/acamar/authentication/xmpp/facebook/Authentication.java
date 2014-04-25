@@ -1,7 +1,6 @@
 package com.acamar.authentication.xmpp.facebook;
 
 import com.acamar.net.xmpp.Connection;
-import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 
 /**

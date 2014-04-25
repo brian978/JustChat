@@ -5,7 +5,6 @@ import com.acamar.event.EventManager;
 import com.acamar.event.FireEventCallback;
 import com.acamar.util.Properties;
 
-import java.io.File;
 import java.io.IOException;
 
 /**

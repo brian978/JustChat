@@ -4,7 +4,6 @@ import com.acamar.authentication.AbstractAuthentication;
 import com.acamar.authentication.AuthenticationAwareInterface;
 import com.acamar.authentication.xmpp.Authentication;
 import com.acamar.gui.swing.frame.AbstractFrame;
-import com.acamar.gui.swing.menu.AbstractMenu;
 import com.acamar.net.ConnectionAwareInterface;
 import com.acamar.net.xmpp.Connection;
 import com.acamar.util.Properties;

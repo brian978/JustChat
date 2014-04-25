@@ -1,7 +1,5 @@
 package com.acamar.net;
 
-import com.acamar.net.Connection;
-
 /**
  * JustChat
  *
