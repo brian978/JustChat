@@ -11,10 +11,11 @@ import java.nio.charset.Charset;
 public class Properties extends java.util.Properties
 {
     protected File file;
+    protected boolean loaded = false;
 
     public Properties(String filename)
     {
-        this.file = new File(filename);
+        this(new File(filename));
     }
 
     public Properties(File file)
@@ -22,20 +23,18 @@ public class Properties extends java.util.Properties
         this.file = file;
     }
 
-    public void load() throws IOException
+    protected void load() throws IOException
     {
         load(new FileInputStream(this.file));
     }
 
     public boolean checkAndLoad()
     {
-        boolean fileLoaded = false;
-
         if (!file.exists()) {
             try {
                 if (file.createNewFile()) {
                     store();
-                    fileLoaded = true;
+                    loaded = true;
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -43,13 +42,18 @@ public class Properties extends java.util.Properties
         } else {
             try {
                 load();
-                fileLoaded = true;
+                loaded = true;
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
 
-        return fileLoaded;
+        return loaded;
+    }
+
+    public boolean isLoaded()
+    {
+        return loaded;
     }
 
     public Properties set(String name, String value)

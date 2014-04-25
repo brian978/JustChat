@@ -15,15 +15,14 @@ import java.io.IOException;
  */
 abstract public class Connection implements ConnectionInterface, ConnectionAsyncInterface
 {
-    protected String configFilename = getConfigFilename();
-    protected Config config = null;
+    protected Properties config = new Properties(getConfigFilename());
     protected String protocol = "";
     protected String host = "";
     protected int port = 0;
 
     protected Connection()
     {
-        getConfig();
+
     }
 
     public Connection(String protocol, String host, int port)
@@ -62,7 +61,7 @@ abstract public class Connection implements ConnectionInterface, ConnectionAsync
     public void disconnect() throws ConnectionException
     {
         try {
-            config.save();
+            config.store();
         } catch (IOException e) {
             // We will handle this using an event
             e.printStackTrace();
@@ -92,20 +91,6 @@ abstract public class Connection implements ConnectionInterface, ConnectionAsync
         );
     }
 
-    protected Config getConfig()
-    {
-        if (config == null) {
-            try {
-                config = new Config(configFilename);
-            } catch (IOException e) {
-                // We will handle this using an event
-                e.printStackTrace();
-            }
-        }
-
-        return config;
-    }
-
     protected String getOption(String name)
     {
         return getOption(name, null);
@@ -113,75 +98,10 @@ abstract public class Connection implements ConnectionInterface, ConnectionAsync
 
     protected String getOption(String name, String defaultValue)
     {
-        if (config == null) {
-            config = getConfig();
+        if (!config.isLoaded()) {
+            config.checkAndLoad();
         }
 
         return config.get(name, defaultValue);
-    }
-
-    /**
-     * Configuration class for the connection
-     */
-    protected class Config
-    {
-        File config = null;
-        Properties properties = null;
-
-        public Config(String filename) throws IOException
-        {
-            this(filename, true);
-        }
-
-        public Config(String filename, boolean autoload) throws IOException
-        {
-            config = new File(filename);
-            properties = new Properties(config);
-
-            if (!createFile() && autoload) {
-                load();
-            }
-        }
-
-        private boolean createFile() throws IOException
-        {
-            boolean fileCreated = false;
-
-            if (!config.exists()) {
-                if (config.createNewFile()) {
-                    fileCreated = true;
-                } else {
-                    throw new IOException("Cannot create file.");
-                }
-            }
-
-            return fileCreated;
-        }
-
-        public void load() throws IOException
-        {
-            properties.load();
-        }
-
-        public void save() throws IOException
-        {
-            properties.store();
-        }
-
-        public void set(String name, String property)
-        {
-            properties.setProperty(name, property);
-        }
-
-        public String get(String property, String defaultValue)
-        {
-            String value = properties.getProperty(property);
-            if (value == null) {
-                properties.setProperty(property, defaultValue);
-                value = defaultValue;
-            }
-
-            return value;
-        }
     }
 }
