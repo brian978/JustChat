@@ -1,7 +1,6 @@
 package com.acamar.net.xmpp;
 
 import com.acamar.net.ConnectionEvent;
-import com.acamar.net.ConnectionException;
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
@@ -22,7 +21,8 @@ public class Connection extends com.acamar.net.Connection
 
     public Connection()
     {
-        setup(getOption("host", defaultHost), Integer.parseInt(getOption("port", defaultPort)));
+        host = getOption("host", defaultHost);
+        port = Integer.parseInt(getOption("port", defaultPort));
     }
 
     @Override
@@ -39,18 +39,28 @@ public class Connection extends com.acamar.net.Connection
 
     public XMPPConnection getEndpoint()
     {
-        if(endpoint == null) {
-            createEndpoint();
-        }
-
         return endpoint;
+    }
+
+    public void login(String identity, String password) throws XMPPException
+    {
+        login(identity, password, null);
+    }
+
+    public void login(String identity, String password, String resource) throws XMPPException
+    {
+        endpoint.login(identity, password, resource);
     }
 
     @Override
     public void connect()
     {
+        if (endpoint == null) {
+            createEndpoint();
+        }
+
         try {
-            getEndpoint().connect();
+            endpoint.connect();
             fireConnectionEvent("", ConnectionEvent.CONNECTION_OPENED);
         } catch (XMPPException e) {
             fireConnectionEvent(e.getMessage(), ConnectionEvent.ERROR_OCCURED);
@@ -58,7 +68,7 @@ public class Connection extends com.acamar.net.Connection
     }
 
     @Override
-    public void disconnect() throws ConnectionException
+    public void disconnect()
     {
         // Sending an offline presence to let everyone know we disconnected
         Presence offline = new Presence(Presence.Type.unavailable);
@@ -66,5 +76,8 @@ public class Connection extends com.acamar.net.Connection
 
         endpoint.disconnect();
         super.disconnect();
+
+        // To force the creation of a new endpoint on connect
+        endpoint = null;
     }
 }

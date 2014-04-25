@@ -18,21 +18,19 @@ abstract public class Connection implements ConnectionInterface, ConnectionAsync
     protected Properties config = new Properties(getConfigFilename());
     protected String host = "";
     protected int port = 0;
+    protected boolean connected = false;
 
     abstract protected String getConfigFilename();
 
     public Connection()
     {
-        try {
-            setup(getOption("host"), Integer.parseInt(getOption("port")));
-        } catch (NumberFormatException e) {
-            setup(getOption("host"), 0);
-        }
-    }
+        host = getOption("host");
 
-    public Connection(String host, int port)
-    {
-        setup(host, port);
+        try {
+            port = Integer.parseInt(getOption("port"));
+        } catch (NumberFormatException e) {
+            port = 0;
+        }
     }
 
     public String getHost()
@@ -49,6 +47,15 @@ abstract public class Connection implements ConnectionInterface, ConnectionAsync
     {
         this.host = host;
         this.port = port;
+
+        // Storing the data as well
+        config.set("host", host);
+        config.set("port", String.valueOf(port));
+    }
+
+    public boolean isConnected()
+    {
+        return connected;
     }
 
     @Override
@@ -70,8 +77,10 @@ abstract public class Connection implements ConnectionInterface, ConnectionAsync
         thread.start();
     }
 
-    public void disconnect() throws ConnectionException
+    public void disconnect()
     {
+        connected = false;
+
         try {
             config.store();
         } catch (IOException e) {

@@ -1,7 +1,6 @@
 package com.justchat.client;
 
 import com.acamar.authentication.xmpp.Authentication;
-import com.acamar.net.ConnectionException;
 import com.acamar.net.xmpp.Connection;
 import com.acamar.util.Properties;
 import com.justchat.client.frame.Contacts;
@@ -67,19 +66,19 @@ public class Launcher
         // Login frame
         login.addWindowListener(exitListener);
         login.setMenu(new MainMenu());
-        login.initialize();
         login.setConnection(xmppConnection)
              .setAuthentication(xmppAuthentication);
         login.addConnectionListeners()
              .addAuthenticationListeners();
+        login.initialize();
 
         // Contacts frame
         contacts.addWindowListener(exitListener);
         contacts.setMenu(new MainMenu());
-        contacts.initialize();
         contacts.setConnection(xmppConnection)
                 .setAuthentication(xmppAuthentication);
         contacts.addAuthenticationListeners();
+        contacts.initialize();
 
         /**
          * --------------------------
@@ -140,12 +139,8 @@ public class Launcher
         {
             System.out.println("Cleaning up the main program");
 
-            if (xmppConnection.getEndpoint().isConnected()) {
-                try {
-                    xmppConnection.disconnect();
-                } catch (ConnectionException e1) {
-                    e1.printStackTrace();
-                }
+            if (xmppConnection.isConnected()) {
+                xmppConnection.disconnect();
             }
 
             try {

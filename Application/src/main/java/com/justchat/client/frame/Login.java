@@ -4,7 +4,6 @@ import com.acamar.authentication.AuthenticationEvent;
 import com.acamar.authentication.AuthenticationListener;
 import com.acamar.gui.swing.panel.AbstractPanel;
 import com.acamar.net.ConnectionEvent;
-import com.acamar.net.ConnectionException;
 import com.acamar.net.ConnectionStatusListener;
 import com.acamar.util.Properties;
 import com.justchat.client.frame.menu.MainMenu;
@@ -12,8 +11,10 @@ import com.justchat.client.gui.panel.LoginPanel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
-import java.io.IOException;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.TimerTask;
 
 /**
@@ -77,6 +78,10 @@ public class Login extends AbstractMainFrame
          */
         loginPanel.setName("loginPanel");
         add(loginPanel);
+
+        // Pre-filling the server and port fields
+        ((JTextField) loginPanel.findComponent("serverField")).setText(xmppConnection.getHost());
+        ((JTextField) loginPanel.findComponent("portField")).setText(String.valueOf(xmppConnection.getPort()));
     }
 
     @Override
@@ -122,6 +127,15 @@ public class Login extends AbstractMainFrame
         loginBtn.setEnabled(false);
         passwordField.setEnabled(false);
 
+        // Storing the configuration of the connection
+        JTextField serverField, portField;
+        serverField = (JTextField) loginPanel.findComponent("serverField");
+        portField = (JTextField) loginPanel.findComponent("portField");
+
+        // Will also store the settings
+        xmppConnection.setup(serverField.getText(), Integer.parseInt(portField.getText()));
+
+        // Now we authenticate
         xmppAuthentication.authenticate(identityField.getText(), passwordField.getPassword());
         passwordField.setText("");
     }

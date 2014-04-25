@@ -34,8 +34,6 @@ public class LoginPanel extends AbstractPanel
 
     protected void populate()
     {
-
-
         /**
          * --------------------
          * Informational label

@@ -15,7 +15,8 @@ public class Connection extends com.acamar.net.xmpp.Connection
 
     public Connection()
     {
-        setup(getOption("host", defaultHost), Integer.parseInt(getOption("port", defaultPort)));
+        host = getOption("host", defaultHost);
+        port = Integer.parseInt(getOption("port", defaultPort));
     }
 
     @Override

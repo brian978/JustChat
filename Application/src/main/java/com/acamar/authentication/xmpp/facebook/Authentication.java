@@ -20,6 +20,6 @@ public class Authentication extends com.acamar.authentication.xmpp.Authenticatio
 
     protected void doLogin(String identity, char[] password) throws XMPPException
     {
-        endpoint.login(identity, new String(password), "Pidgin");
+        connection.login(identity, new String(password), "Pidgin");
     }
 }

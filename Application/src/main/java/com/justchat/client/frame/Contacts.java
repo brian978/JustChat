@@ -2,7 +2,6 @@ package com.justchat.client.frame;
 
 import com.acamar.authentication.AuthenticationEvent;
 import com.acamar.authentication.AuthenticationListener;
-import com.acamar.net.ConnectionException;
 import com.acamar.users.User;
 import com.acamar.users.UsersManager;
 import com.acamar.util.Properties;
@@ -125,11 +124,7 @@ public class Contacts extends AbstractMainFrame
 
     public void doLogout()
     {
-        try {
-            xmppConnection.disconnect();
-        } catch (ConnectionException e1) {
-            e1.printStackTrace();
-        }
+        xmppConnection.disconnect();
 
         usersManager.removeAll();
     }
