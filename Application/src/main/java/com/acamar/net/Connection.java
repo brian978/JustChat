@@ -16,21 +16,40 @@ import java.io.IOException;
 abstract public class Connection implements ConnectionInterface, ConnectionAsyncInterface
 {
     protected Properties config = new Properties(getConfigFilename());
-    protected String protocol = "";
     protected String host = "";
     protected int port = 0;
 
-    protected Connection()
-    {
-
-    }
-
-    public Connection(String protocol, String host, int port)
-    {
-        setup(protocol, host, port);
-    }
-
     abstract protected String getConfigFilename();
+
+    public Connection()
+    {
+        try {
+            setup(getOption("host"), Integer.parseInt(getOption("port")));
+        } catch (NumberFormatException e) {
+            setup(getOption("host"), 0);
+        }
+    }
+
+    public Connection(String host, int port)
+    {
+        setup(host, port);
+    }
+
+    public String getHost()
+    {
+        return host;
+    }
+
+    public int getPort()
+    {
+        return port;
+    }
+
+    public void setup(String host, int port)
+    {
+        this.host = host;
+        this.port = port;
+    }
 
     @Override
     public void connectAsync()
@@ -49,13 +68,6 @@ abstract public class Connection implements ConnectionInterface, ConnectionAsync
         });
 
         thread.start();
-    }
-
-    public void setup(String protocol, String host, int port)
-    {
-        this.protocol = protocol;
-        this.host = host;
-        this.port = port;
     }
 
     public void disconnect() throws ConnectionException

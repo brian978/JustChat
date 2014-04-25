@@ -13,15 +13,14 @@ public class Connection extends com.acamar.net.xmpp.Connection
     final public String defaultHost = "chat.facebook.com";
     final public String defaultPort = "5222";
 
+    public Connection()
+    {
+        setup(getOption("host", defaultHost), Integer.parseInt(getOption("port", defaultPort)));
+    }
+
     @Override
     protected String getConfigFilename()
     {
         return "facebook.xmpp.properties";
-    }
-
-    @Override
-    protected void setup()
-    {
-        setup(null, getOption("host", defaultHost), Integer.parseInt(getOption("port", defaultPort)));
     }
 }

@@ -22,7 +22,7 @@ public class Connection extends com.acamar.net.Connection
 
     public Connection()
     {
-        initializeEndpoint();
+        setup(getOption("host", defaultHost), Integer.parseInt(getOption("port", defaultPort)));
     }
 
     @Override
@@ -31,24 +31,26 @@ public class Connection extends com.acamar.net.Connection
         return "xmpp.properties";
     }
 
-    protected void setup()
+    protected void createEndpoint()
     {
-        setup(null, getOption("host", defaultHost), Integer.parseInt(getOption("port", defaultPort)));
-    }
-
-    protected void initializeEndpoint()
-    {
-        setup();
-
         ConnectionConfiguration connectionConfiguration = new ConnectionConfiguration(host, port);
         endpoint = new XMPPConnection(connectionConfiguration);
+    }
+
+    public XMPPConnection getEndpoint()
+    {
+        if(endpoint == null) {
+            createEndpoint();
+        }
+
+        return endpoint;
     }
 
     @Override
     public void connect()
     {
         try {
-            endpoint.connect();
+            getEndpoint().connect();
             fireConnectionEvent("", ConnectionEvent.CONNECTION_OPENED);
         } catch (XMPPException e) {
             fireConnectionEvent(e.getMessage(), ConnectionEvent.ERROR_OCCURED);
@@ -64,10 +66,5 @@ public class Connection extends com.acamar.net.Connection
 
         endpoint.disconnect();
         super.disconnect();
-    }
-
-    public XMPPConnection getEndpoint()
-    {
-        return endpoint;
     }
 }

@@ -65,7 +65,7 @@ public class Properties extends java.util.Properties
 
     public String get(String name, String defaultValue)
     {
-        if(!containsKey(name)) {
+        if(!containsKey(name) && defaultValue != null) {
             setProperty(name, defaultValue);
         }
 
