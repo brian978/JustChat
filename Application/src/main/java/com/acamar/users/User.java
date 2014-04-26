@@ -1,7 +1,6 @@
 package com.acamar.users;
 
 import java.text.Collator;
-import java.util.Comparator;
 
 /**
  * JustChat
