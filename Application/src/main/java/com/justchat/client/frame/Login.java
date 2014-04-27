@@ -2,7 +2,6 @@ package com.justchat.client.frame;
 
 import com.acamar.authentication.AuthenticationEvent;
 import com.acamar.authentication.AuthenticationListener;
-import com.acamar.gui.swing.panel.AbstractPanel;
 import com.acamar.net.ConnectionEvent;
 import com.acamar.net.ConnectionStatusListener;
 import com.acamar.util.Properties;
@@ -135,6 +134,7 @@ public class Login extends AbstractMainFrame
             @Override
             public void actionPerformed(ActionEvent e)
             {
+                //TODO: find a way to cancel the authentication
                 loginPanel.setVisible(true);
                 authenticatePanel.setVisible(false);
             }
