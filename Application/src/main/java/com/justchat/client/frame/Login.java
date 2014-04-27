@@ -59,7 +59,7 @@ public class Login extends AbstractMainFrame
 
     protected void ensureMinimumSize()
     {
-        setMinimumSize(new Dimension(200, 500));
+        setMinimumSize(new Dimension(200, 400));
     }
 
     protected void populateFrame()
@@ -70,7 +70,6 @@ public class Login extends AbstractMainFrame
          * -------------
          */
         setJMenuBar(menu);
-
         menu.display(MainMenu.DEFAULT_ITEMS);
 
         /**
@@ -104,6 +103,7 @@ public class Login extends AbstractMainFrame
         final JTextField identifier = (JTextField) loginPanel.findComponent("identifierField");
         final JPasswordField password = (JPasswordField) loginPanel.findComponent("passwordField");
         final JButton loginBtn = (JButton) loginPanel.findComponent("loginBtn");
+        final JButton cancelBtn = (JButton) authenticatePanel.findComponent("cancelBtn");
 
         // Password field key actions
         password.addKeyListener(new KeyAdapter()
@@ -128,13 +128,23 @@ public class Login extends AbstractMainFrame
                 }
             }
         });
+
+        // Cancel btn action
+        cancelBtn.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                loginPanel.setVisible(true);
+                authenticatePanel.setVisible(false);
+            }
+        });
     }
 
     private void handleAuthenticateAction(JTextField identityField, JPasswordField passwordField)
     {
         loginPanel.setVisible(false);
         authenticatePanel.setVisible(true);
-        revalidate();
 
         // Storing the configuration of the connection
         JTextField serverField, portField;
@@ -169,11 +179,10 @@ public class Login extends AbstractMainFrame
         {
             if (e.isAuthenticated()) {
                 setVisible(false);
-            } else {
-                loginPanel.setVisible(true);
-                authenticatePanel.setVisible(false);
-                revalidate();
             }
+
+            loginPanel.setVisible(true);
+            authenticatePanel.setVisible(false);
         }
     }
 

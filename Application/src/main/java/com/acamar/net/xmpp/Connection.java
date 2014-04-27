@@ -62,6 +62,7 @@ public class Connection extends com.acamar.net.Connection
         try {
             endpoint.connect();
             fireConnectionEvent("", ConnectionEvent.CONNECTION_OPENED);
+            connected = endpoint.isConnected();
         } catch (XMPPException e) {
             fireConnectionEvent(e.getMessage(), ConnectionEvent.ERROR_OCCURED);
         }
@@ -71,10 +72,12 @@ public class Connection extends com.acamar.net.Connection
     public void disconnect()
     {
         // Sending an offline presence to let everyone know we disconnected
-        Presence offline = new Presence(Presence.Type.unavailable);
-        endpoint.sendPacket(offline);
+        if(isConnected()) {
+            Presence offline = new Presence(Presence.Type.unavailable);
+            endpoint.sendPacket(offline);
+            endpoint.disconnect();
+        }
 
-        endpoint.disconnect();
         super.disconnect();
 
         // To force the creation of a new endpoint on connect

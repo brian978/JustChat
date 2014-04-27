@@ -20,6 +20,7 @@ public class AuthenticatePanel extends AbstractPanel
 
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        setAlignmentX(Component.CENTER_ALIGNMENT);
 
         populate();
     }

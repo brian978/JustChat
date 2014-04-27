@@ -21,15 +21,17 @@ public class LoginPanel extends AbstractPanel
     public LoginPanel()
     {
         super();
+
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        setAlignmentX(Component.CENTER_ALIGNMENT);
 
         populate();
     }
 
     protected void populate()
     {
-        addBoxSeparator(new Dimension(0, 15));
+        addBoxSeparator(new Dimension(0, 10));
 
         /**
          * -----------------
