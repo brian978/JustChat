@@ -31,6 +31,11 @@ public abstract class AbstractPanel extends JPanel
         return null;
     }
 
+    protected void addBoxSeparator(Dimension size)
+    {
+        add(Box.createRigidArea(size));
+    }
+
     public Window getParentContainer()
     {
         return SwingUtilities.getWindowAncestor(this);

@@ -7,6 +7,7 @@ import com.acamar.net.ConnectionEvent;
 import com.acamar.net.ConnectionStatusListener;
 import com.acamar.util.Properties;
 import com.justchat.client.frame.menu.MainMenu;
+import com.justchat.client.gui.panel.AuthenticatePanel;
 import com.justchat.client.gui.panel.LoginPanel;
 
 import javax.swing.*;
@@ -28,6 +29,7 @@ public class Login extends AbstractMainFrame
 {
     // Panels
     private LoginPanel loginPanel = new LoginPanel();
+    private AuthenticatePanel authenticatePanel = new AuthenticatePanel();
 
     public Login(Properties settings)
     {
@@ -79,6 +81,15 @@ public class Login extends AbstractMainFrame
         loginPanel.setName("loginPanel");
         add(loginPanel);
 
+        /**
+         * -------------
+         * Authenticate panel
+         * -------------
+         */
+        authenticatePanel.setName("authenticatePanel");
+        authenticatePanel.setVisible(false);
+        add(authenticatePanel);
+
         // Pre-filling the server and port fields
         ((JTextField) loginPanel.findComponent("serverField")).setText(xmppConnection.getHost());
         ((JTextField) loginPanel.findComponent("portField")).setText(String.valueOf(xmppConnection.getPort()));
@@ -101,7 +112,7 @@ public class Login extends AbstractMainFrame
             public void keyReleased(KeyEvent e)
             {
                 if (e.getKeyCode() == 10) {
-                    handleAuthenticateAction(loginBtn, identifier, password);
+                    handleAuthenticateAction(identifier, password);
                 }
             }
         });
@@ -113,19 +124,17 @@ public class Login extends AbstractMainFrame
             public void actionPerformed(ActionEvent e)
             {
                 if (e.getActionCommand().equals("doLogin")) {
-                    handleAuthenticateAction(loginBtn, identifier, password);
+                    handleAuthenticateAction(identifier, password);
                 }
             }
         });
     }
 
-    private void handleAuthenticateAction(JButton loginBtn, JTextField identityField, JPasswordField passwordField)
+    private void handleAuthenticateAction(JTextField identityField, JPasswordField passwordField)
     {
-        JLabel infoLabel = (JLabel) loginPanel.findComponent("infoLabel");
-        infoLabel.setText("<html><center>Logging you in, please wait...");
-
-        loginBtn.setEnabled(false);
-        passwordField.setEnabled(false);
+        loginPanel.setVisible(false);
+        authenticatePanel.setVisible(true);
+        revalidate();
 
         // Storing the configuration of the connection
         JTextField serverField, portField;
@@ -136,26 +145,21 @@ public class Login extends AbstractMainFrame
         xmppConnection.setup(serverField.getText(), Integer.parseInt(portField.getText()));
 
         // Now we authenticate
-        xmppAuthentication.authenticate(identityField.getText(), passwordField.getPassword());
+        xmppAuthentication.authenticateAsync(identityField.getText(), passwordField.getPassword());
         passwordField.setText("");
     }
 
     private void connectToServer()
     {
-        AbstractPanel loginPanel = (AbstractPanel) findComponent("loginPanel");
-        JLabel infoLabel = (JLabel) loginPanel.findComponent("infoLabel");
-        infoLabel.setText("<html><center>Connecting, please wait...");
     }
 
     private class AuthenticationStatusListener implements AuthenticationListener
     {
-        JLabel infoLabel;
         JButton loginBtn;
         JPasswordField password;
 
         public AuthenticationStatusListener()
         {
-            infoLabel = (JLabel) loginPanel.findComponent("infoLabel");
             loginBtn = (JButton) loginPanel.findComponent("loginBtn");
             password = (JPasswordField) loginPanel.findComponent("passwordField");
         }
@@ -164,26 +168,22 @@ public class Login extends AbstractMainFrame
         public void authenticationPerformed(AuthenticationEvent e)
         {
             if (e.isAuthenticated()) {
-                password.setEnabled(true);
                 setVisible(false);
             } else {
-                loginBtn.setEnabled(true);
-                password.setEnabled(true);
-                infoLabel.setVisible(true);
-                infoLabel.setText("<html><center>" + e.getMessage());
+                loginPanel.setVisible(true);
+                authenticatePanel.setVisible(false);
+                revalidate();
             }
         }
     }
 
     private class ConnectionStatus implements ConnectionStatusListener
     {
-        JLabel infoLabel;
         JButton loginBtn;
         java.util.Timer timer = new java.util.Timer();
 
         public ConnectionStatus()
         {
-            infoLabel = (JLabel) loginPanel.findComponent("infoLabel");
             loginBtn = (JButton) loginPanel.findComponent("loginBtn");
         }
 
@@ -191,17 +191,12 @@ public class Login extends AbstractMainFrame
         public void statusChanged(ConnectionEvent e)
         {
             if (e.getStatusCode() == ConnectionEvent.CONNECTION_OPENED) {
-                infoLabel.setVisible(false);
                 loginBtn.setEnabled(true);
             } else if (e.getStatusCode() == ConnectionEvent.CONNECTION_CLOSED) {
-                infoLabel.setVisible(true);
                 loginBtn.setEnabled(false);
-                infoLabel.setText("<html><center>" + e.getMessage());
 
                 connectToServer();
             } else {
-                infoLabel.setVisible(true);
-                infoLabel.setText("<html><center>" + e.getMessage());
                 timer.schedule(new TimerTask()
                 {
                     @Override

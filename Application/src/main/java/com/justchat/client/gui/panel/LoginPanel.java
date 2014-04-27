@@ -27,24 +27,9 @@ public class LoginPanel extends AbstractPanel
         populate();
     }
 
-    private void addSeparator(Dimension size)
-    {
-        add(Box.createRigidArea(size));
-    }
-
     protected void populate()
     {
-        /**
-         * --------------------
-         * Informational label
-         * --------------------
-         */
-        JLabel infoLabel = new JLabel();
-        infoLabel.setName("infoLabel");
-        infoLabel.setHorizontalAlignment(SwingConstants.CENTER);
-
-        add(infoLabel);
-        addSeparator(new Dimension(0, 15));
+        addBoxSeparator(new Dimension(0, 15));
 
         /**
          * -----------------
@@ -72,10 +57,10 @@ public class LoginPanel extends AbstractPanel
     private void createRow(String label, JTextField fieldObject, String fieldName, Insets fieldMargin)
     {
         add(new JLabel(label));
-        addSeparator(fieldSeparator);
+        addBoxSeparator(fieldSeparator);
 
         add(configureStandardField(fieldObject, fieldName, fieldMargin));
-        addSeparator(sectionSeparator);
+        addBoxSeparator(sectionSeparator);
     }
 
     private JTextField configureStandardField(JTextField field, String name, Insets margin)
