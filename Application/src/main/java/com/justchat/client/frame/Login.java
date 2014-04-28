@@ -92,6 +92,7 @@ public class Login extends AbstractMainFrame
         // Pre-filling the server and port fields
         ((JTextField) loginPanel.findComponent("serverField")).setText(xmppConnection.getHost());
         ((JTextField) loginPanel.findComponent("portField")).setText(String.valueOf(xmppConnection.getPort()));
+        ((JTextField) loginPanel.findComponent("resourceField")).setText(xmppConnection.getResource());
     }
 
     @Override
@@ -148,12 +149,13 @@ public class Login extends AbstractMainFrame
         authenticatePanel.setVisible(true);
 
         // Storing the configuration of the connection
-        JTextField serverField, portField;
+        JTextField serverField, portField, resourceField;
         serverField = (JTextField) loginPanel.findComponent("serverField");
         portField = (JTextField) loginPanel.findComponent("portField");
+        resourceField = (JTextField) loginPanel.findComponent("resourceField");
 
         // Will also store the settings
-        xmppConnection.setup(serverField.getText(), Integer.parseInt(portField.getText()));
+        xmppConnection.setup(serverField.getText(), Integer.parseInt(portField.getText()), resourceField.getText());
 
         // Now we authenticate
         xmppAuthentication.authenticateAsync(identityField.getText(), passwordField.getPassword());
@@ -180,6 +182,7 @@ public class Login extends AbstractMainFrame
         {
             if (e.getStatusCode() == AbstractAuthentication.SUCCESS) {
                 setVisible(false);
+                xmppConnection.saveConfig();
             }
 
             loginPanel.setVisible(true);

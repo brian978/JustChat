@@ -42,6 +42,7 @@ public class LoginPanel extends AbstractPanel
         createRow("Password:", new JPasswordField(), "passwordField", fieldMargin);
         createRow("Server:", new JTextField(), "serverField", fieldMargin);
         createRow("Port:", new JTextField(), "portField", fieldMargin);
+        createRow("Resource:", new JTextField(), "resourceField", fieldMargin);
 
         /**
          * -----------------

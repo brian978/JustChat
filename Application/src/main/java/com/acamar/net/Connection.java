@@ -80,12 +80,7 @@ abstract public class Connection implements ConnectionInterface, ConnectionAsync
     {
         connected = false;
 
-        try {
-            config.store();
-        } catch (IOException e) {
-            // We will handle this using an event
-            e.printStackTrace();
-        }
+        saveConfig();
     }
 
     public Connection addConnectionStatusListener(ConnectionStatusListener listener)
@@ -123,5 +118,15 @@ abstract public class Connection implements ConnectionInterface, ConnectionAsync
         }
 
         return config.get(name, defaultValue);
+    }
+
+    public void saveConfig()
+    {
+        try {
+            config.store();
+        } catch (IOException e) {
+            // We will handle this using an event
+            e.printStackTrace();
+        }
     }
 }
