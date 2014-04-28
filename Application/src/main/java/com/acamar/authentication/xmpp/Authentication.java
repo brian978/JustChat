@@ -16,6 +16,7 @@ import java.util.Arrays;
 public class Authentication extends AbstractAsyncAuthentication
 {
     protected Connection connection = null;
+    protected boolean abortAuthentication = false;
 
     public Authentication(Connection connection)
     {
@@ -23,20 +24,22 @@ public class Authentication extends AbstractAsyncAuthentication
     }
 
     @Override
-    public void authenticate(String identity, char[] password)
+    public synchronized void authenticate(String identity, char[] password)
     {
         boolean success = false;
         String message = "Incorrect login";
 
-        if (!connection.isConnected()) {
+        if (!connection.isConnected() && !abortAuthentication) {
             connection.connect();
         }
 
-        if (identity.length() > 0 && password.length > 0) {
+        if (abortAuthentication) {
+            message = "Authentication canceled";
+        } else if (identity.length() > 0 && password.length > 0) {
             try {
                 doLogin(identity, password);
                 success = true;
-                message = "";
+                message = "OK!";
 
             } catch (XMPPException e) {
                 connection.disconnect();
@@ -49,10 +52,19 @@ public class Authentication extends AbstractAsyncAuthentication
         Arrays.fill(password, '0');
 
         fireAuthenticationEvent(new AuthenticationEvent(new User(identity, "Me"), success, 0, message));
+
+        // Resetting the abort flag so we can retry
+        abortAuthentication = false;
     }
 
-    protected void doLogin(String identity, char[] password) throws XMPPException
+    protected synchronized void doLogin(String identity, char[] password) throws XMPPException
     {
         connection.login(identity, new String(password));
+    }
+
+    public void cancel()
+    {
+        abortAuthentication = true;
+        connection.disconnect();
     }
 }

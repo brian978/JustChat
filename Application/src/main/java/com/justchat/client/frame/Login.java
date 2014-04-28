@@ -134,7 +134,7 @@ public class Login extends AbstractMainFrame
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                //TODO: find a way to cancel the authentication
+                xmppAuthentication.cancel();
                 loginPanel.setVisible(true);
                 authenticatePanel.setVisible(false);
             }

@@ -39,7 +39,11 @@ public class Launcher
     {
         // Loading (or creating) the preferences file
         // TODO: handle read/create file failed (maybe with an error popup?)
-        settings.checkAndLoad();
+        boolean settingsLoaded = settings.checkAndLoad();
+
+        if(!settingsLoaded) {
+            System.exit(-10);
+        }
 
         /**
          * --------------------------
