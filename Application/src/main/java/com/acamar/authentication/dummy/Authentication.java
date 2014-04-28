@@ -13,6 +13,6 @@ public class Authentication extends AbstractAsyncAuthentication
     @Override
     public void authenticate(String identity, char[] password)
     {
-        fireAuthenticationEvent(new AuthenticationEvent(null, true, 200));
+        fireAuthenticationEvent(new AuthenticationEvent(null, true, AuthenticationEvent.SUCCESS));
     }
 }

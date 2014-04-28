@@ -10,9 +10,23 @@ import com.acamar.users.User;
  */
 public class AuthenticationEvent extends AbstractEvent
 {
+    /**
+     * -----------------
+     * Status codes
+     * -----------------
+     */
+    public static final int SUCCESS = 200;
+    public static final int FAILED = 300;
+    public static final int INVALID_DATA = 310;
+    public static final int ABORTED = 400;
+
+    /**
+     * -----------------
+     * Properties
+     * -----------------
+     */
     private boolean authenticated = false;
     private int statusCode = 0;
-    private String message = "";
     private User user = null;
 
     public AuthenticationEvent(User user, boolean authenticated, int statusCode)
@@ -20,12 +34,6 @@ public class AuthenticationEvent extends AbstractEvent
         this.user = user;
         this.authenticated = authenticated;
         this.statusCode = statusCode;
-    }
-
-    public AuthenticationEvent(User user, boolean authenticated, int statusCode, String message)
-    {
-        this(user, authenticated, statusCode);
-        this.message = message;
     }
 
     public User getUser()
@@ -41,10 +49,5 @@ public class AuthenticationEvent extends AbstractEvent
     public int getStatusCode()
     {
         return statusCode;
-    }
-
-    public String getMessage()
-    {
-        return message;
     }
 }

@@ -27,34 +27,33 @@ public class Authentication extends AbstractAsyncAuthentication
     public synchronized void authenticate(String identity, char[] password)
     {
         boolean success = false;
-        String message = "Incorrect login";
+        int statusCode = AuthenticationEvent.SUCCESS;
 
         if (!connection.isConnected() && !abortAuthentication) {
             connection.connect();
         }
 
         if (abortAuthentication) {
-            message = "Authentication canceled";
+            statusCode = AuthenticationEvent.ABORTED;
         } else if (identity.length() > 0 && password.length > 0) {
             try {
                 doLogin(identity, password);
                 success = true;
-                message = "OK!";
-
             } catch (XMPPException e) {
+                statusCode = AuthenticationEvent.FAILED;
                 connection.disconnect();
                 e.printStackTrace();
             }
         } else {
-            message = "Invalid data";
+            statusCode = AuthenticationEvent.INVALID_DATA;
         }
-
-        Arrays.fill(password, '0');
-
-        fireAuthenticationEvent(new AuthenticationEvent(new User(identity, "Me"), success, 0, message));
 
         // Resetting the abort flag so we can retry
         abortAuthentication = false;
+
+        Arrays.fill(password, '0');
+
+        fireAuthenticationEvent(new AuthenticationEvent(new User(identity, "Me"), success, statusCode));
     }
 
     protected synchronized void doLogin(String identity, char[] password) throws XMPPException
