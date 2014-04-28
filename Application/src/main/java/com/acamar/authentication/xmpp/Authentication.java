@@ -1,6 +1,7 @@
 package com.acamar.authentication.xmpp;
 
 import com.acamar.authentication.AbstractAsyncAuthentication;
+import com.acamar.authentication.AbstractAuthentication;
 import com.acamar.authentication.AuthenticationEvent;
 import com.acamar.net.xmpp.Connection;
 import com.acamar.users.User;
@@ -26,26 +27,24 @@ public class Authentication extends AbstractAsyncAuthentication
     @Override
     public synchronized void authenticate(String identity, char[] password)
     {
-        boolean success = false;
-        int statusCode = AuthenticationEvent.SUCCESS;
+        int statusCode = AbstractAuthentication.SUCCESS;
 
         if (!connection.isConnected() && !abortAuthentication) {
             connection.connect();
         }
 
         if (abortAuthentication) {
-            statusCode = AuthenticationEvent.ABORTED;
+            statusCode = AbstractAuthentication.ABORTED;
         } else if (identity.length() > 0 && password.length > 0) {
             try {
                 doLogin(identity, password);
-                success = true;
             } catch (XMPPException e) {
-                statusCode = AuthenticationEvent.FAILED;
+                statusCode = AbstractAuthentication.FAILED;
                 connection.disconnect();
                 e.printStackTrace();
             }
         } else {
-            statusCode = AuthenticationEvent.INVALID_DATA;
+            statusCode = AbstractAuthentication.INVALID_DATA;
         }
 
         // Resetting the abort flag so we can retry
@@ -53,7 +52,7 @@ public class Authentication extends AbstractAsyncAuthentication
 
         Arrays.fill(password, '0');
 
-        fireAuthenticationEvent(new AuthenticationEvent(new User(identity, "Me"), success, statusCode));
+        fireAuthenticationEvent(new AuthenticationEvent(new User(identity, "Me"), statusCode));
     }
 
     protected synchronized void doLogin(String identity, char[] password) throws XMPPException

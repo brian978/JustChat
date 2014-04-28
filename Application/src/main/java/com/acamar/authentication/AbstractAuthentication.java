@@ -11,6 +11,16 @@ import com.acamar.event.FireEventCallback;
  */
 public abstract class AbstractAuthentication implements AuthenticationInterface
 {
+    /**
+     * -----------------
+     * Status codes
+     * -----------------
+     */
+    public static final int SUCCESS = 200;
+    public static final int FAILED = 300;
+    public static final int INVALID_DATA = 310;
+    public static final int ABORTED = 400;
+
     public AuthenticationInterface addAuthenticationListener(AuthenticationListener listener)
     {
         EventManager.add(AuthenticationListener.class, listener);

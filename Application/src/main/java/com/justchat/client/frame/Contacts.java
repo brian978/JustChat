@@ -1,5 +1,6 @@
 package com.justchat.client.frame;
 
+import com.acamar.authentication.AbstractAuthentication;
 import com.acamar.authentication.AuthenticationEvent;
 import com.acamar.authentication.AuthenticationListener;
 import com.acamar.users.User;
@@ -158,7 +159,7 @@ public class Contacts extends AbstractMainFrame
         @Override
         public void authenticationPerformed(AuthenticationEvent e)
         {
-            if (e.isAuthenticated()) {
+            if (e.getStatusCode() == AbstractAuthentication.SUCCESS) {
                 usersManager.setCurrentUser(e.getUser());
             }
         }
