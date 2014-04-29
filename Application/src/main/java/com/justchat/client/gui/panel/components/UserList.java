@@ -39,14 +39,17 @@ public class UserList extends JList<User> implements UsersManagerListener
         dataModel.removeElement(user);
     }
 
+    public void removeAllElements()
+    {
+        dataModel.removeAllElements();
+    }
+
     @Override
     public void sortComplete(ArrayList<User> list)
     {
-        dataModel.removeAllElements();
-
+        removeAllElements();
         for (User user : list) {
-            dataModel.addElement(user);
+            addedUser(user);
         }
-
     }
 }
