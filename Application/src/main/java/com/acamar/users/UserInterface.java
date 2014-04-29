@@ -1,5 +1,7 @@
 package com.acamar.users;
 
+import com.justchat.client.gui.panel.components.UserCategory;
+
 /**
  * JustChat
  *
@@ -14,6 +16,10 @@ public interface UserInterface
     public String getIdentity();
 
     public String getName();
+
+    public UserCategory getCategory();
+
+    public void setCategory(UserCategory category);
 
     public User.UserState getState();
 }

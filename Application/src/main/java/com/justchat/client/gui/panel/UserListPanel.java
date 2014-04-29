@@ -3,6 +3,7 @@ package com.justchat.client.gui.panel;
 import com.acamar.gui.swing.panel.AbstractPanel;
 import com.acamar.users.User;
 import com.acamar.users.UsersManager;
+import com.justchat.client.gui.panel.components.UserCategory;
 import com.justchat.client.gui.panel.components.UserList;
 import org.jivesoftware.smack.RosterEntry;
 
@@ -47,8 +48,17 @@ public class UserListPanel extends AbstractPanel
 
     public void addUsers(Collection<RosterEntry> buddyList)
     {
+        User user;
+
+        // Getting the default categories for now
+        UserCategory onlineCategory = userList.findCategory("Online");
+
+        // TODO: optimize this so we don't add the list of users to the user list twice
         for (RosterEntry buddy : buddyList) {
-            usersManager.add(new User(buddy.getUser(), buddy.getName()));
+            user = new User(buddy.getUser(), buddy.getName());
+            user.setCategory(onlineCategory);
+
+            usersManager.add(user);
         }
 
         usersManager.sort();

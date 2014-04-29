@@ -1,5 +1,7 @@
 package com.acamar.users;
 
+import com.justchat.client.gui.panel.components.UserCategory;
+
 import java.text.Collator;
 
 /**
@@ -14,6 +16,7 @@ public class User implements UserInterface, Comparable<User>
     private Collator collator = Collator.getInstance();
     private String identity = "";
     private String name = "";
+    private UserCategory category = null;
     private UserState state = UserState.OFFLINE;
 
     public User(String identity)
@@ -43,6 +46,18 @@ public class User implements UserInterface, Comparable<User>
     public String getName()
     {
         return name;
+    }
+
+    @Override
+    public UserCategory getCategory()
+    {
+        return category;
+    }
+
+    @Override
+    public void setCategory(UserCategory category)
+    {
+        this.category = category;
     }
 
     @Override

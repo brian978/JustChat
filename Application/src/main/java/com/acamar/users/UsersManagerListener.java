@@ -1,5 +1,7 @@
 package com.acamar.users;
 
+import com.justchat.client.gui.panel.components.UserCategory;
+
 import java.util.ArrayList;
 
 /**
@@ -11,7 +13,7 @@ import java.util.ArrayList;
  */
 public interface UsersManagerListener
 {
-    public void addedUser(User user);
+    public void addedUser(User user) throws NullPointerException;
 
     public void removedUser(User user);
 

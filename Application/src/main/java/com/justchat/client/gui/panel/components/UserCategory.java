@@ -1,4 +1,4 @@
-package com.acamar.users;
+package com.justchat.client.gui.panel.components;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.MutableTreeNode;
@@ -12,15 +12,10 @@ import javax.swing.tree.MutableTreeNode;
  */
 public class UserCategory extends DefaultMutableTreeNode
 {
+    final public static int ONLINE = 1;
+    final public static int OFFLINE = 2;
 
-
-    /**
-     * Creates a tree node that has no parent and no children, but which
-     * allows children.
-     */
-    public UserCategory()
-    {
-    }
+    protected int categoryType;
 
     /**
      * Creates a tree node with no parent, no children, but which allows
@@ -29,8 +24,10 @@ public class UserCategory extends DefaultMutableTreeNode
      * @param userObject an Object provided by the user that constitutes
      *                   the node's data
      */
-    public UserCategory(Object userObject)
+    public UserCategory(Object userObject, int categoryType)
     {
         super(userObject);
+
+        this.categoryType = categoryType;
     }
 }
