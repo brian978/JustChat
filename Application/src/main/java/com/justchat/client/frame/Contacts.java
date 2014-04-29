@@ -102,7 +102,10 @@ public class Contacts extends AbstractMainFrame
             {
                 super.mouseClicked(e);
                 if (e.getClickCount() == 2) {
-                    startNewConversation(((UserList) e.getSource()).getSelectedValue());
+                    User user = ((UserList) e.getSource()).getSelectedUser();
+                    if(user.getIdentity().length() > 0) {
+                        startNewConversation(user);
+                    }
                 }
             }
         });

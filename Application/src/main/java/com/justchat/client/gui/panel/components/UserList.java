@@ -1,9 +1,13 @@
 package com.justchat.client.gui.panel.components;
 
+import com.acamar.users.NullUser;
 import com.acamar.users.User;
 import com.acamar.users.UsersManagerListener;
 
 import javax.swing.*;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeSelectionModel;
 import java.util.ArrayList;
 
 /**
@@ -13,35 +17,31 @@ import java.util.ArrayList;
  * @copyright Copyright (c) 2014
  * @license Creative Commons Attribution-ShareAlike 3.0
  */
-public class UserList extends JList<User> implements UsersManagerListener
+public class UserList extends JTree implements UsersManagerListener
 {
-    private DefaultListModel<User> dataModel;
+    private DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("All contacts");
 
     public UserList()
     {
-        dataModel = new DefaultListModel<User>();
-
-        setModel(dataModel);
-        setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-        setVisibleRowCount(-1);
+        setModel(new DefaultTreeModel(rootNode, false));
+        getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
     }
 
     @Override
     public void addedUser(User user)
     {
-        dataModel.addElement(user);
+        rootNode.add(new DefaultMutableTreeNode(user));
     }
 
     @Override
     public void removedUser(User user)
     {
-        dataModel.removeElement(user);
     }
 
     public void removeAllElements()
     {
-        dataModel.removeAllElements();
+        rootNode.removeAllChildren();
     }
 
     @Override
@@ -51,5 +51,19 @@ public class UserList extends JList<User> implements UsersManagerListener
         for (User user : list) {
             addedUser(user);
         }
+    }
+
+    public User getSelectedUser()
+    {
+        User user;
+        DefaultMutableTreeNode node = (DefaultMutableTreeNode) getLastSelectedPathComponent();
+
+        if (node != null && node.isLeaf()) {
+            user = (User) node.getUserObject();
+        } else {
+            user = new NullUser();
+        }
+
+        return user;
     }
 }

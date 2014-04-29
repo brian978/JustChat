@@ -39,10 +39,10 @@ public class UserListPanel extends AbstractPanel
     protected void populate()
     {
         // Adding a scroll panel to the list
-        JScrollPane userListScroller = new JScrollPane(userList);
+        JScrollPane scrollableUserList = new JScrollPane(userList);
 
         // Adding the UserList to the panel
-        add(userListScroller);
+        add(scrollableUserList);
     }
 
     public void addUsers(Collection<RosterEntry> buddyList)
