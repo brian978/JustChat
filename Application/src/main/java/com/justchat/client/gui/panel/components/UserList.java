@@ -13,9 +13,9 @@ import java.util.ArrayList;
 /**
  * JustChat
  *
+ * @version 1.2
  * @link https://github.com/brian978/JustChat
- * @copyright Copyright (c) 2014
- * @license Creative Commons Attribution-ShareAlike 3.0
+ * @since 2014-03-09
  */
 public class UserList extends JTree implements UsersManagerListener
 {
@@ -37,6 +37,7 @@ public class UserList extends JTree implements UsersManagerListener
     @Override
     public void removedUser(User user)
     {
+        //TODO: implement remove user functionality
     }
 
     public void removeAllElements()
