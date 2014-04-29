@@ -69,7 +69,7 @@ public class UsersManager
         Collections.sort(users);
 
         for (UsersManagerListener listener : listeners) {
-            listener.sorted(users);
+            listener.sortComplete(users);
         }
     }
 

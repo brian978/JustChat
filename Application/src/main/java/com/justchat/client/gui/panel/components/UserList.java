@@ -40,7 +40,7 @@ public class UserList extends JList<User> implements UsersManagerListener
     }
 
     @Override
-    public void sorted(ArrayList<User> list)
+    public void sortComplete(ArrayList<User> list)
     {
         dataModel.removeAllElements();
 

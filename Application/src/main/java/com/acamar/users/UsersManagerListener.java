@@ -15,5 +15,5 @@ public interface UsersManagerListener
 
     public void removedUser(User user);
 
-    public void sorted(ArrayList<User> list);
+    public void sortComplete(ArrayList<User> list);
 }
