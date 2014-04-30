@@ -13,9 +13,9 @@ import java.util.ArrayList;
  */
 public interface UsersManagerListener
 {
-    public void addedUser(User user) throws NullPointerException;
+    public void userAdded(User user);
 
-    public void removedUser(User user);
+    public void userRemoved(User user);
 
-    public void sortComplete(ArrayList<User> list);
+    public void usersSorted(ArrayList<User> list);
 }

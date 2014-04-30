@@ -20,11 +20,13 @@ import java.util.ArrayList;
  */
 public class UserList extends JTree implements UsersManagerListener
 {
+    private int totalUsers = 0;
     private DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("All contacts");
-    private DefaultTreeModel model = new DefaultTreeModel(rootNode, false);
 
     public UserList()
     {
+        DefaultTreeModel model = new DefaultTreeModel(rootNode, false);
+
         setModel(model);
         setRootVisible(true);
         getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
@@ -52,38 +54,6 @@ public class UserList extends JTree implements UsersManagerListener
         return null;
     }
 
-    @Override
-    public void addedUser(User user) throws NullPointerException
-    {
-        user.getCategory().add(new DefaultMutableTreeNode(user));
-
-        expandPath(new TreePath(user.getCategory().getPath()));
-    }
-
-    @Override
-    public void removedUser(User user)
-    {
-        // TODO: implement remove user functionality
-    }
-
-    public void removeAllElements()
-    {
-        // Going through the categories to remove all the users
-        for(int i = 0; i < rootNode.getChildCount(); i++){
-            ((UserCategory) rootNode.getChildAt(i)).removeAllChildren();
-        }
-    }
-
-    @Override
-    public void sortComplete(ArrayList<User> list)
-    {
-        removeAllElements();
-
-        for (User user : list) {
-            addedUser(user);
-        }
-    }
-
     public User getSelectedUser()
     {
         User user;
@@ -96,5 +66,68 @@ public class UserList extends JTree implements UsersManagerListener
         }
 
         return user;
+    }
+
+    public void addUser(User user)
+    {
+        totalUsers++;
+
+        UserCategory category = user.getCategory();
+        category.add(new DefaultMutableTreeNode(user));
+
+        if(category.getChildCount() == 1) {
+            expandPath(new TreePath(category.getPath()));
+        }
+    }
+
+    public void removeUser(User user)
+    {
+        totalUsers--;
+
+        UserCategory category = user.getCategory();
+
+        // Going through the categories to remove all the users
+        for (int i = 0; i < category.getChildCount(); i++) {
+            ((DefaultMutableTreeNode) category.getChildAt(i)).removeFromParent();
+        }
+    }
+
+    public void removeAllUsers()
+    {
+        totalUsers = 0;
+
+        // Going through the categories to remove all the users
+        for (int i = 0; i < rootNode.getChildCount(); i++) {
+            ((UserCategory) rootNode.getChildAt(i)).removeAllChildren();
+        }
+    }
+
+    public void importUsers(ArrayList<User> list)
+    {
+        for (User user : list) {
+            addUser(user);
+        }
+    }
+
+    @Override
+    public void userAdded(User user)
+    {
+        addUser(user);
+    }
+
+    @Override
+    public void userRemoved(User user)
+    {
+        removeUser(user);
+    }
+
+    @Override
+    public void usersSorted(ArrayList<User> list)
+    {
+        if(totalUsers > 0) {
+            removeAllUsers();
+        }
+
+        importUsers(list);
     }
 }

@@ -53,7 +53,7 @@ public class UserListPanel extends AbstractPanel
         // Getting the default categories for now
         UserCategory onlineCategory = userList.findCategory("Online");
 
-        // TODO: optimize this so we don't add the list of users to the user list twice
+        // Adding and sorting the users
         for (RosterEntry buddy : buddyList) {
             user = new User(buddy.getUser(), buddy.getName());
             user.setCategory(onlineCategory);
@@ -62,6 +62,10 @@ public class UserListPanel extends AbstractPanel
         }
 
         usersManager.sort();
+
+        // Adding the sorted users to the userList
+        userList.importUsers(usersManager.getUsers());
+
     }
 
     public void addMouseListener(MouseListener mouseListener)

@@ -21,7 +21,7 @@ public class UsersManager
         users.add(user);
 
         for (UsersManagerListener listener : listeners) {
-            listener.addedUser(user);
+            listener.userAdded(user);
         }
 
         return this;
@@ -32,10 +32,15 @@ public class UsersManager
         users.remove(user);
 
         for (UsersManagerListener listener : listeners) {
-            listener.removedUser(user);
+            listener.userRemoved(user);
         }
 
         return this;
+    }
+
+    public ArrayList<User> getUsers()
+    {
+        return users;
     }
 
     public User find(String id)
@@ -49,19 +54,19 @@ public class UsersManager
         return null;
     }
 
-    public void addListener(UsersManagerListener listener)
-    {
-        listeners.add(listener);
-    }
-
-    public User getCurrentUser()
-    {
-        return currentUser;
-    }
-
-    public void setCurrentUser(User currentUser)
+    /**
+     * Adds the users that is using the application to the manager so we can make use of this information later
+     *
+     * @param currentUser User that has authenticated
+     */
+    public void setUser(User currentUser)
     {
         this.currentUser = currentUser;
+    }
+
+    public User getUser()
+    {
+        return currentUser;
     }
 
     public void sort()
@@ -69,7 +74,7 @@ public class UsersManager
         Collections.sort(users);
 
         for (UsersManagerListener listener : listeners) {
-            listener.sortComplete(users);
+            listener.usersSorted(users);
         }
     }
 
@@ -77,10 +82,15 @@ public class UsersManager
     {
         for (User user : users) {
             for (UsersManagerListener listener : listeners) {
-                listener.removedUser(user);
+                listener.userRemoved(user);
             }
         }
 
         users.clear();
+    }
+
+    public void addListener(UsersManagerListener listener)
+    {
+        listeners.add(listener);
     }
 }

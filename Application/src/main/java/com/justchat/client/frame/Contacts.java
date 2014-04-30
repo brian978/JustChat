@@ -136,7 +136,7 @@ public class Contacts extends AbstractMainFrame
     private void startNewConversation(User user)
     {
         Conversation conversationFrame = new Conversation(xmppConnection, user);
-        conversationFrame.setLocalUser(usersManager.getCurrentUser());
+        conversationFrame.setLocalUser(usersManager.getUser());
     }
 
     private Dimension getSizePreferences()
@@ -163,7 +163,7 @@ public class Contacts extends AbstractMainFrame
         public void authenticationPerformed(AuthenticationEvent e)
         {
             if (e.getStatusCode() == AbstractAuthentication.SUCCESS) {
-                usersManager.setCurrentUser(e.getUser());
+                usersManager.setUser(e.getUser());
             }
         }
     }
