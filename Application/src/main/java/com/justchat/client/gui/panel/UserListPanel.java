@@ -5,7 +5,9 @@ import com.acamar.users.User;
 import com.acamar.users.UsersManager;
 import com.justchat.client.gui.panel.components.UserCategory;
 import com.justchat.client.gui.panel.components.UserList;
+import org.jivesoftware.smack.Roster;
 import org.jivesoftware.smack.RosterEntry;
+import org.jivesoftware.smack.packet.Presence;
 
 import javax.swing.*;
 import java.awt.*;
@@ -46,17 +48,29 @@ public class UserListPanel extends AbstractPanel
         add(scrollableUserList);
     }
 
-    public void addUsers(Collection<RosterEntry> buddyList)
+    public void addUsers(Roster roster)
     {
+        Collection<RosterEntry> buddyList = roster.getEntries();
         User user;
+        Presence presence;
+        UserCategory category;
 
         // Getting the default categories for now
         UserCategory onlineCategory = userList.findCategory("Online");
 
+        // Default user category
+        category = userList.findCategory("Offline");
+
         // Adding and sorting the users
         for (RosterEntry buddy : buddyList) {
+            presence = roster.getPresence(buddy.getUser());
+
+            if(presence.isAvailable()) {
+                category = onlineCategory;
+            }
+
             user = new User(buddy.getUser(), buddy.getName());
-            user.setCategory(onlineCategory);
+            user.setCategory(category);
 
             usersManager.add(user);
         }

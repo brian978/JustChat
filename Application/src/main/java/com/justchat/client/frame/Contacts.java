@@ -154,7 +154,7 @@ public class Contacts extends AbstractMainFrame
 
     public void loadUsers()
     {
-        userListPanel.addUsers(xmppConnection.getEndpoint().getRoster().getEntries());
+        userListPanel.addUsers(xmppConnection.getEndpoint().getRoster());
     }
 
     private class AuthenticationStatusListener implements AuthenticationListener
