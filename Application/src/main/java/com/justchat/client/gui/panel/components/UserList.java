@@ -85,10 +85,14 @@ public class UserList extends JTree implements UsersManagerListener
         totalUsers--;
 
         UserCategory category = user.getCategory();
+        DefaultMutableTreeNode node;
 
         // Going through the categories to remove all the users
         for (int i = 0; i < category.getChildCount(); i++) {
-            ((DefaultMutableTreeNode) category.getChildAt(i)).removeFromParent();
+            node = ((DefaultMutableTreeNode) category.getChildAt(i));
+            if(node.getUserObject() == user) {
+                node.removeFromParent();
+            }
         }
     }
 
