@@ -9,6 +9,8 @@ import com.acamar.util.Properties;
 import com.justchat.client.frame.menu.MainMenu;
 import com.justchat.client.gui.panel.UserListPanel;
 import com.justchat.client.gui.panel.components.UserList;
+import org.jivesoftware.smack.RosterListener;
+import org.jivesoftware.smack.packet.Presence;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,6 +18,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Collection;
 
 /**
  * JustChat
@@ -154,6 +157,38 @@ public class Contacts extends AbstractMainFrame
 
     public void loadUsers()
     {
+        /**
+         * -----------------------
+         * XMPP Presence change
+         * -----------------------
+         */
+        xmppConnection.getEndpoint().getRoster().addRosterListener(new RosterListener()
+        {
+            @Override
+            public void entriesAdded(Collection<String> strings)
+            {
+
+            }
+
+            @Override
+            public void entriesUpdated(Collection<String> strings)
+            {
+
+            }
+
+            @Override
+            public void entriesDeleted(Collection<String> strings)
+            {
+
+            }
+
+            @Override
+            public void presenceChanged(Presence presence)
+            {
+                String user = presence.getFrom();
+            }
+        });
+
         userListPanel.addUsers(xmppConnection.getEndpoint().getRoster());
     }
 
