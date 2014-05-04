@@ -54,17 +54,6 @@ public class UsersManager
         return null;
     }
 
-    public User findByName(String name)
-    {
-        for (User user : users) {
-            if (user.getName().equals(name)) {
-                return user;
-            }
-        }
-
-        return null;
-    }
-
     /**
      * Adds the users that is using the application to the manager so we can make use of this information later
      *

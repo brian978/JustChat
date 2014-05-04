@@ -22,11 +22,10 @@ public class UserList extends JTree implements UsersManagerListener
 {
     private int totalUsers = 0;
     private DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("All contacts");
+    private DefaultTreeModel model = new DefaultTreeModel(rootNode, false);
 
     public UserList()
     {
-        DefaultTreeModel model = new DefaultTreeModel(rootNode, false);
-
         setModel(model);
         setRootVisible(true);
         getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
@@ -80,6 +79,13 @@ public class UserList extends JTree implements UsersManagerListener
         }
     }
 
+    public void updateUser(User user, UserCategory category)
+    {
+        removeUser(user);
+        user.setCategory(category);
+        addUser(user);
+    }
+
     public void removeUser(User user)
     {
         totalUsers--;
@@ -91,7 +97,8 @@ public class UserList extends JTree implements UsersManagerListener
         for (int i = 0; i < category.getChildCount(); i++) {
             node = ((DefaultMutableTreeNode) category.getChildAt(i));
             if(node.getUserObject() == user) {
-                node.removeFromParent();
+                model.removeNodeFromParent(node);
+                break;
             }
         }
     }

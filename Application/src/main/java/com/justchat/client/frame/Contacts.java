@@ -157,38 +157,6 @@ public class Contacts extends AbstractMainFrame
 
     public void loadUsers()
     {
-        /**
-         * -----------------------
-         * XMPP Presence change
-         * -----------------------
-         */
-        xmppConnection.getEndpoint().getRoster().addRosterListener(new RosterListener()
-        {
-            @Override
-            public void entriesAdded(Collection<String> strings)
-            {
-
-            }
-
-            @Override
-            public void entriesUpdated(Collection<String> strings)
-            {
-
-            }
-
-            @Override
-            public void entriesDeleted(Collection<String> strings)
-            {
-
-            }
-
-            @Override
-            public void presenceChanged(Presence presence)
-            {
-                String user = presence.getFrom();
-            }
-        });
-
         userListPanel.addUsers(xmppConnection.getEndpoint().getRoster());
     }
 

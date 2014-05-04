@@ -7,6 +7,7 @@ import com.justchat.client.gui.panel.components.UserCategory;
 import com.justchat.client.gui.panel.components.UserList;
 import org.jivesoftware.smack.Roster;
 import org.jivesoftware.smack.RosterEntry;
+import org.jivesoftware.smack.RosterListener;
 import org.jivesoftware.smack.packet.Presence;
 
 import javax.swing.*;
@@ -50,6 +51,57 @@ public class UserListPanel extends AbstractPanel
 
     public void addUsers(Roster roster)
     {
+        /**
+         * -----------------------
+         * XMPP Presence change
+         * -----------------------
+         */
+        roster.addRosterListener(new RosterListener()
+        {
+            @Override
+            public void entriesAdded(Collection<String> strings)
+            {
+
+            }
+
+            @Override
+            public void entriesUpdated(Collection<String> strings)
+            {
+
+            }
+
+            @Override
+            public void entriesDeleted(Collection<String> strings)
+            {
+
+            }
+
+            @Override
+            public void presenceChanged(Presence presence)
+            {
+                // We need to remove the resource from the "from" string
+                String from = presence.getFrom();
+                from = presence.getFrom().substring(0, from.lastIndexOf('/'));
+
+                User user = usersManager.find(from);
+
+                System.out.println("Presence changed from " + user + " " + presence.getType());
+
+                if (user != null) {
+                    if (presence.isAvailable()) {
+                        userList.updateUser(user, userList.findCategory("Online"));
+                    } else {
+                        userList.updateUser(user, userList.findCategory("Offline"));
+                    }
+                }
+            }
+        });
+
+        /**
+         * -----------------------
+         * Adding the users
+         * -----------------------
+         */
         Collection<RosterEntry> buddyList = roster.getEntries();
         User user;
         Presence presence;
@@ -65,7 +117,7 @@ public class UserListPanel extends AbstractPanel
         for (RosterEntry buddy : buddyList) {
             presence = roster.getPresence(buddy.getUser());
 
-            if(presence.isAvailable()) {
+            if (presence.isAvailable()) {
                 category = onlineCategory;
             }
 
