@@ -72,9 +72,9 @@ public class UserList extends JTree implements UsersManagerListener
         totalUsers++;
 
         UserCategory category = user.getCategory();
-        category.add(new DefaultMutableTreeNode(user));
+        model.insertNodeInto(new DefaultMutableTreeNode(user), category, category.getChildCount());
 
-        if(category.getChildCount() == 1) {
+        if (category.getChildCount() == 1) {
             expandPath(new TreePath(category.getPath()));
         }
     }
@@ -96,20 +96,27 @@ public class UserList extends JTree implements UsersManagerListener
         // Going through the categories to remove all the users
         for (int i = 0; i < category.getChildCount(); i++) {
             node = ((DefaultMutableTreeNode) category.getChildAt(i));
-            if(node.getUserObject() == user) {
+            if (node.getUserObject() == user) {
+                System.out.println("Removing user " + user + " from category " + category.getUserObject());
                 model.removeNodeFromParent(node);
-                break;
             }
         }
+
+        int i = 1;
     }
 
     public void removeAllUsers()
     {
         totalUsers = 0;
 
+        UserCategory category;
+
         // Going through the categories to remove all the users
         for (int i = 0; i < rootNode.getChildCount(); i++) {
-            ((UserCategory) rootNode.getChildAt(i)).removeAllChildren();
+            category = ((UserCategory) rootNode.getChildAt(i));
+            for(int j = 0; i < category.getChildCount(); j++){
+                removeUser((User) ((DefaultMutableTreeNode) category.getChildAt(j)).getUserObject());
+            }
         }
     }
 
@@ -123,19 +130,19 @@ public class UserList extends JTree implements UsersManagerListener
     @Override
     public void userAdded(User user)
     {
-        addUser(user);
+
     }
 
     @Override
     public void userRemoved(User user)
     {
-        removeUser(user);
+
     }
 
     @Override
     public void usersSorted(ArrayList<User> list)
     {
-        if(totalUsers > 0) {
+        if (totalUsers > 0) {
             removeAllUsers();
         }
 

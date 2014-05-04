@@ -18,6 +18,8 @@ public class UsersManager
 
     public synchronized UsersManager add(User user)
     {
+        System.out.println("Added user " + user);
+
         users.add(user);
 
         for (UsersManagerListener listener : listeners) {
