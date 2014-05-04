@@ -127,11 +127,8 @@ public class UserListPanel extends AbstractPanel
             usersManager.add(user);
         }
 
+        // No need to also import the users since they will be imported after the sort
         usersManager.sort();
-
-        // Adding the sorted users to the userList
-        userList.importUsers(usersManager.getUsers());
-
     }
 
     public void addMouseListener(MouseListener mouseListener)

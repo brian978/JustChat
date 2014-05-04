@@ -35,7 +35,7 @@ public class UserList extends JTree implements UsersManagerListener
         rootNode.add(new UserCategory("Online", UserCategory.ONLINE));
         rootNode.add(new UserCategory("Offline", UserCategory.OFFLINE));
 
-        model.reload(rootNode);
+        //        model.reload(rootNode);
     }
 
     public UserCategory findCategory(String name)
@@ -72,7 +72,7 @@ public class UserList extends JTree implements UsersManagerListener
         totalUsers++;
 
         UserCategory category = user.getCategory();
-        model.insertNodeInto(new DefaultMutableTreeNode(user), category, category.getChildCount());
+        model.insertNodeInto(new DefaultMutableTreeNode(user), category, 0);
 
         if (category.getChildCount() == 1) {
             expandPath(new TreePath(category.getPath()));
@@ -81,12 +81,13 @@ public class UserList extends JTree implements UsersManagerListener
 
     public void updateUser(User user, UserCategory category)
     {
-        removeUser(user);
-        user.setCategory(category);
-        addUser(user);
+        if (removeUser(user)) {
+            user.setCategory(category);
+            addUser(user);
+        }
     }
 
-    public void removeUser(User user)
+    public boolean removeUser(User user)
     {
         totalUsers--;
 
@@ -99,10 +100,12 @@ public class UserList extends JTree implements UsersManagerListener
             if (node.getUserObject() == user) {
                 System.out.println("Removing user " + user + " from category " + category.getUserObject());
                 model.removeNodeFromParent(node);
+
+                return true;
             }
         }
 
-        int i = 1;
+        return false;
     }
 
     public void removeAllUsers()
@@ -114,7 +117,7 @@ public class UserList extends JTree implements UsersManagerListener
         // Going through the categories to remove all the users
         for (int i = 0; i < rootNode.getChildCount(); i++) {
             category = ((UserCategory) rootNode.getChildAt(i));
-            for(int j = 0; i < category.getChildCount(); j++){
+            for (int j = 0; i < category.getChildCount(); j++) {
                 removeUser((User) ((DefaultMutableTreeNode) category.getChildAt(j)).getUserObject());
             }
         }
