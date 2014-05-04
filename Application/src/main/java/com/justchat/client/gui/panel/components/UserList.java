@@ -34,8 +34,6 @@ public class UserList extends JTree implements UsersManagerListener
         // We have 2 default categories
         rootNode.add(new UserCategory("Online", UserCategory.ONLINE));
         rootNode.add(new UserCategory("Offline", UserCategory.OFFLINE));
-
-        //        model.reload(rootNode);
     }
 
     public UserCategory findCategory(String name)
@@ -72,7 +70,7 @@ public class UserList extends JTree implements UsersManagerListener
         totalUsers++;
 
         UserCategory category = user.getCategory();
-        model.insertNodeInto(new DefaultMutableTreeNode(user), category, 0);
+        model.insertNodeInto(new DefaultMutableTreeNode(user), category, category.getChildCount());
 
         if (category.getChildCount() == 1) {
             expandPath(new TreePath(category.getPath()));

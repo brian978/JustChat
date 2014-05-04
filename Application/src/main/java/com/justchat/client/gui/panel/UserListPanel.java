@@ -81,11 +81,15 @@ public class UserListPanel extends AbstractPanel
             {
                 // We need to remove the resource from the "from" string
                 String from = presence.getFrom();
-                from = presence.getFrom().substring(0, from.lastIndexOf('/'));
+                int lastIndex = from.lastIndexOf('/');
+
+                if(lastIndex >= 0) {
+                    from = presence.getFrom().substring(0, lastIndex);
+                }
 
                 User user = usersManager.find(from);
 
-                System.out.println("Presence changed from " + user + " " + presence.getType());
+                System.out.println(user + " changed presence to: " + presence.getType());
 
                 if (user != null) {
                     if (presence.isAvailable()) {
