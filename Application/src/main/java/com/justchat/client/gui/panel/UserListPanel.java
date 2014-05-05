@@ -1,6 +1,7 @@
 package com.justchat.client.gui.panel;
 
 import com.acamar.gui.swing.panel.AbstractPanel;
+import com.acamar.smack.roster.RosterAdapter;
 import com.acamar.users.User;
 import com.acamar.users.UsersManager;
 import com.justchat.client.gui.panel.components.UserCategory;
@@ -53,53 +54,10 @@ public class UserListPanel extends AbstractPanel
     {
         /**
          * -----------------------
-         * XMPP Presence change
+         * XMPP Presence listener
          * -----------------------
          */
-        roster.addRosterListener(new RosterListener()
-        {
-            @Override
-            public void entriesAdded(Collection<String> strings)
-            {
-
-            }
-
-            @Override
-            public void entriesUpdated(Collection<String> strings)
-            {
-
-            }
-
-            @Override
-            public void entriesDeleted(Collection<String> strings)
-            {
-
-            }
-
-            @Override
-            public void presenceChanged(Presence presence)
-            {
-                // We need to remove the resource from the "from" string
-                String from = presence.getFrom();
-                int lastIndex = from.lastIndexOf('/');
-
-                if(lastIndex >= 0) {
-                    from = presence.getFrom().substring(0, lastIndex);
-                }
-
-                User user = usersManager.find(from);
-
-                System.out.println(user + " changed presence to: " + presence.getType());
-
-                if (user != null) {
-                    if (presence.isAvailable()) {
-                        userList.updateUser(user, userList.findCategory("Online"));
-                    } else {
-                        userList.updateUser(user, userList.findCategory("Offline"));
-                    }
-                }
-            }
-        });
+        roster.addRosterListener(new PresenceListener());
 
         /**
          * -----------------------
@@ -138,5 +96,32 @@ public class UserListPanel extends AbstractPanel
     public void addMouseListener(MouseListener mouseListener)
     {
         userList.addMouseListener(mouseListener);
+    }
+
+    private class PresenceListener extends RosterAdapter
+    {
+        @Override
+        public void presenceChanged(Presence presence)
+        {
+            // We need to remove the resource from the "from" string
+            String from = presence.getFrom();
+            int lastIndex = from.lastIndexOf('/');
+
+            if(lastIndex >= 0) {
+                from = presence.getFrom().substring(0, lastIndex);
+            }
+
+            User user = usersManager.find(from);
+
+            System.out.println(user + " changed presence to: " + presence.getType());
+
+            if (user != null) {
+                if (presence.isAvailable()) {
+                    userList.updateUser(user, userList.findCategory("Online"));
+                } else {
+                    userList.updateUser(user, userList.findCategory("Offline"));
+                }
+            }
+        }
     }
 }
