@@ -95,6 +95,7 @@ public class Launcher
             public void componentHidden(ComponentEvent e)
             {
                 super.componentHidden(e);
+                contacts.updateRoster();
                 contacts.loadUsers();
                 contacts.showFrame();
             }

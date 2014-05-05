@@ -3,14 +3,14 @@ package com.justchat.client.frame;
 import com.acamar.authentication.AbstractAuthentication;
 import com.acamar.authentication.AuthenticationEvent;
 import com.acamar.authentication.AuthenticationListener;
+import com.acamar.net.Connection;
 import com.acamar.users.User;
 import com.acamar.users.UsersManager;
 import com.acamar.util.Properties;
 import com.justchat.client.frame.menu.MainMenu;
 import com.justchat.client.gui.panel.UserListPanel;
 import com.justchat.client.gui.panel.components.UserList;
-import org.jivesoftware.smack.RosterListener;
-import org.jivesoftware.smack.packet.Presence;
+import org.jivesoftware.smack.XMPPConnection;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,7 +18,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Collection;
 
 /**
  * JustChat
@@ -53,6 +52,12 @@ public class Contacts extends AbstractMainFrame
         xmppAuthentication.addAuthenticationListener(new AuthenticationStatusListener());
 
         return this;
+    }
+
+    public void updateRoster()
+    {
+        // The roster is needed when we do operations on the user list
+        userListPanel.setRoster(xmppConnection.getEndpoint().getRoster());
     }
 
     @Override
@@ -131,9 +136,11 @@ public class Contacts extends AbstractMainFrame
 
     public void doLogout()
     {
-        xmppConnection.disconnect();
+        // The cleanup must be done prior to the disconnect because it depends on the connection
+        // in order to work properly
+        userListPanel.cleanup();
 
-        usersManager.removeAll();
+        xmppConnection.disconnect();
     }
 
     private void startNewConversation(User user)
@@ -157,7 +164,7 @@ public class Contacts extends AbstractMainFrame
 
     public void loadUsers()
     {
-        userListPanel.addUsers(xmppConnection.getEndpoint().getRoster());
+        userListPanel.addUsers();
     }
 
     private class AuthenticationStatusListener implements AuthenticationListener

@@ -19,14 +19,16 @@ import java.util.Collection;
 /**
  * JustChat
  *
+ * @version 1.5
  * @link https://github.com/brian978/JustChat
- * @copyright Copyright (c) 2014
- * @license Creative Commons Attribution-ShareAlike 3.0
+ * @since 2014-03-03
  */
 public class UserListPanel extends AbstractPanel
 {
-    UserList userList = new UserList();
-    UsersManager usersManager = null;
+    private UserList userList = new UserList();
+    private UsersManager usersManager = null;
+    private Roster roster = null;
+    private RosterListener rosterListener = new PresenceListener();
 
     public UserListPanel(UsersManager usersManager)
     {
@@ -50,15 +52,20 @@ public class UserListPanel extends AbstractPanel
         add(scrollableUserList);
     }
 
-    public void addUsers(Roster roster)
+    public void setRoster(Roster roster)
     {
-        /**
-         * -----------------------
-         * XMPP Presence listener
-         * -----------------------
-         */
-        roster.addRosterListener(new PresenceListener());
+        // Cleaning up the last roster first
+        if(this.roster != null) {
+            this.roster.removeRosterListener(rosterListener);
+        }
 
+        this.roster = roster;
+
+        this.roster.addRosterListener(rosterListener);
+    }
+
+    public void addUsers()
+    {
         /**
          * -----------------------
          * Adding the users
@@ -96,6 +103,15 @@ public class UserListPanel extends AbstractPanel
     public void addMouseListener(MouseListener mouseListener)
     {
         userList.addMouseListener(mouseListener);
+    }
+
+    public void cleanup()
+    {
+        roster.removeRosterListener(rosterListener);
+        usersManager.removeAll();
+        userList.removeAllUsers();
+
+        roster = null;
     }
 
     /**
