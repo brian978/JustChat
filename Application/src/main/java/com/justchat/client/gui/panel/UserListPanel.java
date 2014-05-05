@@ -98,6 +98,10 @@ public class UserListPanel extends AbstractPanel
         userList.addMouseListener(mouseListener);
     }
 
+    /**
+     * The listener will change the user category when the presence changes
+     *
+     */
     private class PresenceListener extends RosterAdapter
     {
         @Override
