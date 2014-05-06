@@ -21,12 +21,10 @@ public class MainMenu extends AbstractMenu
     public MainMenu()
     {
         // Buttons that show up all the time
-        com.acamar.gui.swing.menu.ButtonGroup defaultGroup = new com.acamar.gui.swing.menu.ButtonGroup();
-        defaultGroup.setTag("default");
+        com.acamar.gui.swing.menu.ButtonGroup defaultGroup = new com.acamar.gui.swing.menu.ButtonGroup("default");
 
         // Buttons that show up when the user is authenticated
-        com.acamar.gui.swing.menu.ButtonGroup authGroup = new com.acamar.gui.swing.menu.ButtonGroup();
-        authGroup.setTag("authenticated");
+        com.acamar.gui.swing.menu.ButtonGroup authGroup = new com.acamar.gui.swing.menu.ButtonGroup("authenticated");
 
         // Creating our buttons
         JMenuItem settingsBtn = createMenuItem("Preferences", "preferencesItem", defaultGroup);

@@ -11,7 +11,7 @@ public class ButtonGroup extends javax.swing.ButtonGroup
 {
     String tag = "";
 
-    public void setTag(String tag)
+    public ButtonGroup(String tag)
     {
         this.tag = tag;
     }

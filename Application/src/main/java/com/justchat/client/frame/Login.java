@@ -137,16 +137,14 @@ public class Login extends AbstractMainFrame
             public void actionPerformed(ActionEvent e)
             {
                 xmppAuthentication.cancel();
-                loginPanel.setVisible(true);
-                authenticatePanel.setVisible(false);
+                toggleMainPanels();
             }
         });
     }
 
     private void handleAuthenticateAction(JTextField identityField, JPasswordField passwordField)
     {
-        loginPanel.setVisible(false);
-        authenticatePanel.setVisible(true);
+        toggleMainPanels();
 
         // Storing the configuration of the connection
         JTextField serverField, portField, resourceField;
@@ -162,8 +160,13 @@ public class Login extends AbstractMainFrame
         passwordField.setText("");
     }
 
-    private void connectToServer()
+    /**
+     * The method switches between the authentication and the login panel
+     */
+    private void toggleMainPanels()
     {
+        loginPanel.setVisible(!loginPanel.isVisible());
+        authenticatePanel.setVisible(!loginPanel.isVisible());
     }
 
     private class AuthenticationStatusListener implements AuthenticationListener
@@ -207,17 +210,6 @@ public class Login extends AbstractMainFrame
                 loginBtn.setEnabled(true);
             } else if (e.getStatusCode() == ConnectionEvent.CONNECTION_CLOSED) {
                 loginBtn.setEnabled(false);
-
-                connectToServer();
-            } else {
-                timer.schedule(new TimerTask()
-                {
-                    @Override
-                    public void run()
-                    {
-                        connectToServer();
-                    }
-                }, 3000);
             }
         }
     }
