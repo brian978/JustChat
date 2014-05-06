@@ -4,6 +4,8 @@ import com.acamar.gui.swing.panel.AbstractPanel;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.HashMap;
+import java.util.Set;
 
 /**
  * JustChat
@@ -75,5 +77,20 @@ public class LoginPanel extends AbstractPanel
         field.setName(name);
 
         return field;
+    }
+
+    public void prefill(HashMap<String, String> data)
+    {
+        Component component;
+        Set<String> keys = data.keySet();
+
+        for (String key : keys) {
+            component = findComponent(key);
+            if(component != null) {
+                if(component instanceof JTextField) {
+                    ((JTextField) component).setText(data.get(key));
+                }
+            }
+        }
     }
 }

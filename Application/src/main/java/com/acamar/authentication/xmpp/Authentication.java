@@ -60,9 +60,14 @@ public class Authentication extends AbstractAsyncAuthentication
         connection.login(identity, new String(password));
     }
 
-    public void cancel()
+    public synchronized boolean cancel()
     {
-        abortAuthentication = true;
-        connection.disconnect();
+        if (!connection.isConnected()) {
+            abortAuthentication = true;
+            connection.disconnect();
+            return true;
+        }
+
+        return false;
     }
 }

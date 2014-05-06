@@ -16,7 +16,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.util.TimerTask;
+import java.util.HashMap;
 
 /**
  * JustChat
@@ -89,10 +89,13 @@ public class Login extends AbstractMainFrame
         authenticatePanel.setVisible(false);
         add(authenticatePanel);
 
-        // Pre-filling the server and port fields
-        ((JTextField) loginPanel.findComponent("serverField")).setText(xmppConnection.getHost());
-        ((JTextField) loginPanel.findComponent("portField")).setText(String.valueOf(xmppConnection.getPort()));
-        ((JTextField) loginPanel.findComponent("resourceField")).setText(xmppConnection.getResource());
+        // Login data
+        HashMap<String, String> data = new HashMap<>();
+        data.put("serverField", xmppConnection.getHost());
+        data.put("portField", String.valueOf(xmppConnection.getPort()));
+        data.put("resourceField", xmppConnection.getResource());
+
+        loginPanel.prefill(data);
     }
 
     @Override
@@ -101,7 +104,6 @@ public class Login extends AbstractMainFrame
         super.setupEvents();
 
         // Buttons and fields events
-        final JTextField identifier = (JTextField) loginPanel.findComponent("identifierField");
         final JPasswordField password = (JPasswordField) loginPanel.findComponent("passwordField");
         final JButton loginBtn = (JButton) loginPanel.findComponent("loginBtn");
         final JButton cancelBtn = (JButton) authenticatePanel.findComponent("cancelBtn");
@@ -113,7 +115,7 @@ public class Login extends AbstractMainFrame
             public void keyReleased(KeyEvent e)
             {
                 if (e.getKeyCode() == 10) {
-                    handleAuthenticateAction(identifier, password);
+                    handleAuthenticateAction();
                 }
             }
         });
@@ -125,7 +127,7 @@ public class Login extends AbstractMainFrame
             public void actionPerformed(ActionEvent e)
             {
                 if (e.getActionCommand().equals("doLogin")) {
-                    handleAuthenticateAction(identifier, password);
+                    handleAuthenticateAction();
                 }
             }
         });
@@ -136,15 +138,20 @@ public class Login extends AbstractMainFrame
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                xmppAuthentication.cancel();
-                toggleMainPanels();
+                if (xmppAuthentication.cancel()) {
+                    toggleMainPanels();
+                }
             }
         });
     }
 
-    private void handleAuthenticateAction(JTextField identityField, JPasswordField passwordField)
+    private void handleAuthenticateAction()
     {
         toggleMainPanels();
+
+        // Login data
+        JTextField identityField = (JTextField) loginPanel.findComponent("identifierField");
+        JPasswordField passwordField = (JPasswordField) loginPanel.findComponent("passwordField");
 
         // Storing the configuration of the connection
         JTextField serverField, portField, resourceField;
@@ -155,7 +162,7 @@ public class Login extends AbstractMainFrame
         // Will also store the settings
         xmppConnection.setup(serverField.getText(), Integer.parseInt(portField.getText()), resourceField.getText());
 
-        // Now we authenticate
+        // Now we authenticate (async so we don't block the interface)
         xmppAuthentication.authenticateAsync(identityField.getText(), passwordField.getPassword());
         passwordField.setText("");
     }
