@@ -3,6 +3,7 @@ package com.justchat.client.gui.panel;
 import com.acamar.gui.swing.panel.AbstractPanel;
 
 import javax.swing.*;
+import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.util.HashMap;
 import java.util.Set;
@@ -40,6 +41,11 @@ public class LoginPanel extends AbstractPanel
          * Fields
          * -----------------
          */
+        JComboBox<String> connectionField = new JComboBox<>();
+        connectionField.addItem("XMPP");
+        connectionField.addItem("Facebook (XMPP)");
+
+        createRow("Connection:", connectionField, "connectionField", fieldMargin);
         createRow("Username / Email:", new JTextField(), "identifierField", fieldMargin);
         createRow("Password:", new JPasswordField(), "passwordField", fieldMargin);
         createRow("Server:", new JTextField(), "serverField", fieldMargin);
@@ -59,7 +65,7 @@ public class LoginPanel extends AbstractPanel
         add(loginBtn);
     }
 
-    private void createRow(String label, JTextField fieldObject, String fieldName, Insets fieldMargin)
+    private void createRow(String label, JComponent fieldObject, String fieldName, Insets fieldMargin)
     {
         add(new JLabel(label));
         addBoxSeparator(fieldSeparator);
@@ -68,13 +74,18 @@ public class LoginPanel extends AbstractPanel
         addBoxSeparator(sectionSeparator);
     }
 
-    private JTextField configureStandardField(JTextField field, String name, Insets margin)
+    private JComponent configureStandardField(JComponent field, String name, Insets margin)
     {
-        field.setAlignmentX(Component.LEFT_ALIGNMENT);
-        field.setColumns(10);
-        field.setMargin(margin);
-        field.setMaximumSize(field.getPreferredSize());
         field.setName(name);
+        field.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        if (field instanceof JTextField) {
+            ((JTextField) field).setColumns(10);
+            ((JTextField) field).setMargin(margin);
+        }
+
+        // This must be done after we know the number of columns of the field (if any)
+        field.setPreferredSize(new Dimension(100, field.getPreferredSize().height));
 
         return field;
     }
@@ -86,8 +97,8 @@ public class LoginPanel extends AbstractPanel
 
         for (String key : keys) {
             component = findComponent(key);
-            if(component != null) {
-                if(component instanceof JTextField) {
+            if (component != null) {
+                if (component instanceof JTextField) {
                     ((JTextField) component).setText(data.get(key));
                 }
             }
