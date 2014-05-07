@@ -37,6 +37,24 @@ public class Login extends AbstractMainFrame
         super("JustChat", settings);
     }
 
+    @Override
+    public AbstractMainFrame setAuthentication(AbstractAuthentication authentication)
+    {
+        super.setAuthentication(authentication);
+
+        // Login data
+        Connection xmppConnection = xmppAuthentication.getConnection();
+
+        HashMap<String, String> data = new HashMap<>();
+        data.put("serverField", xmppConnection.getHost());
+        data.put("portField", String.valueOf(xmppConnection.getPort()));
+        data.put("resourceField", xmppConnection.getResource());
+
+        loginPanel.prefill(data);
+
+        return this;
+    }
+
     public Login addAuthenticationListeners()
     {
         xmppAuthentication.addAuthenticationListener(new AuthenticationStatusListener());
@@ -83,16 +101,6 @@ public class Login extends AbstractMainFrame
         authenticatePanel.setName("authenticatePanel");
         authenticatePanel.setVisible(false);
         add(authenticatePanel);
-
-        // Login data
-        Connection xmppConnection = xmppAuthentication.getConnection();
-
-        HashMap<String, String> data = new HashMap<>();
-        data.put("serverField", xmppConnection.getHost());
-        data.put("portField", String.valueOf(xmppConnection.getPort()));
-        data.put("resourceField", xmppConnection.getResource());
-
-        loginPanel.prefill(data);
     }
 
     @Override

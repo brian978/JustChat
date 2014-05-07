@@ -41,7 +41,7 @@ public class Launcher
         // TODO: handle read/create file failed (maybe with an error popup?)
         boolean settingsLoaded = settings.checkAndLoad();
 
-        if(!settingsLoaded) {
+        if (!settingsLoaded) {
             System.exit(-10);
         }
 
@@ -70,16 +70,14 @@ public class Launcher
         // Login frame
         login.addWindowListener(exitListener);
         login.setMenu(new MainMenu());
-        login.setAuthentication(xmppAuthentication);
-        login.addAuthenticationListeners()
-             .initialize();
+        login.initialize();
 
         // Contacts frame
         contacts.addWindowListener(exitListener);
         contacts.setMenu(new MainMenu());
-        contacts.setAuthentication(xmppAuthentication);
-        contacts.addAuthenticationListeners();
         contacts.initialize();
+
+        updateAuthenticationMethod();
 
         /**
          * --------------------------
@@ -126,6 +124,15 @@ public class Launcher
          * -------------------------
          */
         login.showFrame();
+    }
+
+    protected void updateAuthenticationMethod()
+    {
+        login.setAuthentication(xmppAuthentication);
+        login.addAuthenticationListeners();
+
+        contacts.setAuthentication(xmppAuthentication);
+        contacts.addAuthenticationListeners();
     }
 
     private class SaveOnExitListener extends WindowAdapter
