@@ -21,12 +21,11 @@ import java.awt.event.ActionListener;
  * @since 2014-04-23
  */
 abstract public class AbstractMainFrame extends AbstractFrame
-        implements AuthenticationAwareInterface, ConnectionAwareInterface
+        implements AuthenticationAwareInterface
 {
     protected MainMenu menu;
     protected Properties settings;
     protected Authentication xmppAuthentication;
-    protected Connection xmppConnection;
 
     public AbstractMainFrame(String title, Properties settings)
     {
@@ -80,14 +79,6 @@ abstract public class AbstractMainFrame extends AbstractFrame
     public AbstractMainFrame setAuthentication(AbstractAuthentication authentication)
     {
         this.xmppAuthentication = (Authentication) authentication;
-
-        return this;
-    }
-
-    @Override
-    public AbstractMainFrame setConnection(com.acamar.net.Connection connection)
-    {
-        this.xmppConnection = (Connection) connection;
 
         return this;
     }

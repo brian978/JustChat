@@ -17,8 +17,24 @@ public class Authentication extends com.acamar.authentication.xmpp.Authenticatio
         super(connection);
     }
 
+    @Override
+    public Connection getConnection()
+    {
+        if (connection == null) {
+            connection = new Connection();
+        }
+
+        return (Connection) connection;
+    }
+
     protected void doLogin(String identity, char[] password) throws XMPPException
     {
         connection.login(identity, new String(password));
+    }
+
+    @Override
+    public String toString()
+    {
+        return "XMPP (Facebook)";
     }
 }

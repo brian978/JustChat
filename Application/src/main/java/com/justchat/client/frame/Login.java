@@ -5,6 +5,7 @@ import com.acamar.authentication.AuthenticationEvent;
 import com.acamar.authentication.AuthenticationListener;
 import com.acamar.net.ConnectionEvent;
 import com.acamar.net.ConnectionStatusListener;
+import com.acamar.net.xmpp.Connection;
 import com.acamar.util.Properties;
 import com.justchat.client.frame.menu.MainMenu;
 import com.justchat.client.gui.panel.AuthenticatePanel;
@@ -39,13 +40,7 @@ public class Login extends AbstractMainFrame
     public Login addAuthenticationListeners()
     {
         xmppAuthentication.addAuthenticationListener(new AuthenticationStatusListener());
-
-        return this;
-    }
-
-    public Login addConnectionListeners()
-    {
-        xmppConnection.addConnectionStatusListener(new ConnectionStatus());
+        xmppAuthentication.getConnection().addConnectionStatusListener(new ConnectionStatus());
 
         return this;
     }
@@ -90,6 +85,8 @@ public class Login extends AbstractMainFrame
         add(authenticatePanel);
 
         // Login data
+        Connection xmppConnection = xmppAuthentication.getConnection();
+
         HashMap<String, String> data = new HashMap<>();
         data.put("serverField", xmppConnection.getHost());
         data.put("portField", String.valueOf(xmppConnection.getPort()));
@@ -104,9 +101,19 @@ public class Login extends AbstractMainFrame
         super.setupEvents();
 
         // Buttons and fields events
+        final JComboBox connection = (JComboBox) loginPanel.findComponent("connectionField");
         final JPasswordField password = (JPasswordField) loginPanel.findComponent("passwordField");
         final JButton loginBtn = (JButton) loginPanel.findComponent("loginBtn");
         final JButton cancelBtn = (JButton) authenticatePanel.findComponent("cancelBtn");
+
+        connection.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                String selectedItem = (String) connection.getSelectedItem();
+            }
+        });
 
         // Password field key actions
         password.addKeyListener(new KeyAdapter()
@@ -160,7 +167,8 @@ public class Login extends AbstractMainFrame
         resourceField = (JTextField) loginPanel.findComponent("resourceField");
 
         // Will also store the settings
-        xmppConnection.setup(serverField.getText(), Integer.parseInt(portField.getText()), resourceField.getText());
+        xmppAuthentication.getConnection()
+                          .setup(serverField.getText(), Integer.parseInt(portField.getText()), resourceField.getText());
 
         // Now we authenticate (async so we don't block the interface)
         xmppAuthentication.authenticateAsync(identityField.getText(), passwordField.getPassword());
@@ -192,7 +200,6 @@ public class Login extends AbstractMainFrame
         {
             if (e.getStatusCode() == AbstractAuthentication.SUCCESS) {
                 setVisible(false);
-                xmppConnection.saveConfig();
             }
 
             loginPanel.setVisible(true);

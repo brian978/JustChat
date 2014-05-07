@@ -70,17 +70,14 @@ public class Launcher
         // Login frame
         login.addWindowListener(exitListener);
         login.setMenu(new MainMenu());
-        login.setConnection(xmppConnection)
-             .setAuthentication(xmppAuthentication);
-        login.addConnectionListeners()
-             .addAuthenticationListeners();
-        login.initialize();
+        login.setAuthentication(xmppAuthentication);
+        login.addAuthenticationListeners()
+             .initialize();
 
         // Contacts frame
         contacts.addWindowListener(exitListener);
         contacts.setMenu(new MainMenu());
-        contacts.setConnection(xmppConnection)
-                .setAuthentication(xmppAuthentication);
+        contacts.setAuthentication(xmppAuthentication);
         contacts.addAuthenticationListeners();
         contacts.initialize();
 

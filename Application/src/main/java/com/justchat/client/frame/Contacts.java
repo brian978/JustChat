@@ -57,7 +57,7 @@ public class Contacts extends AbstractMainFrame
     public void updateRoster()
     {
         // The roster is needed when we do operations on the user list
-        userListPanel.setRoster(xmppConnection.getEndpoint().getRoster());
+        userListPanel.setRoster(xmppAuthentication.getConnection().getEndpoint().getRoster());
     }
 
     @Override
@@ -140,12 +140,12 @@ public class Contacts extends AbstractMainFrame
         // in order to work properly
         userListPanel.cleanup();
 
-        xmppConnection.disconnect();
+        xmppAuthentication.getConnection().disconnect();
     }
 
     private void startNewConversation(User user)
     {
-        Conversation conversationFrame = new Conversation(xmppConnection, user);
+        Conversation conversationFrame = new Conversation(xmppAuthentication.getConnection(), user);
         conversationFrame.setLocalUser(usersManager.getUser());
     }
 

@@ -19,9 +19,28 @@ public class Authentication extends AbstractAsyncAuthentication
     protected Connection connection = null;
     protected boolean abortAuthentication = false;
 
+    public Authentication()
+    {
+    }
+
     public Authentication(Connection connection)
     {
         this.connection = connection;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "XMPP";
+    }
+
+    public Connection getConnection()
+    {
+        if (connection == null) {
+            connection = new Connection();
+        }
+
+        return connection;
     }
 
     @Override
@@ -38,6 +57,7 @@ public class Authentication extends AbstractAsyncAuthentication
         } else if (identity.length() > 0 && password.length > 0) {
             try {
                 doLogin(identity, password);
+                connection.saveConfig();
             } catch (XMPPException e) {
                 statusCode = AbstractAuthentication.FAILED;
                 connection.disconnect();
