@@ -10,6 +10,7 @@ import com.acamar.util.Properties;
 import com.justchat.client.frame.menu.MainMenu;
 import com.justchat.client.gui.panel.AuthenticatePanel;
 import com.justchat.client.gui.panel.LoginPanel;
+import com.justchat.client.gui.panel.components.ConnectionItem;
 
 import javax.swing.*;
 import java.awt.*;
@@ -43,14 +44,7 @@ public class Login extends AbstractMainFrame
         super.setAuthentication(authentication);
 
         // Login data
-        Connection xmppConnection = xmppAuthentication.getConnection();
-
-        HashMap<String, String> data = new HashMap<>();
-        data.put("serverField", xmppConnection.getHost());
-        data.put("portField", String.valueOf(xmppConnection.getPort()));
-        data.put("resourceField", xmppConnection.getResource());
-
-        loginPanel.prefill(data);
+        prefillData(xmppAuthentication.getConnection());
 
         return this;
     }
@@ -119,7 +113,18 @@ public class Login extends AbstractMainFrame
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                String selectedItem = (String) connection.getSelectedItem();
+                Connection connection1 = null;
+                ConnectionItem selectedItem = (ConnectionItem) connection.getSelectedItem();
+
+                try {
+                    connection1 = (Connection) selectedItem.getInstance();
+                } catch (IllegalAccessException | InstantiationException e1) {
+                    e1.printStackTrace();
+                }
+
+                if (connection1 != null) {
+                    prefillData(connection1);
+                }
             }
         });
 
@@ -190,6 +195,16 @@ public class Login extends AbstractMainFrame
     {
         loginPanel.setVisible(!loginPanel.isVisible());
         authenticatePanel.setVisible(!loginPanel.isVisible());
+    }
+
+    private void prefillData(Connection connection)
+    {
+        HashMap<String, String> data = new HashMap<>();
+        data.put("serverField", connection.getHost());
+        data.put("portField", String.valueOf(connection.getPort()));
+        data.put("resourceField", connection.getResource());
+
+        loginPanel.prefill(data);
     }
 
     private class AuthenticationStatusListener implements AuthenticationListener
