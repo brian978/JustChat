@@ -12,11 +12,6 @@ import org.jivesoftware.smack.XMPPException;
  */
 public class Authentication extends com.acamar.authentication.xmpp.Authentication
 {
-    public Authentication(Connection connection)
-    {
-        super(connection);
-    }
-
     @Override
     public Connection getConnection()
     {

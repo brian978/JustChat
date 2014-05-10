@@ -57,7 +57,7 @@ public class Launcher
          * Authentication setup
          * --------------------------
          */
-        xmppAuthentication = new Authentication(xmppConnection);
+        xmppAuthentication = new Authentication();
 
         /**
          * --------------------------

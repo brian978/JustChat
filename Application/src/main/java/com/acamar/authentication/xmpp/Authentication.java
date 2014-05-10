@@ -23,11 +23,6 @@ public class Authentication extends AbstractAsyncAuthentication
     {
     }
 
-    public Authentication(Connection connection)
-    {
-        this.connection = connection;
-    }
-
     @Override
     public String toString()
     {
