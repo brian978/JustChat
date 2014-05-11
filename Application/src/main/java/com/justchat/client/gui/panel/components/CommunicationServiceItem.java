@@ -9,23 +9,23 @@ import com.acamar.net.Connection;
  * @link https://github.com/brian978/JustChat
  * @since 2014-05-09
  */
-public class ConnectionItem<T extends Connection>
+public class CommunicationServiceItem<T extends Connection>
 {
-    private Class<T> connectionClass;
+    private Class<T> authenticationClass;
     private String name;
     private T instance = null;
 
 
-    public ConnectionItem(Class<T> connectionClass, String name)
+    public CommunicationServiceItem(Class<T> authenticationClass, String name)
     {
-        this.connectionClass = connectionClass;
+        this.authenticationClass = authenticationClass;
         this.name = name;
     }
 
     public T getInstance() throws IllegalAccessException, InstantiationException
     {
         if (instance == null) {
-            instance = connectionClass.newInstance();
+            instance = authenticationClass.newInstance();
         }
 
         return instance;

@@ -10,7 +10,7 @@ import com.acamar.util.Properties;
 import com.justchat.client.frame.menu.MainMenu;
 import com.justchat.client.gui.panel.AuthenticatePanel;
 import com.justchat.client.gui.panel.LoginPanel;
-import com.justchat.client.gui.panel.components.ConnectionItem;
+import com.justchat.client.gui.panel.components.CommunicationServiceItem;
 
 import javax.swing.*;
 import java.awt.*;
@@ -114,7 +114,7 @@ public class Login extends AbstractMainFrame
             public void actionPerformed(ActionEvent e)
             {
                 Connection connection1 = null;
-                ConnectionItem selectedItem = (ConnectionItem) connection.getSelectedItem();
+                CommunicationServiceItem selectedItem = (CommunicationServiceItem) connection.getSelectedItem();
 
                 try {
                     connection1 = (Connection) selectedItem.getInstance();

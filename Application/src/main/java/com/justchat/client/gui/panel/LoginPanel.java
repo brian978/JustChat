@@ -1,7 +1,7 @@
 package com.justchat.client.gui.panel;
 
 import com.acamar.gui.swing.panel.AbstractPanel;
-import com.justchat.client.gui.panel.components.ConnectionItem;
+import com.justchat.client.gui.panel.components.CommunicationServiceItem;
 
 import javax.swing.*;
 import java.awt.*;
@@ -41,9 +41,9 @@ public class LoginPanel extends AbstractPanel
          * Fields
          * -----------------
          */
-        JComboBox<ConnectionItem> connectionField = new JComboBox<>();
-        connectionField.addItem(new ConnectionItem<>(com.acamar.net.xmpp.Connection.class, "XMPP"));
-        connectionField.addItem(new ConnectionItem<>(com.acamar.net.xmpp.facebook.Connection.class, "XMPP (Facebook)"));
+        JComboBox<CommunicationServiceItem> connectionField = new JComboBox<>();
+        connectionField.addItem(new CommunicationServiceItem<>(com.acamar.net.xmpp.Connection.class, "XMPP"));
+        connectionField.addItem(new CommunicationServiceItem<>(com.acamar.net.xmpp.facebook.Connection.class, "XMPP (Facebook)"));
 
         createRow("Connection:", connectionField, "connectionField", fieldMargin);
         createRow("Username / Email:", new JTextField(), "identifierField", fieldMargin);
