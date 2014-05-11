@@ -42,8 +42,8 @@ public class LoginPanel extends AbstractPanel
          * -----------------
          */
         JComboBox<CommunicationServiceItem> connectionField = new JComboBox<>();
-        connectionField.addItem(new CommunicationServiceItem<>(com.acamar.net.xmpp.Connection.class, "XMPP"));
-        connectionField.addItem(new CommunicationServiceItem<>(com.acamar.net.xmpp.facebook.Connection.class, "XMPP (Facebook)"));
+        connectionField.addItem(new CommunicationServiceItem<>(com.acamar.authentication.xmpp.Authentication.class, "XMPP"));
+        connectionField.addItem(new CommunicationServiceItem<>(com.acamar.authentication.xmpp.facebook.Authentication.class, "XMPP (Facebook)"));
 
         createRow("Connection:", connectionField, "connectionField", fieldMargin);
         createRow("Username / Email:", new JTextField(), "identifierField", fieldMargin);

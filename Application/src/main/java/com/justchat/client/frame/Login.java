@@ -3,6 +3,7 @@ package com.justchat.client.frame;
 import com.acamar.authentication.AbstractAuthentication;
 import com.acamar.authentication.AuthenticationEvent;
 import com.acamar.authentication.AuthenticationListener;
+import com.acamar.authentication.xmpp.Authentication;
 import com.acamar.net.ConnectionEvent;
 import com.acamar.net.ConnectionStatusListener;
 import com.acamar.net.xmpp.Connection;
@@ -113,17 +114,17 @@ public class Login extends AbstractMainFrame
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                Connection connection1 = null;
+                Authentication authentication = null;
                 CommunicationServiceItem selectedItem = (CommunicationServiceItem) connection.getSelectedItem();
 
                 try {
-                    connection1 = (Connection) selectedItem.getInstance();
+                    authentication = selectedItem.getInstance();
                 } catch (IllegalAccessException | InstantiationException e1) {
                     e1.printStackTrace();
                 }
 
-                if (connection1 != null) {
-                    prefillData(connection1);
+                if (authentication != null) {
+                    prefillData(authentication.getConnection());
                 }
             }
         });

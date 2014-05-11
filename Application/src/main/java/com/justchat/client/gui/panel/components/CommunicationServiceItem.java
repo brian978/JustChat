@@ -1,6 +1,6 @@
 package com.justchat.client.gui.panel.components;
 
-import com.acamar.net.Connection;
+import com.acamar.authentication.xmpp.Authentication;
 
 /**
  * JustChat
@@ -9,7 +9,7 @@ import com.acamar.net.Connection;
  * @link https://github.com/brian978/JustChat
  * @since 2014-05-09
  */
-public class CommunicationServiceItem<T extends Connection>
+public class CommunicationServiceItem<T extends Authentication>
 {
     private Class<T> authenticationClass;
     private String name;
