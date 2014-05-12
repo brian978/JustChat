@@ -107,8 +107,16 @@ public class Launcher
         login.showFrame();
     }
 
-    protected void setAuthenticationMethod(Authentication xmppAuthentication)
+    protected void setAuthenticationObject(Authentication xmppAuthentication)
     {
+        if(login.getAuthentication() != null) {
+            login.removeAuthenticationListeners();
+        }
+
+        if(contacts.getAuthentication() != null) {
+            contacts.removeAuthenticationListeners();
+        }
+
         login.setAuthentication(xmppAuthentication);
         login.addAuthenticationListeners();
 

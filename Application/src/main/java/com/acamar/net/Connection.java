@@ -90,6 +90,13 @@ abstract public class Connection implements ConnectionInterface, ConnectionAsync
         return this;
     }
 
+    public Connection removeConnectionStatusListener(ConnectionStatusListener listener)
+    {
+        EventManager.remove(ConnectionStatusListener.class, listener);
+
+        return this;
+    }
+
     protected void fireConnectionEvent(String message, int statusCode)
     {
         EventManager.fireEvent(

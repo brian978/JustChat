@@ -28,6 +28,7 @@ import java.awt.event.MouseEvent;
  */
 public class Contacts extends AbstractMainFrame
 {
+    private AuthenticationListener authenticationListener = new AuthenticationStatusListener();
     private UsersManager usersManager = new UsersManager();
     private UserListPanel userListPanel = new UserListPanel(usersManager);
 
@@ -49,7 +50,14 @@ public class Contacts extends AbstractMainFrame
 
     public Contacts addAuthenticationListeners()
     {
-        xmppAuthentication.addAuthenticationListener(new AuthenticationStatusListener());
+        xmppAuthentication.addAuthenticationListener(authenticationListener);
+
+        return this;
+    }
+
+    public Contacts removeAuthenticationListeners()
+    {
+        xmppAuthentication.addAuthenticationListener(authenticationListener);
 
         return this;
     }

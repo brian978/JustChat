@@ -28,6 +28,13 @@ public abstract class AbstractAuthentication implements AuthenticationInterface
         return this;
     }
 
+    public AuthenticationInterface removeAuthenticationListener(AuthenticationListener listener)
+    {
+        EventManager.remove(AuthenticationListener.class, listener);
+
+        return this;
+    }
+
     protected void fireAuthenticationEvent(AuthenticationEvent e)
     {
         EventManager.fireEvent(AuthenticationListener.class, e, new FireEventCallback()

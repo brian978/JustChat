@@ -10,4 +10,5 @@ package com.acamar.authentication;
 public interface AuthenticationAwareInterface<T>
 {
     public T setAuthentication(AbstractAuthentication authentication);
+    public AbstractAuthentication getAuthentication();
 }

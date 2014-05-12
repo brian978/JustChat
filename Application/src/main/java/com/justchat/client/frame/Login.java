@@ -30,6 +30,8 @@ import java.util.HashMap;
  */
 public class Login extends AbstractMainFrame
 {
+    private AuthenticationListener authenticationListener = new AuthenticationStatusListener();
+
     // Panels
     private LoginPanel loginPanel = new LoginPanel();
     private AuthenticatePanel authenticatePanel = new AuthenticatePanel();
@@ -52,8 +54,14 @@ public class Login extends AbstractMainFrame
 
     public Login addAuthenticationListeners()
     {
-        xmppAuthentication.addAuthenticationListener(new AuthenticationStatusListener());
-        xmppAuthentication.getConnection().addConnectionStatusListener(new ConnectionStatus());
+        xmppAuthentication.addAuthenticationListener(authenticationListener);
+
+        return this;
+    }
+
+    public Login removeAuthenticationListeners()
+    {
+        xmppAuthentication.removeAuthenticationListener(authenticationListener);
 
         return this;
     }
@@ -210,15 +218,6 @@ public class Login extends AbstractMainFrame
 
     private class AuthenticationStatusListener implements AuthenticationListener
     {
-        JButton loginBtn;
-        JPasswordField password;
-
-        public AuthenticationStatusListener()
-        {
-            loginBtn = (JButton) loginPanel.findComponent("loginBtn");
-            password = (JPasswordField) loginPanel.findComponent("passwordField");
-        }
-
         @Override
         public void authenticationPerformed(AuthenticationEvent e)
         {
@@ -228,27 +227,6 @@ public class Login extends AbstractMainFrame
 
             loginPanel.setVisible(true);
             authenticatePanel.setVisible(false);
-        }
-    }
-
-    private class ConnectionStatus implements ConnectionStatusListener
-    {
-        JButton loginBtn;
-        java.util.Timer timer = new java.util.Timer();
-
-        public ConnectionStatus()
-        {
-            loginBtn = (JButton) loginPanel.findComponent("loginBtn");
-        }
-
-        @Override
-        public void statusChanged(ConnectionEvent e)
-        {
-            if (e.getStatusCode() == ConnectionEvent.CONNECTION_OPENED) {
-                loginBtn.setEnabled(true);
-            } else if (e.getStatusCode() == ConnectionEvent.CONNECTION_CLOSED) {
-                loginBtn.setEnabled(false);
-            }
         }
     }
 }

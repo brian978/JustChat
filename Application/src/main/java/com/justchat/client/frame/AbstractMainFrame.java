@@ -83,6 +83,12 @@ abstract public class AbstractMainFrame extends AbstractFrame
         return this;
     }
 
+    @Override
+    public Authentication getAuthentication()
+    {
+        return xmppAuthentication;
+    }
+
     public void setMenu(MainMenu menu)
     {
         this.menu = menu;
