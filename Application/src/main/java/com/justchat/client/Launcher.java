@@ -23,9 +23,6 @@ import java.io.IOException;
  */
 public class Launcher
 {
-    Connection xmppConnection;
-    Authentication xmppAuthentication;
-
     Properties settings = new Properties("preferences.properties");
     Login login = new Login(settings);
     Contacts contacts = new Contacts(settings);
@@ -47,20 +44,6 @@ public class Launcher
 
         /**
          * --------------------------
-         * Connection setup
-         * --------------------------
-         */
-        xmppConnection = new Connection();
-
-        /**
-         * --------------------------
-         * Authentication setup
-         * --------------------------
-         */
-        xmppAuthentication = new Authentication();
-
-        /**
-         * --------------------------
          * Frames setup
          * --------------------------
          */
@@ -76,8 +59,6 @@ public class Launcher
         contacts.addWindowListener(exitListener);
         contacts.setMenu(new MainMenu());
         contacts.initialize();
-
-        updateAuthenticationMethod();
 
         /**
          * --------------------------
@@ -126,7 +107,7 @@ public class Launcher
         login.showFrame();
     }
 
-    protected void updateAuthenticationMethod()
+    protected void setAuthenticationMethod(Authentication xmppAuthentication)
     {
         login.setAuthentication(xmppAuthentication);
         login.addAuthenticationListeners();
@@ -147,10 +128,6 @@ public class Launcher
         public void windowClosing(WindowEvent e)
         {
             System.out.println("Cleaning up the main program");
-
-            if (xmppConnection.isConnected()) {
-                xmppConnection.disconnect();
-            }
 
             try {
                 settings.store();
