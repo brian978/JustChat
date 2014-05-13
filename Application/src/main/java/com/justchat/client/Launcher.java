@@ -6,12 +6,12 @@ import com.acamar.util.Properties;
 import com.justchat.client.frame.Contacts;
 import com.justchat.client.frame.Login;
 import com.justchat.client.frame.menu.MainMenu;
+import com.justchat.client.gui.panel.LoginPanel;
+import com.justchat.client.gui.panel.components.CommunicationServiceItem;
 
+import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 import java.io.IOException;
 
 /**
@@ -74,6 +74,30 @@ public class Launcher
                 contacts.updateRoster();
                 contacts.loadUsers();
                 contacts.showFrame();
+            }
+        });
+
+        // Deciding what to do when we select a different communication server
+        LoginPanel loginPanel = (LoginPanel) login.findComponent("loginPanel");
+        final JComboBox connection = (JComboBox) loginPanel.findComponent("connectionField");
+
+        connection.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                Authentication authentication = null;
+                CommunicationServiceItem selectedItem = (CommunicationServiceItem) connection.getSelectedItem();
+
+                try {
+                    authentication = selectedItem.getInstance();
+                } catch (IllegalAccessException | InstantiationException e1) {
+                    e1.printStackTrace();
+                }
+
+                if (authentication != null) {
+                    setAuthenticationObject(authentication);
+                }
             }
         });
 
