@@ -1,7 +1,6 @@
 package com.acamar.authentication.xmpp.facebook;
 
 import com.acamar.net.xmpp.facebook.Connection;
-import org.jivesoftware.smack.XMPPException;
 
 /**
  * JustChat
@@ -14,6 +13,7 @@ public class Authentication extends com.acamar.authentication.xmpp.Authenticatio
 {
     /**
      * Creates a new connection object or returns an existing one
+     * We need to override the method because we need to use a Facebook connection object
      *
      * @return Connection
      */
@@ -25,19 +25,6 @@ public class Authentication extends com.acamar.authentication.xmpp.Authenticatio
         }
 
         return (Connection) connection;
-    }
-
-    /**
-     * Will use the existing connection to login
-     *
-     * @param identity For facebook this would be the username
-     * @param password The password for the account
-     * @throws XMPPException
-     */
-    @Override
-    protected void doLogin(String identity, char[] password) throws XMPPException
-    {
-        connection.login(identity, new String(password));
     }
 
     /**
