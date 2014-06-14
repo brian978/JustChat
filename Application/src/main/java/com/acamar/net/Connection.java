@@ -1,11 +1,10 @@
 package com.acamar.net;
 
-import com.acamar.event.EventInterface;
 import com.acamar.event.EventManager;
-import com.acamar.event.FireEventCallback;
 import com.acamar.util.Properties;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * JustChat
@@ -60,18 +59,20 @@ abstract public class Connection implements ConnectionInterface, ConnectionAsync
     @Override
     public void connectAsync()
     {
-        Thread thread = new Thread(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                try {
-                    connect();
-                } catch (ConnectionException e) {
-                    fireConnectionEvent(e.getCause().getMessage(), ConnectionEvent.ERROR_OCCURED);
+        Thread thread = new Thread(
+                new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        try {
+                            connect();
+                        } catch (ConnectionException e) {
+                            fireConnectionEvent(e.getCause().getMessage(), ConnectionEvent.ERROR_OCCURED);
+                        }
+                    }
                 }
-            }
-        });
+        );
 
         thread.start();
     }
@@ -99,18 +100,15 @@ abstract public class Connection implements ConnectionInterface, ConnectionAsync
 
     protected void fireConnectionEvent(String message, int statusCode)
     {
-        EventManager.fireEvent(
-                ConnectionStatusListener.class,
-                new ConnectionEvent(message, statusCode),
-                new FireEventCallback()
-                {
-                    @Override
-                    public void fireEvent(Object listener, EventInterface e)
-                    {
-                        ((ConnectionStatusListener) listener).statusChanged((ConnectionEvent) e);
-                    }
-                }
-        );
+        try {
+            EventManager.fireEvent(
+                    ConnectionStatusListener.class,
+                    new ConnectionEvent(message, statusCode),
+                    ConnectionStatusListener.class.getMethod("statusChanged", ConnectionEvent.class)
+            );
+        } catch (InvocationTargetException | IllegalAccessException | NoSuchMethodException e) {
+            e.printStackTrace();
+        }
     }
 
     protected String getOption(String name)

@@ -1,8 +1,9 @@
 package com.acamar.authentication;
 
-import com.acamar.event.EventInterface;
 import com.acamar.event.EventManager;
-import com.acamar.event.FireEventCallback;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 /**
  * JustChat
@@ -20,14 +21,16 @@ public abstract class AbstractAuthentication implements AuthenticationInterface,
     @Override
     public void authenticateAsync(final String identity, final char[] password)
     {
-        Thread thread = new Thread(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                authenticate(identity, password);
-            }
-        });
+        Thread thread = new Thread(
+                new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        authenticate(identity, password);
+                    }
+                }
+        );
 
         thread.start();
     }
@@ -65,13 +68,15 @@ public abstract class AbstractAuthentication implements AuthenticationInterface,
      */
     protected void fireAuthenticationEvent(AuthenticationEvent e)
     {
-        EventManager.fireEvent(AuthenticationListener.class, e, new FireEventCallback()
-        {
-            @Override
-            public void fireEvent(Object listener, EventInterface e)
-            {
-                ((AuthenticationListener) listener).authenticationPerformed((AuthenticationEvent) e);
-            }
-        });
+        try {
+            Method authenticationPerformed = AuthenticationListener.class.getMethod(
+                    "authenticationPerformed",
+                    AuthenticationEvent.class
+            );
+
+            EventManager.fireEvent(AuthenticationListener.class, e, authenticationPerformed);
+        } catch (InvocationTargetException | IllegalAccessException | NoSuchMethodException e1) {
+            e1.printStackTrace();
+        }
     }
 }
