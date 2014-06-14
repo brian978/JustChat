@@ -1,6 +1,7 @@
 package com.justchat.client.frame.menu;
 
 import com.acamar.gui.swing.menu.AbstractMenu;
+import com.acamar.gui.swing.menu.ButtonGroup;
 
 import javax.swing.*;
 
@@ -21,10 +22,10 @@ public class MainMenu extends AbstractMenu
     public MainMenu()
     {
         // Buttons that show up all the time
-        com.acamar.gui.swing.menu.ButtonGroup defaultGroup = new com.acamar.gui.swing.menu.ButtonGroup("default");
+        ButtonGroup defaultGroup = new ButtonGroup("default");
 
         // Buttons that show up when the user is authenticated
-        com.acamar.gui.swing.menu.ButtonGroup authGroup = new com.acamar.gui.swing.menu.ButtonGroup("authenticated");
+        ButtonGroup authGroup = new ButtonGroup("authenticated");
 
         // Creating our buttons
         JMenuItem settingsBtn = createMenuItem("Preferences", "preferencesItem", defaultGroup);

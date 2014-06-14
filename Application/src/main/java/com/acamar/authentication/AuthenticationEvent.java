@@ -10,27 +10,44 @@ import com.acamar.users.User;
  */
 public class AuthenticationEvent extends AbstractEvent
 {
-    /**
-     * -----------------
-     * Properties
-     * -----------------
-     */
-    private int statusCode = 0;
+    private StatusCode statusCode;
     private User user = null;
 
-    public AuthenticationEvent(User user, int statusCode)
+    public AuthenticationEvent(User user, StatusCode statusCode)
     {
         this.user = user;
         this.statusCode = statusCode;
     }
 
+    /**
+     * Returns the user that tried to authenticate
+     *
+     * @return User
+     */
     public User getUser()
     {
         return user;
     }
 
-    public int getStatusCode()
+    /**
+     * Returns the status code of the authentication
+     *
+     * @return StatusCode
+     */
+    public StatusCode getStatusCode()
     {
         return statusCode;
+    }
+
+    /**
+     * Used to avoid creating constants
+     *
+     */
+    public enum StatusCode
+    {
+        SUCCESS,
+        FAILED,
+        INVALID_DATA,
+        ABORTED
     }
 }

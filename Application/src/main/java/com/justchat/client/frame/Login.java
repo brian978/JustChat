@@ -221,7 +221,7 @@ public class Login extends AbstractMainFrame
         @Override
         public void authenticationPerformed(AuthenticationEvent e)
         {
-            if (e.getStatusCode() == AbstractAuthentication.SUCCESS) {
+            if (e.getStatusCode() == AuthenticationEvent.StatusCode.SUCCESS) {
                 setVisible(false);
             }
 

@@ -10,5 +10,6 @@ public enum OperatingSystemFamily
     LINUX,
     WINDOWS,
     UNIX,
-    MAC
+    MAC,
+    OTHER
 }

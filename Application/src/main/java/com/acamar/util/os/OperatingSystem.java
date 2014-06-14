@@ -9,7 +9,8 @@ public enum OperatingSystem
 {
     WINDOWS_OS("Windows", OperatingSystemFamily.WINDOWS),
     LINUX_OS("Linux", OperatingSystemFamily.LINUX),
-    MAC_OS("Mac OS", OperatingSystemFamily.MAC);
+    MAC_OS("Mac OS", OperatingSystemFamily.MAC),
+    UNKNOWN_OS("Unknown OS", OperatingSystemFamily.OTHER);
 
     private String label;
     private OperatingSystemFamily family;
@@ -40,6 +41,6 @@ public enum OperatingSystem
             }
         }
 
-        return null;
+        return OperatingSystem.UNKNOWN_OS;
     }
 }

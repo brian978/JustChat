@@ -127,6 +127,9 @@ abstract public class Connection implements ConnectionInterface, ConnectionAsync
         return config.get(name, defaultValue);
     }
 
+    /**
+     * The configuration is save usually after a successful login so we have the data at next login
+     */
     public void saveConfig()
     {
         try {

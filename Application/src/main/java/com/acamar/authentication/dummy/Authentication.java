@@ -1,6 +1,5 @@
 package com.acamar.authentication.dummy;
 
-import com.acamar.authentication.AbstractAsyncAuthentication;
 import com.acamar.authentication.AbstractAuthentication;
 import com.acamar.authentication.AuthenticationEvent;
 
@@ -9,11 +8,11 @@ import com.acamar.authentication.AuthenticationEvent;
  *
  * @link https://github.com/brian978/JustChat
  */
-public class Authentication extends AbstractAsyncAuthentication
+public class Authentication extends AbstractAuthentication
 {
     @Override
     public void authenticate(String identity, char[] password)
     {
-        fireAuthenticationEvent(new AuthenticationEvent(null, AbstractAuthentication.SUCCESS));
+        fireAuthenticationEvent(new AuthenticationEvent(null, AuthenticationEvent.StatusCode.SUCCESS));
     }
 }

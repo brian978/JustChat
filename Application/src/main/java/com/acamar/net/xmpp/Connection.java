@@ -28,6 +28,13 @@ public class Connection extends com.acamar.net.Connection
         resource = getOption("resource", defaultResource);
     }
 
+    /**
+     * The method is called after the account data is submitted
+     *
+     * @param host The host we will use to connect to
+     * @param port The port to use
+     * @param resource The resource is something like a path
+     */
     public void setup(String host, int port, String resource)
     {
         super.setup(host, port);
@@ -37,6 +44,9 @@ public class Connection extends com.acamar.net.Connection
         config.set("resource", resource);
     }
 
+    /**
+     * The client endpoint must be created before we can connect so this will be called prior to that
+     */
     protected void createEndpoint()
     {
         ConnectionConfiguration connectionConfiguration = new ConnectionConfiguration(host, port);

@@ -180,7 +180,7 @@ public class Contacts extends AbstractMainFrame
         @Override
         public void authenticationPerformed(AuthenticationEvent e)
         {
-            if (e.getStatusCode() == AbstractAuthentication.SUCCESS) {
+            if (e.getStatusCode() == AuthenticationEvent.StatusCode.SUCCESS) {
                 usersManager.setUser(e.getUser());
             }
         }
