@@ -7,10 +7,7 @@ import com.justchat.client.users.User;
 import com.justchat.client.frame.menu.ChatMenu;
 import com.justchat.client.gui.panel.ChatPanel;
 import com.justchat.client.gui.panel.components.ChatBox;
-import org.jivesoftware.smack.Chat;
-import org.jivesoftware.smack.ChatManager;
-import org.jivesoftware.smack.MessageListener;
-import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smack.*;
 import org.jivesoftware.smack.packet.Message;
 
 import javax.swing.*;
@@ -38,7 +35,7 @@ public class Conversation extends AbstractFrame
         this.remoteUser = remoteUser;
 
         // Creating the chat session
-        ChatManager chatmanager = connection.getEndpoint().getChatManager();
+        ChatManager chatmanager = ChatManager.getInstanceFor(connection.getEndpoint());
         chat = chatmanager.createChat(remoteUser.getIdentity(), new InboundMessageListener());
 
         // Setting up the new frame
@@ -215,7 +212,7 @@ public class Conversation extends AbstractFrame
 
                 try {
                     chat.sendMessage(message);
-                } catch (XMPPException e1) {
+                } catch (XMPPException | SmackException.NotConnectedException e1) {
                     e1.printStackTrace();
                 }
             }

@@ -4,8 +4,10 @@ import com.acamar.authentication.AbstractAuthentication;
 import com.acamar.authentication.AuthenticationEvent;
 import com.acamar.net.xmpp.Connection;
 import com.acamar.users.User;
+import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
 
+import java.io.IOException;
 import java.util.Arrays;
 
 /**
@@ -69,7 +71,7 @@ public class Authentication extends AbstractAuthentication
             try {
                 doLogin(identity, password);
                 connection.saveConfig();
-            } catch (XMPPException e) {
+            } catch (XMPPException | SmackException | IOException e) {
                 statusCode = AuthenticationEvent.StatusCode.FAILED;
                 connection.disconnect();
                 e.printStackTrace();
@@ -94,7 +96,7 @@ public class Authentication extends AbstractAuthentication
      * @param password The password for the account
      * @throws XMPPException
      */
-    protected synchronized void doLogin(String identity, char[] password) throws XMPPException
+    protected synchronized void doLogin(String identity, char[] password) throws XMPPException, IOException, SmackException
     {
         connection.login(identity, new String(password));
     }

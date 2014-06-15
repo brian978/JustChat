@@ -8,23 +8,19 @@
     <version>0.1-alpha</version>
     <dependencies>
         <dependency>
-            <groupId>org.glassfish.tyrus.bundles</groupId>
-            <artifactId>tyrus-standalone-client</artifactId>
-            <version>1.4</version>
+            <groupId>org.igniterealtime.smack</groupId>
+            <artifactId>smack-core</artifactId>
+            <version>4.0.0</version>
         </dependency>
         <dependency>
-            <groupId>org.jivesoftware</groupId>
-            <artifactId>smack</artifactId>
-            <version>3.4.1</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/smack.jar</systemPath>
+            <groupId>org.igniterealtime.smack</groupId>
+            <artifactId>smack-extensions</artifactId>
+            <version>4.0.0</version>
         </dependency>
         <dependency>
-            <groupId>org.jivesoftware</groupId>
-            <artifactId>smackx</artifactId>
-            <version>3.4.1</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/smackx.jar</systemPath>
+            <groupId>org.igniterealtime.smack</groupId>
+            <artifactId>smack-tcp</artifactId>
+            <version>4.0.0</version>
         </dependency>
     </dependencies>
     <build>
