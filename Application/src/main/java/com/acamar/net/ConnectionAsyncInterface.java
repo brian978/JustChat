@@ -9,5 +9,9 @@ package com.acamar.net;
  */
 public interface ConnectionAsyncInterface extends ConnectionInterface
 {
-    public void connectAsync() throws ConnectionException;
+    /**
+     * The method provides a asynchronous method of connecting to a server
+     *
+     */
+    public void connectAsync();
 }

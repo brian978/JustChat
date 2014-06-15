@@ -1,5 +1,6 @@
 package com.acamar.net.xmpp;
 
+import com.acamar.net.AbstractConnection;
 import com.acamar.net.ConnectionEvent;
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.XMPPConnection;
@@ -11,7 +12,7 @@ import org.jivesoftware.smack.packet.Presence;
  *
  * @link https://github.com/brian978/JustChat
  */
-public class Connection extends com.acamar.net.Connection
+public class Connection extends AbstractConnection
 {
     protected XMPPConnection endpoint = null;
     protected String resource = "";

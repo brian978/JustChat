@@ -11,16 +11,14 @@ import java.lang.reflect.InvocationTargetException;
  *
  * @link https://github.com/brian978/JustChat
  */
-abstract public class Connection implements ConnectionInterface, ConnectionAsyncInterface
+abstract public class AbstractConnection implements ConnectionInterface, ConnectionAsyncInterface
 {
     protected Properties config = new Properties(getConfigFilename());
     protected String host = "";
     protected int port = 0;
     protected boolean connected = false;
 
-    abstract protected String getConfigFilename();
-
-    public Connection()
+    public AbstractConnection()
     {
         host = getOption("host");
 
@@ -31,16 +29,38 @@ abstract public class Connection implements ConnectionInterface, ConnectionAsync
         }
     }
 
+    /**
+     * The method is used to create the properties object when the connection object is created
+     *
+     * @return String
+     */
+    abstract protected String getConfigFilename();
+
+    /**
+     *
+     * @return String
+     */
     public String getHost()
     {
         return host;
     }
 
+    /**
+     *
+     * @return int
+     */
     public int getPort()
     {
         return port;
     }
 
+    /**
+     * Configures the connection object
+     * It also sets the configuration parameters in the configuration object so they can be saved
+     *
+     * @param host Host to connect to
+     * @param port Port to connect to
+     */
     public void setup(String host, int port)
     {
         this.host = host;
@@ -51,11 +71,19 @@ abstract public class Connection implements ConnectionInterface, ConnectionAsync
         config.set("port", String.valueOf(port));
     }
 
+    /**
+     *
+     * @return boolean
+     */
     public boolean isConnected()
     {
         return connected;
     }
 
+    /**
+     * The method provides a asynchronous method of connecting to a server
+     *
+     */
     @Override
     public void connectAsync()
     {
@@ -84,14 +112,14 @@ abstract public class Connection implements ConnectionInterface, ConnectionAsync
         saveConfig();
     }
 
-    public Connection addConnectionStatusListener(ConnectionStatusListener listener)
+    public AbstractConnection addConnectionStatusListener(ConnectionStatusListener listener)
     {
         EventManager.add(ConnectionStatusListener.class, listener);
 
         return this;
     }
 
-    public Connection removeConnectionStatusListener(ConnectionStatusListener listener)
+    public AbstractConnection removeConnectionStatusListener(ConnectionStatusListener listener)
     {
         EventManager.remove(ConnectionStatusListener.class, listener);
 

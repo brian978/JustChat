@@ -1,16 +1,13 @@
 package com.justchat.client.frame;
 
-import com.acamar.authentication.AbstractAuthentication;
 import com.acamar.authentication.AuthenticationEvent;
 import com.acamar.authentication.AuthenticationListener;
-import com.acamar.net.Connection;
 import com.acamar.users.User;
 import com.acamar.users.UsersManager;
 import com.acamar.util.Properties;
 import com.justchat.client.frame.menu.MainMenu;
 import com.justchat.client.gui.panel.UserListPanel;
 import com.justchat.client.gui.panel.components.UserList;
-import org.jivesoftware.smack.XMPPConnection;
 
 import javax.swing.*;
 import java.awt.*;

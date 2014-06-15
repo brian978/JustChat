@@ -9,5 +9,5 @@ package com.acamar.net;
  */
 public interface ConnectionAwareInterface<T>
 {
-    public T setConnection(Connection connection);
+    public T setConnection(AbstractConnection connection);
 }
