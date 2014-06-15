@@ -3,13 +3,9 @@ package com.acamar.net.xmpp;
 import com.acamar.net.AbstractConnection;
 import com.acamar.net.ConnectionEvent;
 import org.jivesoftware.smack.ConnectionConfiguration;
-import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Presence;
-import org.jivesoftware.smack.tcp.XMPPTCPConnection;
-
-import java.io.IOException;
 
 /**
  * JustChat
@@ -71,7 +67,7 @@ public class Connection extends AbstractConnection
     protected void createEndpoint()
     {
         ConnectionConfiguration connectionConfiguration = new ConnectionConfiguration(host, port);
-        endpoint = new XMPPTCPConnection(connectionConfiguration);
+        endpoint = new XMPPConnection(connectionConfiguration);
     }
 
     /**
@@ -92,7 +88,7 @@ public class Connection extends AbstractConnection
      * @param password Password of the account
      * @throws XMPPException
      */
-    public void login(String identity, String password) throws XMPPException, IOException, SmackException
+    public void login(String identity, String password) throws XMPPException
     {
         endpoint.login(identity, password, resource);
     }
@@ -111,7 +107,7 @@ public class Connection extends AbstractConnection
             endpoint.connect();
             fireConnectionEvent("", ConnectionEvent.CONNECTION_OPENED);
             connected = endpoint.isConnected();
-        } catch (XMPPException | SmackException | IOException e) {
+        } catch (XMPPException e) {
             fireConnectionEvent(e.getMessage(), ConnectionEvent.ERROR_OCCURED);
         }
     }
@@ -125,13 +121,8 @@ public class Connection extends AbstractConnection
         // Sending an offline presence to let everyone know that the user disconnected
         if (isConnected()) {
             Presence offline = new Presence(Presence.Type.unavailable);
-
-            try {
-                endpoint.sendPacket(offline);
-                endpoint.disconnect();
-            } catch (SmackException.NotConnectedException e) {
-                e.printStackTrace();
-            }
+            endpoint.sendPacket(offline);
+            endpoint.disconnect();
         }
 
         super.disconnect();
