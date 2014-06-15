@@ -13,5 +13,5 @@ public interface ConnectionInterface
 
     public void disconnect() throws ConnectionException;
 
-    public Connection addConnectionStatusListener(ConnectionStatusListener listener);
+    public ConnectionInterface addConnectionStatusListener(ConnectionStatusListener listener);
 }
