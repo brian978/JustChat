@@ -96,6 +96,9 @@ public class Login extends AbstractMainFrame
         loginPanel.setName("loginPanel");
         add(loginPanel);
 
+        // We need to populate the fields by default
+        prefillData((CommunicationServiceItem) ((JComboBox) loginPanel.findComponent("connectionField")).getItemAt(0));
+
         /**
          * -------------
          * Authenticate panel
@@ -122,18 +125,7 @@ public class Login extends AbstractMainFrame
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                Authentication authentication = null;
-                CommunicationServiceItem selectedItem = (CommunicationServiceItem) connection.getSelectedItem();
-
-                try {
-                    authentication = selectedItem.getInstance();
-                } catch (IllegalAccessException | InstantiationException e1) {
-                    e1.printStackTrace();
-                }
-
-                if (authentication != null) {
-                    prefillData(authentication.getConnection());
-                }
+                prefillData((CommunicationServiceItem) connection.getSelectedItem());
             }
         });
 
@@ -204,6 +196,21 @@ public class Login extends AbstractMainFrame
     {
         loginPanel.setVisible(!loginPanel.isVisible());
         authenticatePanel.setVisible(!loginPanel.isVisible());
+    }
+
+    private void prefillData(CommunicationServiceItem item)
+    {
+        Authentication authentication = null;
+
+        try {
+            authentication = item.getInstance();
+        } catch (IllegalAccessException | InstantiationException e1) {
+            e1.printStackTrace();
+        }
+
+        if (authentication != null) {
+            prefillData(authentication.getConnection());
+        }
     }
 
     private void prefillData(Connection connection)
