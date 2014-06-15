@@ -80,6 +80,10 @@ public class Connection extends AbstractConnection
         endpoint.login(identity, password, resource);
     }
 
+    /**
+     * Provides a synchronous method of connecting to a server
+     *
+     */
     @Override
     public void connect()
     {
@@ -96,10 +100,14 @@ public class Connection extends AbstractConnection
         }
     }
 
+    /**
+     * Disconnects from the server and saves the configuration
+     *
+     */
     @Override
     public void disconnect()
     {
-        // Sending an offline presence to let everyone know we disconnected
+        // Sending an offline presence to let everyone know that the user disconnected
         if(isConnected()) {
             Presence offline = new Presence(Presence.Type.unavailable);
             endpoint.sendPacket(offline);

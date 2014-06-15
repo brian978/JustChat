@@ -37,7 +37,6 @@ abstract public class AbstractConnection implements ConnectionInterface, Connect
     abstract protected String getConfigFilename();
 
     /**
-     *
      * @return String
      */
     public String getHost()
@@ -46,7 +45,6 @@ abstract public class AbstractConnection implements ConnectionInterface, Connect
     }
 
     /**
-     *
      * @return int
      */
     public int getPort()
@@ -72,6 +70,7 @@ abstract public class AbstractConnection implements ConnectionInterface, Connect
     }
 
     /**
+     * Checks if the connection is established
      *
      * @return boolean
      */
@@ -82,7 +81,6 @@ abstract public class AbstractConnection implements ConnectionInterface, Connect
 
     /**
      * The method provides a asynchronous method of connecting to a server
-     *
      */
     @Override
     public void connectAsync()
@@ -93,11 +91,7 @@ abstract public class AbstractConnection implements ConnectionInterface, Connect
                     @Override
                     public void run()
                     {
-                        try {
-                            connect();
-                        } catch (ConnectionException e) {
-                            fireConnectionEvent(e.getCause().getMessage(), ConnectionEvent.ERROR_OCCURED);
-                        }
+                        connect();
                     }
                 }
         );
@@ -105,6 +99,9 @@ abstract public class AbstractConnection implements ConnectionInterface, Connect
         thread.start();
     }
 
+    /**
+     * Disconnects from the server and saves the configuration
+     */
     public void disconnect()
     {
         connected = false;
@@ -112,6 +109,12 @@ abstract public class AbstractConnection implements ConnectionInterface, Connect
         saveConfig();
     }
 
+    /**
+     * Can be used to add a event listener for connection events
+     *
+     * @param listener Listener object that will listen for connection events
+     * @return AbstractConnection
+     */
     public AbstractConnection addConnectionStatusListener(ConnectionStatusListener listener)
     {
         EventManager.add(ConnectionStatusListener.class, listener);
@@ -119,6 +122,12 @@ abstract public class AbstractConnection implements ConnectionInterface, Connect
         return this;
     }
 
+    /**
+     * Can be used to remove a event listener for connection events
+     *
+     * @param listener Listener object that will listen for connection events
+     * @return AbstractConnection
+     */
     public AbstractConnection removeConnectionStatusListener(ConnectionStatusListener listener)
     {
         EventManager.remove(ConnectionStatusListener.class, listener);
@@ -126,6 +135,12 @@ abstract public class AbstractConnection implements ConnectionInterface, Connect
         return this;
     }
 
+    /**
+     * Builds and fires a connection event
+     *
+     * @param message Message that will be contained in the event object
+     * @param statusCode Status code so we can determine from the event what happened
+     */
     protected void fireConnectionEvent(String message, int statusCode)
     {
         try {
@@ -139,11 +154,24 @@ abstract public class AbstractConnection implements ConnectionInterface, Connect
         }
     }
 
+    /**
+     * Returns an option from the configuration object. If the option is not found it will return NULL
+     *
+     * @param name Option name from config
+     * @return String
+     */
     protected String getOption(String name)
     {
         return getOption(name, null);
     }
 
+    /**
+     * Returns an option from the configuration object
+     *
+     * @param name Option name from config
+     * @param defaultValue The default value to be returned if the option is not found
+     * @return String
+     */
     protected String getOption(String name, String defaultValue)
     {
         if (!config.isLoaded()) {

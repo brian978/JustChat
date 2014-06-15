@@ -9,9 +9,15 @@ package com.acamar.net;
  */
 public interface ConnectionInterface
 {
-    public void connect() throws ConnectionException;
+    /**
+     * Provides a synchronous method of connecting to a server
+     *
+     */
+    public void connect();
 
+    /**
+     * Disconnects the user from the server
+     *
+     */
     public void disconnect() throws ConnectionException;
-
-    public ConnectionInterface addConnectionStatusListener(ConnectionStatusListener listener);
 }
