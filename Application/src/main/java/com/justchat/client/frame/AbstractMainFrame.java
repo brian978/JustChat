@@ -4,8 +4,6 @@ import com.acamar.authentication.AbstractAuthentication;
 import com.acamar.authentication.AuthenticationAwareInterface;
 import com.acamar.authentication.xmpp.Authentication;
 import com.acamar.gui.swing.frame.AbstractFrame;
-import com.acamar.net.ConnectionAwareInterface;
-import com.acamar.net.xmpp.Connection;
 import com.acamar.util.Properties;
 import com.justchat.client.frame.menu.MainMenu;
 
@@ -20,8 +18,7 @@ import java.awt.event.ActionListener;
  * @link https://github.com/brian978/JustChat
  * @since 2014-04-23
  */
-abstract public class AbstractMainFrame extends AbstractFrame
-        implements AuthenticationAwareInterface
+abstract public class AbstractMainFrame extends AbstractFrame implements AuthenticationAwareInterface
 {
     protected MainMenu menu;
     protected Properties settings;
@@ -44,26 +41,30 @@ abstract public class AbstractMainFrame extends AbstractFrame
          * ----------------
          */
         // Preferences action
-        menu.findItemByName("preferencesItem").addActionListener(new ActionListener()
-        {
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                System.out.println("Launching preferences window from " + AbstractMainFrame.this.getTitle());
-            }
-        });
+        menu.findItemByName("preferencesItem").addActionListener(
+                new ActionListener()
+                {
+                    @Override
+                    public void actionPerformed(ActionEvent e)
+                    {
+                        System.out.println("Launching preferences window from " + AbstractMainFrame.this.getTitle());
+                    }
+                }
+        );
 
         // Exit action
-        menu.findItemByName("exitItem").addActionListener(new ActionListener()
-        {
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                if (menu.getParentWindow((JMenuItem) e.getSource()) == AbstractMainFrame.this) {
-                    triggerClosingEvent();
+        menu.findItemByName("exitItem").addActionListener(
+                new ActionListener()
+                {
+                    @Override
+                    public void actionPerformed(ActionEvent e)
+                    {
+                        if (menu.getParentWindow((JMenuItem) e.getSource()) == AbstractMainFrame.this) {
+                            triggerClosingEvent();
+                        }
+                    }
                 }
-            }
-        });
+        );
     }
 
     public AbstractMainFrame initialize()

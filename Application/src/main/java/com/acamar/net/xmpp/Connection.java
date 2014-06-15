@@ -17,23 +17,29 @@ public class Connection extends AbstractConnection
     protected XMPPConnection endpoint = null;
     protected String resource = "";
 
-    // Connection defaults
-    final public String defaultHost = "127.0.0.1";
-    final public String defaultPort = "5222";
-    final public String defaultResource = "Smack";
-
     public Connection()
     {
-        host = getOption("host", defaultHost);
-        port = Integer.parseInt(getOption("port", defaultPort));
-        resource = getOption("resource", defaultResource);
+        host = getOption("host", "127.0.0.1");
+        port = Integer.parseInt(getOption("port", "5222"));
+        resource = getOption("resource", "Smack");
+    }
+
+    /**
+     * The method is used to create the properties object when the connection object is created
+     *
+     * @return String
+     */
+    @Override
+    protected String getConfigFilename()
+    {
+        return "xmpp.properties";
     }
 
     /**
      * The method is called after the account data is submitted
      *
-     * @param host The host we will use to connect to
-     * @param port The port to use
+     * @param host     The host we will use to connect to
+     * @param port     The port to use
      * @param resource The resource is something like a path
      */
     public void setup(String host, int port, String resource)
@@ -46,6 +52,16 @@ public class Connection extends AbstractConnection
     }
 
     /**
+     * Returns the resource that will be used for the login
+     *
+     * @return String
+     */
+    public String getResource()
+    {
+        return resource;
+    }
+
+    /**
      * The client endpoint must be created before we can connect so this will be called prior to that
      */
     protected void createEndpoint()
@@ -54,35 +70,31 @@ public class Connection extends AbstractConnection
         endpoint = new XMPPConnection(connectionConfiguration);
     }
 
-    @Override
-    protected String getConfigFilename()
-    {
-        return "xmpp.properties";
-    }
-
-    public String getResource()
-    {
-        return resource;
-    }
-
+    /**
+     * We need to be able to access the endpoint object because we might
+     * need different objects from it (like the roster)
+     *
+     * @return XMPPConnection
+     */
     public XMPPConnection getEndpoint()
     {
         return endpoint;
     }
 
+    /**
+     * This method will be, most likely, called by the authentication class
+     *
+     * @param identity String that identifies the user on the server
+     * @param password Password of the account
+     * @throws XMPPException
+     */
     public void login(String identity, String password) throws XMPPException
-    {
-        login(identity, password, resource);
-    }
-
-    public void login(String identity, String password, String resource) throws XMPPException
     {
         endpoint.login(identity, password, resource);
     }
 
     /**
      * Provides a synchronous method of connecting to a server
-     *
      */
     @Override
     public void connect()
@@ -102,13 +114,12 @@ public class Connection extends AbstractConnection
 
     /**
      * Disconnects from the server and saves the configuration
-     *
      */
     @Override
     public void disconnect()
     {
         // Sending an offline presence to let everyone know that the user disconnected
-        if(isConnected()) {
+        if (isConnected()) {
             Presence offline = new Presence(Presence.Type.unavailable);
             endpoint.sendPacket(offline);
             endpoint.disconnect();

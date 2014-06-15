@@ -2,7 +2,7 @@ package com.justchat.client.frame;
 
 import com.acamar.authentication.AuthenticationEvent;
 import com.acamar.authentication.AuthenticationListener;
-import com.acamar.users.User;
+import com.justchat.client.users.User;
 import com.acamar.users.UsersManager;
 import com.acamar.util.Properties;
 import com.justchat.client.frame.menu.MainMenu;
@@ -151,7 +151,7 @@ public class Contacts extends AbstractMainFrame
     private void startNewConversation(User user)
     {
         Conversation conversationFrame = new Conversation(xmppAuthentication.getConnection(), user);
-        conversationFrame.setLocalUser(usersManager.getUser());
+        conversationFrame.setLocalUser((User) usersManager.getUser());
     }
 
     private Dimension getSizePreferences()

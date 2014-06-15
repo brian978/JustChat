@@ -3,6 +3,8 @@ package com.acamar.authentication;
 /**
  * JustChat
  *
+ * The interface is used to determine if an object supports the injection of a authentication object
+ *
  * @version 1.0
  * @link https://github.com/brian978/JustChat
  * @since 2014-04-23

@@ -16,6 +16,12 @@ public class UsersManager
     ArrayList<UsersManagerListener> listeners = new ArrayList<>();
     User currentUser = null;
 
+    /**
+     * Adds a user to the users array and dispatches the userAdded event
+     *
+     * @param user User to be added to the list of users
+     * @return UsersManager
+     */
     public synchronized UsersManager add(User user)
     {
         System.out.println("Added user " + user);
@@ -29,6 +35,12 @@ public class UsersManager
         return this;
     }
 
+    /**
+     * Removes a user from the users array and dispatches the userRemoved event
+     *
+     * @param user User to be added to the list of users
+     * @return UsersManager
+     */
     public synchronized UsersManager remove(User user)
     {
         users.remove(user);
@@ -40,11 +52,22 @@ public class UsersManager
         return this;
     }
 
+    /**
+     * Returns the list of users that the manager has
+     *
+     * @return ArrayList<User>
+     */
     public ArrayList<User> getUsers()
     {
         return users;
     }
 
+    /**
+     * Searches for a user its identifier
+     *
+     * @param id The identity of the user that needs to be found
+     * @return User
+     */
     public User find(String id)
     {
         for (User user : users) {
@@ -57,7 +80,7 @@ public class UsersManager
     }
 
     /**
-     * Adds the users that is using the application to the manager so we can make use of this information later
+     * Adds the user that is using the application to the manager so we can make use of this information later
      *
      * @param currentUser User that has authenticated
      */
@@ -66,11 +89,20 @@ public class UsersManager
         this.currentUser = currentUser;
     }
 
+    /**
+     * Returns the current user (the one that logged in)
+     *
+     * @return User
+     */
     public User getUser()
     {
         return currentUser;
     }
 
+    /**
+     * Sorts the list of users and then dispatches a usersSorted event
+     *
+     */
     public void sort()
     {
         Collections.sort(users);
@@ -80,6 +112,10 @@ public class UsersManager
         }
     }
 
+    /**
+     * Dispatches a userRemoved event and then clears the user list
+     *
+     */
     public synchronized void removeAll()
     {
         for (User user : users) {
@@ -91,6 +127,11 @@ public class UsersManager
         users.clear();
     }
 
+    /**
+     * Attaches an event listener that will be called when a certain action is done on the user list
+     *
+     * @param listener Event listener object
+     */
     public void addListener(UsersManagerListener listener)
     {
         listeners.add(listener);

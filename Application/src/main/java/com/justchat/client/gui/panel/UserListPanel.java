@@ -2,10 +2,10 @@ package com.justchat.client.gui.panel;
 
 import com.acamar.gui.swing.panel.AbstractPanel;
 import com.acamar.smack.roster.RosterAdapter;
-import com.acamar.users.User;
 import com.acamar.users.UsersManager;
 import com.justchat.client.gui.panel.components.UserCategory;
 import com.justchat.client.gui.panel.components.UserList;
+import com.justchat.client.users.User;
 import org.jivesoftware.smack.Roster;
 import org.jivesoftware.smack.RosterEntry;
 import org.jivesoftware.smack.RosterListener;
@@ -55,7 +55,7 @@ public class UserListPanel extends AbstractPanel
     public void setRoster(Roster roster)
     {
         // Cleaning up the last roster first
-        if(this.roster != null) {
+        if (this.roster != null) {
             this.roster.removeRosterListener(rosterListener);
         }
 
@@ -109,14 +109,12 @@ public class UserListPanel extends AbstractPanel
     {
         roster.removeRosterListener(rosterListener);
         usersManager.removeAll();
-        userList.removeAllUsers();
 
         roster = null;
     }
 
     /**
      * The listener will change the user category when the presence changes
-     *
      */
     private class PresenceListener extends RosterAdapter
     {
@@ -127,11 +125,11 @@ public class UserListPanel extends AbstractPanel
             String from = presence.getFrom();
             int lastIndex = from.lastIndexOf('/');
 
-            if(lastIndex >= 0) {
+            if (lastIndex >= 0) {
                 from = presence.getFrom().substring(0, lastIndex);
             }
 
-            User user = usersManager.find(from);
+            User user = (User) usersManager.find(from);
 
             System.out.println(user + " changed presence to: " + presence.getType());
 

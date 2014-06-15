@@ -1,6 +1,6 @@
 package com.justchat.client.gui.panel.components;
 
-import com.acamar.users.User;
+import com.justchat.client.users.User;
 
 import javax.swing.*;
 import javax.swing.text.*;

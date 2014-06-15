@@ -21,12 +21,7 @@ abstract public class AbstractConnection implements ConnectionInterface, Connect
     public AbstractConnection()
     {
         host = getOption("host");
-
-        try {
-            port = Integer.parseInt(getOption("port"));
-        } catch (NumberFormatException e) {
-            port = 0;
-        }
+        port = Integer.parseInt(getOption("port", "0"));
     }
 
     /**
@@ -35,22 +30,6 @@ abstract public class AbstractConnection implements ConnectionInterface, Connect
      * @return String
      */
     abstract protected String getConfigFilename();
-
-    /**
-     * @return String
-     */
-    public String getHost()
-    {
-        return host;
-    }
-
-    /**
-     * @return int
-     */
-    public int getPort()
-    {
-        return port;
-    }
 
     /**
      * Configures the connection object
@@ -67,6 +46,22 @@ abstract public class AbstractConnection implements ConnectionInterface, Connect
         // Storing the data as well
         config.set("host", host);
         config.set("port", String.valueOf(port));
+    }
+
+    /**
+     * @return String
+     */
+    public String getHost()
+    {
+        return host;
+    }
+
+    /**
+     * @return int
+     */
+    public int getPort()
+    {
+        return port;
     }
 
     /**
@@ -138,7 +133,7 @@ abstract public class AbstractConnection implements ConnectionInterface, Connect
     /**
      * Builds and fires a connection event
      *
-     * @param message Message that will be contained in the event object
+     * @param message    Message that will be contained in the event object
      * @param statusCode Status code so we can determine from the event what happened
      */
     protected void fireConnectionEvent(String message, int statusCode)
@@ -168,7 +163,7 @@ abstract public class AbstractConnection implements ConnectionInterface, Connect
     /**
      * Returns an option from the configuration object
      *
-     * @param name Option name from config
+     * @param name         Option name from config
      * @param defaultValue The default value to be returned if the option is not found
      * @return String
      */

@@ -1,7 +1,5 @@
 package com.acamar.users;
 
-import com.justchat.client.gui.panel.components.UserCategory;
-
 import java.text.Collator;
 
 /**
@@ -13,10 +11,8 @@ import java.text.Collator;
  */
 public class User implements UserInterface, Comparable<User>
 {
-    private Collator collator = Collator.getInstance();
     private String identity = "";
     private String name = "";
-    private UserCategory category = null;
     private UserState state = UserState.OFFLINE;
 
     public User(String identity)
@@ -30,54 +26,77 @@ public class User implements UserInterface, Comparable<User>
         this.name = name;
     }
 
-    @Override
-    public void setState(UserState state)
-    {
-        this.state = state;
-    }
-
+    /**
+     * Returns a string that is used to identify the user on the server (like email or username)
+     *
+     * @return String
+     */
     @Override
     public String getIdentity()
     {
         return identity;
     }
 
+    /**
+     * Returns the name of the user that will be visible in the UI
+     *
+     * @return String
+     */
     @Override
     public String getName()
     {
         return name;
     }
 
+    /**
+     * Sets the state of the user (like online/offline)
+     *
+     * @param state State of the user
+     */
     @Override
-    public UserCategory getCategory()
+    public void setState(UserState state)
     {
-        return category;
+        this.state = state;
     }
 
-    @Override
-    public void setCategory(UserCategory category)
-    {
-        this.category = category;
-    }
-
+    /**
+     * Returns the state of the user (like online/offline)
+     *
+     * @return User.UserState
+     */
     @Override
     public UserState getState()
     {
         return state;
     }
 
+    /**
+     * The method is required so that in a list we need to be able to show the username
+     *
+     * @return String
+     */
     @Override
     public String toString()
     {
         return name;
     }
 
+    /**
+     * The method is used when sorting the users by name
+     *
+     * @param o user
+     * @return int
+     */
     @Override
     public int compareTo(User o)
     {
-        return collator.compare(getName(), o.getName());
+        return Collator.getInstance().compare(getName(), o.getName());
     }
 
+    /**
+     * Contains the types of user states
+     *
+     */
     public static enum UserState
     {
         ONLINE,

@@ -3,7 +3,7 @@ package com.justchat.client.frame;
 import com.acamar.gui.swing.frame.AbstractFrame;
 import com.acamar.gui.swing.menu.AbstractMenu;
 import com.acamar.net.xmpp.Connection;
-import com.acamar.users.User;
+import com.justchat.client.users.User;
 import com.justchat.client.frame.menu.ChatMenu;
 import com.justchat.client.gui.panel.ChatPanel;
 import com.justchat.client.gui.panel.components.ChatBox;

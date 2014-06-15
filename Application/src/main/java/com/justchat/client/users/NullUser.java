@@ -1,4 +1,6 @@
-package com.acamar.users;
+package com.justchat.client.users;
+
+import com.acamar.users.*;
 
 /**
  * JustChat

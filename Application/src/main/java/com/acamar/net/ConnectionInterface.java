@@ -19,5 +19,5 @@ public interface ConnectionInterface
      * Disconnects the user from the server
      *
      */
-    public void disconnect() throws ConnectionException;
+    public void disconnect();
 }

@@ -23,11 +23,21 @@ public class ConnectionEvent extends AbstractEvent
         this.statusCode = statusCode;
     }
 
+    /**
+     * Returns the message for the event
+     *
+     * @return String
+     */
     public String getMessage()
     {
         return message;
     }
 
+    /**
+     * Returns the status code so we know what to do in code
+     *
+     * @return int
+     */
     public int getStatusCode()
     {
         return statusCode;

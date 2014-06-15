@@ -1,8 +1,8 @@
 package com.justchat.client.gui.panel.components;
 
-import com.acamar.users.NullUser;
-import com.acamar.users.User;
 import com.acamar.users.UsersManagerListener;
+import com.justchat.client.users.NullUser;
+import com.justchat.client.users.User;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -14,7 +14,7 @@ import java.util.ArrayList;
 /**
  * JustChat
  *
- * @version 1.2
+ * @version 1.3
  * @link https://github.com/brian978/JustChat
  * @since 2014-03-09
  */
@@ -36,6 +36,12 @@ public class UserList extends JTree implements UsersManagerListener
         rootNode.add(new UserCategory("Offline", UserCategory.OFFLINE));
     }
 
+    /**
+     * Locates a category by name
+     *
+     * @param name Category name
+     * @return UserCategory
+     */
     public UserCategory findCategory(String name)
     {
         UserCategory category;
@@ -51,6 +57,11 @@ public class UserList extends JTree implements UsersManagerListener
         return null;
     }
 
+    /**
+     * Returns the user the is currently selected in the list or a null user that has no identity or name
+     *
+     * @return User
+     */
     public User getSelectedUser()
     {
         User user;
@@ -65,7 +76,27 @@ public class UserList extends JTree implements UsersManagerListener
         return user;
     }
 
-    public void addUser(User user)
+    /**
+     * Moves the user from one category to another
+     *
+     * @param user User to be updated
+     * @param category New category of the user
+     */
+    public void updateUser(User user, UserCategory category)
+    {
+        if (removeUser(user)) {
+            user.setCategory(category);
+            addUser(user);
+        }
+    }
+
+    /**
+     * Adds a user to list in the users category and expands the tree path after the first user is added
+     * Increments the total users count
+     *
+     * @param user User to be added
+     */
+    protected void addUser(User user)
     {
         totalUsers++;
 
@@ -77,15 +108,14 @@ public class UserList extends JTree implements UsersManagerListener
         }
     }
 
-    public void updateUser(User user, UserCategory category)
-    {
-        if (removeUser(user)) {
-            user.setCategory(category);
-            addUser(user);
-        }
-    }
-
-    public boolean removeUser(User user)
+    /**
+     * Removes a user from the list using the users category as a starting point for searching
+     * Also it decrements the total users count
+     *
+     * @param user User to be removed
+     * @return boolean
+     */
+    protected boolean removeUser(User user)
     {
         totalUsers--;
 
@@ -106,42 +136,72 @@ public class UserList extends JTree implements UsersManagerListener
         return false;
     }
 
-    public void removeAllUsers()
+    /**
+     * Removes all the users from the list
+     *
+     */
+    protected void removeAllUsers()
     {
         totalUsers = 0;
 
         UserCategory category;
+        ArrayList<DefaultMutableTreeNode> userList = new ArrayList<>();
 
-        // Going through the categories to remove all the users
+        // Collecting the users to be removed
         for (int i = 0; i < rootNode.getChildCount(); i++) {
             category = ((UserCategory) rootNode.getChildAt(i));
-            for (int j = 0; i < category.getChildCount(); j++) {
-                removeUser((User) ((DefaultMutableTreeNode) category.getChildAt(j)).getUserObject());
+            for (int j = 0; j < category.getChildCount(); j++) {
+                userList.add((DefaultMutableTreeNode) category.getChildAt(j));
             }
         }
-    }
 
-    public void importUsers(ArrayList<User> list)
-    {
-        for (User user : list) {
-            addUser(user);
+        // Removing the users
+        for (DefaultMutableTreeNode node : userList) {
+            model.removeNodeFromParent(node);
         }
     }
 
+    /**
+     * Adds a list of users to the user list
+     *
+     * @param list List of users to add
+     */
+    public void importUsers(ArrayList<com.acamar.users.User> list)
+    {
+        for (com.acamar.users.User user : list) {
+            addUser((User) user);
+        }
+    }
+
+    /**
+     * Event that is triggered when a user is added in the UsersManager object
+     *
+     * @param user User that was added
+     */
     @Override
-    public void userAdded(User user)
+    public void userAdded(com.acamar.users.User user)
     {
 
     }
 
+    /**
+     * Event that is triggered when a user will be removed from the UsersManager object
+     *
+     * @param user User that will be removed
+     */
     @Override
-    public void userRemoved(User user)
+    public void userRemoved(com.acamar.users.User user)
     {
-
+        removeUser((User) user);
     }
 
+    /**
+     * Event that is triggered after the user list is sorted by the UsersManager
+     *
+     * @param list A sorted list of users
+     */
     @Override
-    public void usersSorted(ArrayList<User> list)
+    public void usersSorted(ArrayList<com.acamar.users.User> list)
     {
         if (totalUsers > 0) {
             removeAllUsers();

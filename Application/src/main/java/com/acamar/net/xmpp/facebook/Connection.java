@@ -9,18 +9,18 @@ package com.acamar.net.xmpp.facebook;
  */
 public class Connection extends com.acamar.net.xmpp.Connection
 {
-    // Connection defaults
-    final public String defaultHost = "chat.facebook.com";
-    final public String defaultPort = "5222";
-    final public String defaultResource = "Pidgin";
-
     public Connection()
     {
-        host = getOption("host", defaultHost);
-        port = Integer.parseInt(getOption("port", defaultPort));
-        resource = getOption("resource", defaultResource);
+        host = getOption("host", "chat.facebook.com");
+        port = Integer.parseInt(getOption("port", "5222"));
+        resource = getOption("resource", "Pidgin");
     }
 
+    /**
+     * The method is used to create the properties object when the connection object is created
+     *
+     * @return String
+     */
     @Override
     protected String getConfigFilename()
     {
