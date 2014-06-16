@@ -15,14 +15,26 @@ public class User implements UserInterface, Comparable<User>
     private String name = "";
     private UserState state = UserState.OFFLINE;
 
+    /**
+     * Creates a user object only with an identity
+     *
+     * @param identity String the identifies the user uniquely
+     */
     public User(String identity)
     {
         this.identity = identity;
     }
 
+    /**
+     * Creates a user object with both an identity and a name
+     *
+     * @param identity String the identifies the user uniquely
+     * @param name     Name of the user that will be displayed in the GUI
+     */
     public User(String identity, String name)
     {
-        this.identity = identity;
+        this(identity);
+
         this.name = name;
     }
 
@@ -95,7 +107,6 @@ public class User implements UserInterface, Comparable<User>
 
     /**
      * Contains the types of user states
-     *
      */
     public static enum UserState
     {

@@ -1,7 +1,5 @@
 package com.acamar.users;
 
-import com.justchat.client.gui.panel.components.UserCategory;
-
 import java.util.ArrayList;
 
 /**
