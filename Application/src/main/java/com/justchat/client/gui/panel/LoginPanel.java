@@ -54,6 +54,17 @@ public class LoginPanel extends AbstractPanel
 
         /**
          * -----------------
+         * Remember login
+         * -----------------
+         */
+        JCheckBox rememberLogin = new JCheckBox("Remember my ID & password");
+        rememberLogin.setActionCommand("rememberLogin");
+        rememberLogin.setName("rememberLogin");
+        add(rememberLogin);
+        addBoxSeparator(sectionSeparator);
+
+        /**
+         * -----------------
          * Login button
          * -----------------
          */
