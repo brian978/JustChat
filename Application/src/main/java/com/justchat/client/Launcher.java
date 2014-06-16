@@ -81,23 +81,15 @@ public class Launcher
         LoginPanel loginPanel = (LoginPanel) login.findComponent("loginPanel");
         final JComboBox connection = (JComboBox) loginPanel.findComponent("connectionField");
 
+        // Selecting the authentication object of the first item because by default that is what we will have pre-filled
+        setAuthenticationObject((CommunicationServiceItem) ((JComboBox) loginPanel.findComponent("connectionField")).getItemAt(0));
+
         connection.addActionListener(new ActionListener()
         {
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                Authentication authentication = null;
-                CommunicationServiceItem selectedItem = (CommunicationServiceItem) connection.getSelectedItem();
-
-                try {
-                    authentication = selectedItem.getInstance();
-                } catch (IllegalAccessException | InstantiationException e1) {
-                    e1.printStackTrace();
-                }
-
-                if (authentication != null) {
-                    setAuthenticationObject(authentication);
-                }
+                setAuthenticationObject((CommunicationServiceItem) connection.getSelectedItem());
             }
         });
 
@@ -131,13 +123,28 @@ public class Launcher
         login.showFrame();
     }
 
+    protected void setAuthenticationObject(CommunicationServiceItem serviceItem)
+    {
+        Authentication authentication = null;
+
+        try {
+            authentication = serviceItem.getInstance();
+        } catch (IllegalAccessException | InstantiationException e1) {
+            e1.printStackTrace();
+        }
+
+        if (authentication != null) {
+            setAuthenticationObject(authentication);
+        }
+    }
+
     protected void setAuthenticationObject(Authentication xmppAuthentication)
     {
-        if(login.getAuthentication() != null) {
+        if (login.getAuthentication() != null) {
             login.removeAuthenticationListeners();
         }
 
-        if(contacts.getAuthentication() != null) {
+        if (contacts.getAuthentication() != null) {
             contacts.removeAuthenticationListeners();
         }
 

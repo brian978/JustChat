@@ -198,12 +198,12 @@ public class Login extends AbstractMainFrame
         authenticatePanel.setVisible(!loginPanel.isVisible());
     }
 
-    private void prefillData(CommunicationServiceItem item)
+    private void prefillData(CommunicationServiceItem serviceItem)
     {
         Authentication authentication = null;
 
         try {
-            authentication = item.getInstance();
+            authentication = serviceItem.getInstance();
         } catch (IllegalAccessException | InstantiationException e1) {
             e1.printStackTrace();
         }
