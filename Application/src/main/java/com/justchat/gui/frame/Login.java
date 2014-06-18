@@ -76,6 +76,10 @@ public class Login extends AbstractMainFrame
         setMinimumSize(new Dimension(200, 400));
     }
 
+    /**
+     * Adds the default elements that are on the frame (other can be added dynamically any other time of course)
+     *
+     */
     protected void populateFrame()
     {
         /**
@@ -107,6 +111,10 @@ public class Login extends AbstractMainFrame
         add(authenticatePanel);
     }
 
+    /**
+     * Adds event handlers to the events that will be triggered by elements on the frame
+     *
+     */
     @Override
     protected void setupEvents()
     {
@@ -118,6 +126,7 @@ public class Login extends AbstractMainFrame
         final JButton loginBtn = (JButton) loginPanel.findComponent("loginBtn");
         final JButton cancelBtn = (JButton) authenticatePanel.findComponent("cancelBtn");
 
+        // Communication service changed
         connection.addActionListener(new ActionListener()
         {
             @Override
@@ -164,6 +173,12 @@ public class Login extends AbstractMainFrame
         });
     }
 
+    /**
+     * It handles the connection setup and calls the authentication method on the proper object
+     *
+     * The method is called when the user clicks the login button in the login panel
+     *
+     */
     private void handleAuthenticateAction()
     {
         toggleMainPanels();
@@ -189,6 +204,7 @@ public class Login extends AbstractMainFrame
 
     /**
      * The method switches between the authentication and the login panel
+     *
      */
     private void toggleMainPanels()
     {
@@ -196,6 +212,12 @@ public class Login extends AbstractMainFrame
         authenticatePanel.setVisible(!loginPanel.isVisible());
     }
 
+    /**
+     * It handles the first step before the data preparation for the login panel which is the extraction of the
+     * connection object from the service item
+     *
+     * @param serviceItem CommunicationServiceItem
+     */
     private void prefillData(CommunicationServiceItem serviceItem)
     {
         Authentication authentication = null;
@@ -211,6 +233,11 @@ public class Login extends AbstractMainFrame
         }
     }
 
+    /**
+     * Prepares the data from the connection object for the login panel that will add it to the UI
+     *
+     * @param connection Connection
+     */
     private void prefillData(Connection connection)
     {
         HashMap<String, String> data = new HashMap<>();
@@ -221,15 +248,25 @@ public class Login extends AbstractMainFrame
         loginPanel.prefill(data);
     }
 
+    /**
+     * The class decides what happens to the frame when an authentication event occurs
+     *
+     * @version 1.0
+     * @link https://github.com/brian978/JustChat
+     * @since 2014-03-03
+     */
     private class AuthenticationStatusListener implements AuthenticationListener
     {
         @Override
         public void authenticationPerformed(AuthenticationEvent e)
         {
+            // If the login is successful we hide the current frame (since we don't need it for now)
             if (e.getStatusCode() == AuthenticationEvent.StatusCode.SUCCESS) {
                 setVisible(false);
             }
 
+            // Since the login was done we need to revert what we show on this frame to the original state
+            // in case the user logs out
             loginPanel.setVisible(true);
             authenticatePanel.setVisible(false);
         }

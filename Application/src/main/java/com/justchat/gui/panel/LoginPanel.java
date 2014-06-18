@@ -11,9 +11,9 @@ import java.util.Set;
 /**
  * JustChat
  *
+ * @version 1.2
  * @link https://github.com/brian978/JustChat
- * @copyright Copyright (c) 2014
- * @license Creative Commons Attribution-ShareAlike 3.0
+ * @since 2014-03-03
  */
 public class LoginPanel extends AbstractPanel
 {
@@ -101,6 +101,14 @@ public class LoginPanel extends AbstractPanel
         return field;
     }
 
+    /**
+     * Adds a set of data to the fields present in the panel
+     *
+     * Each entry in the data must identified by the name of the element in the panel that must be
+     * populated with that data
+     *
+     * @param data HashMap<String, String>
+     */
     public void prefill(HashMap<String, String> data)
     {
         Component component;

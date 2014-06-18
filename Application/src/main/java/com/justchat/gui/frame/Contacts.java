@@ -73,6 +73,10 @@ public class Contacts extends AbstractMainFrame
         setLayout(new BoxLayout(getContentPane(), BoxLayout.PAGE_AXIS));
     }
 
+    /**
+     * Adds the default elements that are on the frame (other can be added dynamically any other time of course)
+     *
+     */
     protected void populateFrame()
     {
         /**
@@ -93,6 +97,10 @@ public class Contacts extends AbstractMainFrame
         add(userListPanel);
     }
 
+    /**
+     * Adds event handlers to the events that will be triggered by elements on the frame
+     *
+     */
     @Override
     protected void setupEvents()
     {

@@ -31,8 +31,16 @@ abstract public class AbstractMainFrame extends AbstractFrame implements Authent
         this.settings = settings;
     }
 
+    /**
+     * Adds the default elements that are on the frame (other can be added dynamically any other time of course)
+     *
+     */
     abstract protected void populateFrame();
 
+    /**
+     * Adds event handlers to the events that will be triggered by elements on the frame
+     *
+     */
     protected void setupEvents()
     {
         /**

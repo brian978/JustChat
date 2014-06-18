@@ -39,9 +39,9 @@ public abstract class AbstractAuthentication implements AuthenticationInterface,
      * Adds an event listener to the global event manager
      *
      * @param listener An object that will be called after the authentication is done
-     * @return AuthenticationInterface
+     * @return AbstractAuthentication
      */
-    public AuthenticationInterface addAuthenticationListener(AuthenticationListener listener)
+    public AbstractAuthentication addAuthenticationListener(AuthenticationListener listener)
     {
         EventManager.add(AuthenticationListener.class, listener);
 
@@ -52,9 +52,9 @@ public abstract class AbstractAuthentication implements AuthenticationInterface,
      * Removes a listener from the global event manager
      *
      * @param listener The listener object to be removed
-     * @return AuthenticationInterface
+     * @return AbstractAuthentication
      */
-    public AuthenticationInterface removeAuthenticationListener(AuthenticationListener listener)
+    public AbstractAuthentication removeAuthenticationListener(AuthenticationListener listener)
     {
         EventManager.remove(AuthenticationListener.class, listener);
 
