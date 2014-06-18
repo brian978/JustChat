@@ -1,6 +1,6 @@
 JustChat
 ========
 
-The chat application uses the Smack API to connect to an XMPP server and WebSockets for connectivity to a NodeJS server.
+JustChat is a desktop application the instant messaging that is able to connect to XMPP based servers (like Facebook) and allow you to talk to your friends.
 
-For now the application connects to a dummy NodeJS server and an Openfire XMPP server.
+The ideea is to create an alternative chat application for Facebook that is also able to send different types of files (both users would need to use it though)
