@@ -1,4 +1,4 @@
-package com.justchat.gui.frame.menu;
+package com.justchat.view.frame.menu;
 
 import com.acamar.gui.swing.menu.AbstractMenu;
 import com.acamar.gui.swing.menu.ButtonGroup;

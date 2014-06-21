@@ -1,6 +1,6 @@
 package com.justchat.users;
 
-import com.justchat.gui.panel.components.UserCategory;
+import com.justchat.view.panel.components.UserCategory;
 
 /**
  * JustChat

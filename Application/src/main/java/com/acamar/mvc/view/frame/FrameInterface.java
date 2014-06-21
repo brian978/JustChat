@@ -1,4 +1,4 @@
-package com.acamar.gui.swing.frame;
+package com.acamar.mvc.view.frame;
 
 import java.awt.*;
 

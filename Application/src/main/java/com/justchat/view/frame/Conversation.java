@@ -1,12 +1,12 @@
-package com.justchat.gui.frame;
+package com.justchat.view.frame;
 
-import com.acamar.gui.swing.frame.AbstractFrame;
+import com.acamar.mvc.view.frame.AbstractFrame;
 import com.acamar.gui.swing.menu.AbstractMenu;
 import com.acamar.net.xmpp.Connection;
 import com.justchat.users.User;
-import com.justchat.gui.frame.menu.ChatMenu;
-import com.justchat.gui.panel.ChatPanel;
-import com.justchat.gui.panel.components.ChatBox;
+import com.justchat.view.frame.menu.ChatMenu;
+import com.justchat.view.panel.ChatPanel;
+import com.justchat.view.panel.components.ChatBox;
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.ChatManager;
 import org.jivesoftware.smack.MessageListener;

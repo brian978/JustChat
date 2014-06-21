@@ -1,11 +1,11 @@
-package com.justchat.gui.frame;
+package com.justchat.view.frame;
 
 import com.acamar.authentication.AbstractAuthentication;
 import com.acamar.authentication.AuthenticationAwareInterface;
 import com.acamar.authentication.xmpp.Authentication;
-import com.acamar.gui.swing.frame.AbstractFrame;
+import com.acamar.mvc.view.frame.AbstractFrame;
 import com.acamar.util.Properties;
-import com.justchat.gui.frame.menu.MainMenu;
+import com.justchat.view.frame.menu.MainMenu;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

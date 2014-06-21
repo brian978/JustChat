@@ -1,13 +1,13 @@
-package com.justchat.gui.frame;
+package com.justchat.view.frame;
 
 import com.acamar.authentication.AuthenticationEvent;
 import com.acamar.authentication.AuthenticationListener;
 import com.justchat.users.User;
 import com.acamar.users.UsersManager;
 import com.acamar.util.Properties;
-import com.justchat.gui.frame.menu.MainMenu;
-import com.justchat.gui.panel.UserListPanel;
-import com.justchat.gui.panel.components.UserList;
+import com.justchat.view.frame.menu.MainMenu;
+import com.justchat.view.panel.UserListPanel;
+import com.justchat.view.panel.components.UserList;
 
 import javax.swing.*;
 import java.awt.*;

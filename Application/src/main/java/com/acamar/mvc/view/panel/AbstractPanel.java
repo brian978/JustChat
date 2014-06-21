@@ -1,4 +1,4 @@
-package com.acamar.gui.swing.panel;
+package com.acamar.mvc.view.panel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -34,10 +34,5 @@ public abstract class AbstractPanel extends JPanel
     protected void addBoxSeparator(Dimension size)
     {
         add(Box.createRigidArea(size));
-    }
-
-    public Window getParentContainer()
-    {
-        return SwingUtilities.getWindowAncestor(this);
     }
 }
