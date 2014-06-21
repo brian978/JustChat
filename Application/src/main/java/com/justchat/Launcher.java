@@ -137,6 +137,13 @@ public class Launcher
         }
     }
 
+    /**
+     * Injects the authentication object in the login and contacts frames
+     *
+     * The process involves removing the old listeners and reattaching new ones
+     *
+     * @param xmppAuthentication Authentication
+     */
     protected void setAuthenticationObject(Authentication xmppAuthentication)
     {
         if (login.getAuthentication() != null) {
@@ -154,6 +161,11 @@ public class Launcher
         contacts.addAuthenticationListeners();
     }
 
+    /**
+     * Application close listener that handles configuration saving
+     *
+     * @version 1.0
+     */
     private class SaveOnExitListener extends WindowAdapter
     {
         /**
