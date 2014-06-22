@@ -80,7 +80,7 @@ public class Conversation extends AbstractFrame
         c.fill = GridBagConstraints.BOTH;
         c.anchor = GridBagConstraints.FIRST_LINE_START;
 
-        add(menu, c);
+        add(menu.getContainer(), c);
         attachMenuListeners(menu);
 
         /**

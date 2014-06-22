@@ -9,9 +9,9 @@ import java.awt.event.KeyEvent;
 /**
  * JustChat
  *
+ * @version 1.1
  * @link https://github.com/brian978/JustChat
- * @copyright Copyright (c) 2014
- * @license Creative Commons Attribution-ShareAlike 3.0
+ * @since 2014-03-02
  */
 public class ChatMenu extends AbstractMenu
 {
