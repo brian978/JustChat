@@ -7,9 +7,11 @@ import java.awt.event.WindowEvent;
 /**
  * JustChat
  *
+ * @version 1.0
  * @link https://github.com/brian978/JustChat
+ * @since 2014-03-03
  */
-abstract public class AbstractFrame extends JFrame implements FrameInterface
+public abstract class AbstractFrame extends JFrame implements FrameInterface
 {
     public AbstractFrame(String title)
     {

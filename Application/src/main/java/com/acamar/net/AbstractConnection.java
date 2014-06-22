@@ -11,7 +11,7 @@ import java.lang.reflect.InvocationTargetException;
  *
  * @link https://github.com/brian978/JustChat
  */
-abstract public class AbstractConnection implements ConnectionInterface, ConnectionAsyncInterface
+public abstract class AbstractConnection implements ConnectionInterface, ConnectionAsyncInterface
 {
     protected Properties config = new Properties(getConfigFilename());
     protected String host = "";

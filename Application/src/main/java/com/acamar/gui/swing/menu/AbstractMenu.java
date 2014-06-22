@@ -12,7 +12,7 @@ import java.util.HashMap;
  * @link https://github.com/brian978/JustChat
  * @since 2014-03-03
  */
-public class AbstractMenu
+public abstract class AbstractMenu
 {
     protected JMenuBar container = new JMenuBar();
     protected HashMap<String, JMenuItem> menuItems = new HashMap<>();

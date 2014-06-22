@@ -18,7 +18,7 @@ import java.awt.event.ActionListener;
  * @link https://github.com/brian978/JustChat
  * @since 2014-04-23
  */
-abstract public class AbstractMainFrame extends AbstractFrame implements AuthenticationAwareInterface
+public abstract class AbstractMainFrame extends AbstractFrame implements AuthenticationAwareInterface
 {
     protected MainMenu menu;
     protected Properties settings;

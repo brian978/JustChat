@@ -10,7 +10,7 @@ import java.awt.*;
  * @link https://github.com/brian978/JustChat
  * @since 2014-06-22
  */
-public class AbstractController
+public abstract class AbstractController
 {
     /**
      * Searches, by name, for a component in the current frame (does not search in the panels of the frame)
