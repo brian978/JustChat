@@ -87,7 +87,7 @@ public class Login extends AbstractMainFrame
          * main menu
          * -------------
          */
-        setJMenuBar(menu);
+        setJMenuBar(menu.getContainer());
         menu.display(MainMenu.DEFAULT_ITEMS);
 
         /**

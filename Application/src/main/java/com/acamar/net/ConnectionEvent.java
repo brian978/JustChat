@@ -1,26 +1,40 @@
 package com.acamar.net;
 
-import com.acamar.event.AbstractEvent;
+import com.acamar.event.Event;
+
+import java.util.HashMap;
 
 /**
  * JustChat
  *
+ * @version 2.0
  * @link https://github.com/brian978/JustChat
+ * @since 2014-03-30
  */
-public class ConnectionEvent extends AbstractEvent
+public class ConnectionEvent extends Event
 {
-    public final static int UNKOWN = 0;
-    public final static int CONNECTION_OPENED = 1;
-    public final static int ERROR_OCCURED = 2;
-    public final static int CONNECTION_CLOSED = 3;
-
-    protected String message = "";
-    protected int statusCode = UNKOWN;
-
-    public ConnectionEvent(String message, int statusCode)
+    /**
+     * Constructs a new event object
+     *
+     * @param target Target of the event (usually the object that triggered the event)
+     */
+    public ConnectionEvent(Object target)
     {
-        this.message = message;
-        this.statusCode = statusCode;
+        super("connection", target);
+
+        // Adding a default status code
+        params.put("statusCode", StatusCode.UNKOWN);
+    }
+
+    /**
+     * Constructs a new event object
+     *
+     * @param target Target of the event (usually the object that triggered the event)
+     * @param params Parameters for the event
+     */
+    public ConnectionEvent(Object target, HashMap<Object, Object> params)
+    {
+        super("connection", target, params);
     }
 
     /**
@@ -30,7 +44,7 @@ public class ConnectionEvent extends AbstractEvent
      */
     public String getMessage()
     {
-        return message;
+        return (String) params.get("message");
     }
 
     /**
@@ -38,8 +52,20 @@ public class ConnectionEvent extends AbstractEvent
      *
      * @return int
      */
-    public int getStatusCode()
+    public StatusCode getStatusCode()
     {
-        return statusCode;
+        return (StatusCode) params.get("statusCode");
+    }
+
+    /**
+     * Used to avoid creating constants
+     *
+     */
+    public enum StatusCode
+    {
+        UNKOWN,
+        CONNECTION_OPENED,
+        ERROR_OCCURED,
+        CONNECTION_CLOSED
     }
 }

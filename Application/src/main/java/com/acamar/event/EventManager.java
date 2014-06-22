@@ -8,11 +8,13 @@ import java.util.HashMap;
 /**
  * JustChat
  *
+ * @version 2.0
  * @link https://github.com/brian978/JustChat
+ * @since 2014-03-30
  */
 public class EventManager
 {
-    private static HashMap<Class, ArrayList<Object>> listeners = new HashMap<>();
+    protected HashMap<Class, ArrayList<Object>> listeners = new HashMap<>();
 
     /**
      * Adds an event listener to the queue
@@ -20,14 +22,14 @@ public class EventManager
      * @param listenerClass The class of the event listener is used to group a the event listeners
      * @param listener      The object that will listen for events
      */
-    public static void add(Class listenerClass, Object listener)
+    public void add(Class listenerClass, Object listener)
     {
-        ArrayList<Object> listeners = EventManager.listeners.get(listenerClass);
+        ArrayList<Object> listeners = this.listeners.get(listenerClass);
 
         // Initializing the listeners ArrayList in case it's not present
         if (listeners == null) {
             listeners = new ArrayList<>();
-            EventManager.listeners.put(listenerClass, listeners);
+            this.listeners.put(listenerClass, listeners);
         }
 
         listeners.add(listener);
@@ -39,9 +41,9 @@ public class EventManager
      * @param listenerClass The class of the event listener is used to identify the group of listeners where to look
      * @param listener      The object that will listen for events
      */
-    public static void remove(Class listenerClass, Object listener)
+    public void remove(Class listenerClass, Object listener)
     {
-        ArrayList<Object> listeners = EventManager.getListeners(listenerClass);
+        ArrayList<Object> listeners = this.getListeners(listenerClass);
         if (listeners != null) {
             listeners.remove(listener);
         }
@@ -51,9 +53,9 @@ public class EventManager
      * @param listenerClass The class of the event listeners that will be returned
      * @return ArrayList<Object>
      */
-    public static ArrayList<Object> getListeners(Class listenerClass)
+    public ArrayList<Object> getListeners(Class listenerClass)
     {
-        ArrayList<Object> listeners = EventManager.listeners.get(listenerClass);
+        ArrayList<Object> listeners = this.listeners.get(listenerClass);
 
         return listeners == null ? new ArrayList<>() : listeners;
     }
@@ -67,9 +69,9 @@ public class EventManager
      * @throws InvocationTargetException
      * @throws IllegalAccessException
      */
-    public static void fireEvent(Class listenerClass, EventInterface e, Method methodToCall) throws InvocationTargetException, IllegalAccessException
+    public void fireEvent(Class listenerClass, EventInterface e, Method methodToCall) throws InvocationTargetException, IllegalAccessException
     {
-        ArrayList<Object> listeners = EventManager.getListeners(listenerClass);
+        ArrayList<Object> listeners = this.getListeners(listenerClass);
         if (!listeners.isEmpty()) {
             for (Object listener : listeners) {
                 methodToCall.invoke(listener, e);
@@ -87,9 +89,9 @@ public class EventManager
      * @param e                 The event object
      * @param fireEventCallback An object that will dispatch the event to a method of the listener
      */
-    public static void fireEvent(Class listenerClass, EventInterface e, FireEventCallback fireEventCallback)
+    public void fireEvent(Class listenerClass, EventInterface e, FireEventCallback fireEventCallback)
     {
-        ArrayList<Object> listeners = EventManager.getListeners(listenerClass);
+        ArrayList<Object> listeners = this.getListeners(listenerClass);
         if (!listeners.isEmpty()) {
             for (Object listener : listeners) {
                 fireEventCallback.fireEvent(listener, e);

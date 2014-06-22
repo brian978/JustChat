@@ -7,6 +7,7 @@ import com.acamar.users.User;
 import org.jivesoftware.smack.XMPPException;
 
 import java.util.Arrays;
+import java.util.HashMap;
 
 /**
  * JustChat
@@ -83,8 +84,10 @@ public class Authentication extends AbstractAuthentication
 
         Arrays.fill(password, '0');
 
+
+
         // Letting the listeners know what happened (since this is asynchronous)
-        fireAuthenticationEvent(new AuthenticationEvent(new User(identity, "Me"), statusCode));
+        fireAuthenticationEvent(new User(identity, "Me"), statusCode);
     }
 
     /**

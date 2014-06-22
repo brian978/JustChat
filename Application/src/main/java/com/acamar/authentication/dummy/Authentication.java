@@ -19,6 +19,6 @@ public class Authentication extends AbstractAuthentication
     @Override
     public void authenticate(String identity, char[] password)
     {
-        fireAuthenticationEvent(new AuthenticationEvent(null, AuthenticationEvent.StatusCode.SUCCESS));
+        fireAuthenticationEvent(null, AuthenticationEvent.StatusCode.SUCCESS);
     }
 }

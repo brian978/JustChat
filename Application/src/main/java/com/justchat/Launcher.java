@@ -1,6 +1,7 @@
 package com.justchat;
 
 import com.acamar.authentication.xmpp.Authentication;
+import com.acamar.event.EventManager;
 import com.acamar.util.Properties;
 import com.justchat.view.frame.Contacts;
 import com.justchat.view.frame.Login;
@@ -25,6 +26,8 @@ public class Launcher
     Properties settings = new Properties("preferences.properties");
     Login login = new Login(settings);
     Contacts contacts = new Contacts(settings);
+
+    EventManager eventManager = new EventManager();
 
     public static void main(String[] args)
     {
@@ -146,6 +149,9 @@ public class Launcher
         if (contacts.getAuthentication() != null) {
             contacts.removeAuthenticationListeners();
         }
+
+        xmppAuthentication.setEventManager(eventManager);
+        xmppAuthentication.getConnection().setEventManager(eventManager);
 
         login.setAuthentication(xmppAuthentication);
         login.addAuthenticationListeners();
