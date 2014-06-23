@@ -45,7 +45,7 @@ public class Conversation extends AbstractFrame
         configureFrame();
         populateFrame();
         setupEvents();
-        showFrame();
+        show();
         ensureMinimumSize();
     }
 
@@ -59,7 +59,7 @@ public class Conversation extends AbstractFrame
     {
         super.configureFrame();
 
-        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
     }
 
     protected void populateFrame()
@@ -80,7 +80,7 @@ public class Conversation extends AbstractFrame
         c.fill = GridBagConstraints.BOTH;
         c.anchor = GridBagConstraints.FIRST_LINE_START;
 
-        add(menu.getContainer(), c);
+        frame.add(menu.getContainer(), c);
         attachMenuListeners(menu);
 
         /**
@@ -98,7 +98,7 @@ public class Conversation extends AbstractFrame
 
         chatPanel = new ChatPanel();
         chatPanel.setName("ChatPanel");
-        add(chatPanel, c);
+        frame.add(chatPanel, c);
     }
 
     private void setupEvents()
@@ -107,12 +107,11 @@ public class Conversation extends AbstractFrame
         chatPanel.getMessageBox().addKeyListener(new OutboundMessageListener(chatPanel.getChatBox()));
 
         // Frame events
-        addWindowListener(new CleanupWindowListener());
+        frame.addWindowListener(new CleanupWindowListener());
     }
 
     protected void attachMenuListeners(AbstractMenu menu)
     {
-        final JFrame currentFrame = this;
         JMenuItem item;
 
         /**
@@ -144,7 +143,7 @@ public class Conversation extends AbstractFrame
                 @Override
                 public void actionPerformed(ActionEvent e)
                 {
-                    currentFrame.dispatchEvent(new WindowEvent(currentFrame, WindowEvent.WINDOW_CLOSING));
+                    frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
                 }
             });
         }

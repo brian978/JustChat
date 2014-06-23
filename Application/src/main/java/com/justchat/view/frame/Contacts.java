@@ -34,15 +34,22 @@ public class Contacts extends AbstractMainFrame
         super("JustChat - Contacts", settings);
     }
 
+    /**
+     * Sets the minimum size of the frame
+     */
     @Override
-    public void showFrame()
+    protected void ensureMinimumSize()
     {
-        setMinimumSize(new Dimension(200, 300));
+        frame.setMinimumSize(new Dimension(200, 300));
+    }
 
+    @Override
+    public void show()
+    {
         // Updating the window dimensions to what the user last set
-        setPreferredSize(getSizePreferences());
+        frame.setPreferredSize(getSizePreferences());
 
-        super.showFrame();
+        super.show();
     }
 
     public Contacts addAuthenticationListeners()
@@ -70,7 +77,7 @@ public class Contacts extends AbstractMainFrame
     {
         super.configureFrame();
 
-        setLayout(new BoxLayout(getContentPane(), BoxLayout.PAGE_AXIS));
+        frame.setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.PAGE_AXIS));
     }
 
     /**
@@ -84,7 +91,7 @@ public class Contacts extends AbstractMainFrame
          * main menu
          * -------------
          */
-        setJMenuBar(menu.getContainer());
+        frame.setJMenuBar(menu.getContainer());
 
         menu.display(MainMenu.DEFAULT_ITEMS);
         menu.display(MainMenu.AUTHENTICATED_ITEMS);
@@ -94,7 +101,7 @@ public class Contacts extends AbstractMainFrame
          * User list
          * -------------
          */
-        add(userListPanel);
+        frame.add(userListPanel);
     }
 
     /**
@@ -142,7 +149,7 @@ public class Contacts extends AbstractMainFrame
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                setVisible(false);
+                frame.setVisible(false);
             }
         });
     }
@@ -164,7 +171,7 @@ public class Contacts extends AbstractMainFrame
 
     private Dimension getSizePreferences()
     {
-        Dimension size = getSize();
+        Dimension size = frame.getSize();
         Object width = settings.get("ContactsWidth", String.valueOf((int) size.getWidth()));
         Object height = settings.get("ContactsHeight", String.valueOf((int) size.getHeight()));
 
@@ -172,7 +179,7 @@ public class Contacts extends AbstractMainFrame
             return new Dimension(Integer.parseInt(width.toString()), Integer.parseInt(height.toString()));
         }
 
-        return getPreferredSize();
+        return frame.getPreferredSize();
     }
 
     public void loadUsers()

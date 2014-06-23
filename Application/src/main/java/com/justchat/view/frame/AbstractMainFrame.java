@@ -55,7 +55,7 @@ public abstract class AbstractMainFrame extends AbstractFrame implements Authent
                     @Override
                     public void actionPerformed(ActionEvent e)
                     {
-                        System.out.println("Launching preferences window from " + AbstractMainFrame.this.getTitle());
+                        System.out.println("Launching preferences window from " + frame.getTitle());
                     }
                 }
         );
@@ -67,7 +67,7 @@ public abstract class AbstractMainFrame extends AbstractFrame implements Authent
                     @Override
                     public void actionPerformed(ActionEvent e)
                     {
-                        if (menu.getParentWindow((JMenuItem) e.getSource()) == AbstractMainFrame.this) {
+                        if (menu.getParentWindow((JMenuItem) e.getSource()) == frame) {
                             triggerClosingEvent();
                         }
                     }
