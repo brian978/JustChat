@@ -115,7 +115,7 @@ public class LoginPanel extends AbstractPanel
         Set<String> keys = data.keySet();
 
         for (String key : keys) {
-            component = container.findComponent(key);
+            component = this.findComponent(key);
             if (component != null) {
                 if (component instanceof JTextField) {
                     ((JTextField) component).setText(data.get(key));

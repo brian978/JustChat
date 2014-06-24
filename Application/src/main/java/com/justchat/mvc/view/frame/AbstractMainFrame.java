@@ -20,7 +20,7 @@ import java.awt.event.ActionListener;
  */
 public abstract class AbstractMainFrame extends AbstractFrame implements AuthenticationAwareInterface
 {
-    protected MainMenu menu;
+    protected MainMenu menu = new MainMenu();
     protected Properties settings;
     protected Authentication xmppAuthentication;
 
@@ -96,10 +96,5 @@ public abstract class AbstractMainFrame extends AbstractFrame implements Authent
     public Authentication getAuthentication()
     {
         return xmppAuthentication;
-    }
-
-    public void setMenu(MainMenu menu)
-    {
-        this.menu = menu;
     }
 }

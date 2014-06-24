@@ -14,5 +14,5 @@ public interface FireEventCallback
      * @param listener Object that is used to listen for an event
      * @param e Event that will be triggered
      */
-    public void fireEvent(Object listener, EventInterface e);
+    public void trigger(Object listener, EventInterface e);
 }

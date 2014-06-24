@@ -11,5 +11,4 @@ import com.justchat.mvc.view.frame.Contacts;
  */
 public class ContactsController
 {
-    Contacts view = new Contacts();
 }

@@ -146,7 +146,7 @@ public abstract class AbstractConnection implements ConnectionInterface, Connect
         eventParams.put("statusCode", statusCode);
 
         try {
-            eventManager.fireEvent(
+            eventManager.trigger(
                     ConnectionStatusListener.class,
                     new ConnectionEvent(this, eventParams),
                     ConnectionStatusListener.class.getMethod("statusChanged", ConnectionEvent.class)

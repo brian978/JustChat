@@ -54,12 +54,10 @@ public class Launcher
 
         // Login frame
         login.getViewContainer().addWindowListener(exitListener);
-        login.setMenu(new MainMenu());
         login.initialize();
 
         // Contacts frame
         contacts.getViewContainer().addWindowListener(exitListener);
-        contacts.setMenu(new MainMenu());
         contacts.initialize();
 
         /**
@@ -142,22 +140,22 @@ public class Launcher
 
     protected void setAuthenticationObject(Authentication xmppAuthentication)
     {
-        if (login.getAuthentication() != null) {
-            login.removeAuthenticationListeners();
-        }
-
-        if (contacts.getAuthentication() != null) {
-            contacts.removeAuthenticationListeners();
-        }
-
-        xmppAuthentication.setEventManager(eventManager);
-        xmppAuthentication.getConnection().setEventManager(eventManager);
-
-        login.setAuthentication(xmppAuthentication);
-        login.addAuthenticationListeners();
-
-        contacts.setAuthentication(xmppAuthentication);
-        contacts.addAuthenticationListeners();
+//        if (login.getAuthentication() != null) {
+//            login.removeAuthenticationListeners();
+//        }
+//
+//        if (contacts.getAuthentication() != null) {
+//            contacts.removeAuthenticationListeners();
+//        }
+//
+//        xmppAuthentication.setEventManager(eventManager);
+//        xmppAuthentication.getConnection().setEventManager(eventManager);
+//
+//        login.setAuthentication(xmppAuthentication);
+//        login.addAuthenticationListeners();
+//
+//        contacts.setAuthentication(xmppAuthentication);
+//        contacts.addAuthenticationListeners();
     }
 
     private class SaveOnExitListener extends WindowAdapter

@@ -14,32 +14,4 @@ import java.awt.*;
  */
 public abstract class AbstractController
 {
-    /**
-     * Searches, by name, for a component in the given container (shallow search)
-     *
-     * @param viewContainer The container in which to search for a component
-     * @param name      Name of the component to locate
-     * @return Component|null
-     */
-    public Component findComponent(ViewContainer viewContainer, String name)
-    {
-        // We get the container in which to search
-        Container container = (Container) viewContainer.getViewContainer();
-        if (container instanceof JFrame) {
-            container = ((JFrame) container).getContentPane();
-        }
-
-        String componentName;
-        Component[] components = container.getComponents();
-
-        // Doing a shallow search for a component that has the requested name
-        for (Component component : components) {
-            componentName = component.getName();
-            if (componentName != null && componentName.equals(name)) {
-                return component;
-            }
-        }
-
-        return null;
-    }
 }

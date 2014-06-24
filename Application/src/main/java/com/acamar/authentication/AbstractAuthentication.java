@@ -85,7 +85,7 @@ public abstract class AbstractAuthentication
                     AuthenticationEvent.class
             );
 
-            eventManager.fireEvent(
+            eventManager.trigger(
                     AuthenticationListener.class,
                     new AuthenticationEvent(this, eventParams),
                     authenticationPerformed

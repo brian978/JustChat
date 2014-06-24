@@ -30,7 +30,6 @@ public class Login extends AbstractMainFrame
 {
     private AuthenticationListener authenticationListener = new AuthenticationStatusListener();
 
-    // Panels
     private LoginPanel loginPanel = new LoginPanel();
     private AuthenticatePanel authenticatePanel = new AuthenticatePanel();
 
@@ -39,31 +38,11 @@ public class Login extends AbstractMainFrame
         super("JustChat", settings);
     }
 
+    /**
+     * Sets different properties of the frame, what layout to use and what happens when the frame is closed
+     *
+     */
     @Override
-    public AbstractMainFrame setAuthentication(AbstractAuthentication authentication)
-    {
-        super.setAuthentication(authentication);
-
-        // Login data
-        prefillData(xmppAuthentication.getConnection());
-
-        return this;
-    }
-
-    public Login addAuthenticationListeners()
-    {
-        xmppAuthentication.addAuthenticationListener(authenticationListener);
-
-        return this;
-    }
-
-    public Login removeAuthenticationListeners()
-    {
-        xmppAuthentication.removeAuthenticationListener(authenticationListener);
-
-        return this;
-    }
-
     protected void configure()
     {
         super.configure();
@@ -71,6 +50,11 @@ public class Login extends AbstractMainFrame
         container.setLayout(new BoxLayout(container.getContentPane(), BoxLayout.PAGE_AXIS));
     }
 
+    /**
+     * Sets the minimum size of the frame
+     *
+     */
+    @Override
     protected void ensureMinimumSize()
     {
         container.setMinimumSize(new Dimension(200, 400));
@@ -80,6 +64,7 @@ public class Login extends AbstractMainFrame
      * Adds the default elements that are on the frame (other can be added dynamically any other time of course)
      *
      */
+    @Override
     protected void populateFrame()
     {
         /**
@@ -114,6 +99,7 @@ public class Login extends AbstractMainFrame
     /**
      * Adds event handlers to the events that will be triggered by elements on the frame
      *
+     * TODO: Move to controller
      */
     @Override
     protected void setupEvents()
@@ -178,6 +164,7 @@ public class Login extends AbstractMainFrame
      *
      * The method is called when the user clicks the login button in the login panel
      *
+     * TODO: Move to controller
      */
     private void handleAuthenticateAction()
     {
@@ -206,7 +193,7 @@ public class Login extends AbstractMainFrame
      * The method switches between the authentication and the login panel
      *
      */
-    private void toggleMainPanels()
+    public void toggleMainPanels()
     {
         loginPanel.setVisible(!loginPanel.isVisible());
         authenticatePanel.setVisible(!loginPanel.isVisible());
@@ -218,7 +205,7 @@ public class Login extends AbstractMainFrame
      *
      * @param serviceItem CommunicationServiceItem
      */
-    private void prefillData(CommunicationServiceItem serviceItem)
+    public void prefillData(CommunicationServiceItem serviceItem)
     {
         Authentication authentication = null;
 
@@ -238,7 +225,7 @@ public class Login extends AbstractMainFrame
      *
      * @param connection Connection
      */
-    private void prefillData(Connection connection)
+    public void prefillData(Connection connection)
     {
         HashMap<String, String> data = new HashMap<>();
         data.put("serverField", connection.getHost());
@@ -267,8 +254,7 @@ public class Login extends AbstractMainFrame
 
             // Since the login was done we need to revert what we show on this frame to the original state
             // in case the user logs out
-            loginPanel.setVisible(true);
-            authenticatePanel.setVisible(false);
+            toggleMainPanels();
         }
     }
 }
