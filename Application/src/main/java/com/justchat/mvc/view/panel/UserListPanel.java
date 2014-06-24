@@ -1,10 +1,10 @@
-package com.justchat.view.panel;
+package com.justchat.mvc.view.panel;
 
 import com.acamar.mvc.view.AbstractPanel;
 import com.acamar.smack.roster.RosterAdapter;
 import com.acamar.users.UsersManager;
-import com.justchat.view.panel.components.UserCategory;
-import com.justchat.view.panel.components.UserList;
+import com.justchat.mvc.view.panel.components.UserCategory;
+import com.justchat.mvc.view.panel.components.UserList;
 import com.justchat.users.User;
 import org.jivesoftware.smack.Roster;
 import org.jivesoftware.smack.RosterEntry;

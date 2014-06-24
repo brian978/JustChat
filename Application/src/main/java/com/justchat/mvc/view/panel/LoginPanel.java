@@ -1,7 +1,7 @@
-package com.justchat.view.panel;
+package com.justchat.mvc.view.panel;
 
 import com.acamar.mvc.view.AbstractPanel;
-import com.justchat.view.panel.components.CommunicationServiceItem;
+import com.justchat.mvc.view.panel.components.CommunicationServiceItem;
 
 import javax.swing.*;
 import java.awt.*;

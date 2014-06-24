@@ -1,4 +1,4 @@
-package com.justchat.view.panel;
+package com.justchat.mvc.view.panel;
 
 import com.acamar.mvc.view.AbstractPanel;
 

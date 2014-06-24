@@ -1,4 +1,4 @@
-package com.justchat.view.frame;
+package com.justchat.mvc.view.frame;
 
 import com.acamar.authentication.AbstractAuthentication;
 import com.acamar.authentication.AuthenticationEvent;
@@ -6,10 +6,10 @@ import com.acamar.authentication.AuthenticationListener;
 import com.acamar.authentication.xmpp.Authentication;
 import com.acamar.net.xmpp.Connection;
 import com.acamar.util.Properties;
-import com.justchat.view.frame.menu.MainMenu;
-import com.justchat.view.panel.AuthenticatePanel;
-import com.justchat.view.panel.LoginPanel;
-import com.justchat.view.panel.components.CommunicationServiceItem;
+import com.justchat.mvc.view.frame.menu.MainMenu;
+import com.justchat.mvc.view.panel.AuthenticatePanel;
+import com.justchat.mvc.view.panel.LoginPanel;
+import com.justchat.mvc.view.panel.components.CommunicationServiceItem;
 
 import javax.swing.*;
 import java.awt.*;

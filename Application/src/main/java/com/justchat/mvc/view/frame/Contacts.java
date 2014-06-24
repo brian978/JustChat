@@ -1,13 +1,13 @@
-package com.justchat.view.frame;
+package com.justchat.mvc.view.frame;
 
 import com.acamar.authentication.AuthenticationEvent;
 import com.acamar.authentication.AuthenticationListener;
 import com.justchat.users.User;
 import com.acamar.users.UsersManager;
 import com.acamar.util.Properties;
-import com.justchat.view.frame.menu.MainMenu;
-import com.justchat.view.panel.UserListPanel;
-import com.justchat.view.panel.components.UserList;
+import com.justchat.mvc.view.frame.menu.MainMenu;
+import com.justchat.mvc.view.panel.UserListPanel;
+import com.justchat.mvc.view.panel.components.UserList;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,12 +26,13 @@ import java.awt.event.MouseEvent;
 public class Contacts extends AbstractMainFrame
 {
     private AuthenticationListener authenticationListener = new AuthenticationStatusListener();
-    private UsersManager usersManager = new UsersManager();
-    private UserListPanel userListPanel = new UserListPanel(usersManager);
+    private UserListPanel userListPanel;
 
-    public Contacts(Properties settings)
+    public Contacts(Properties settings, UsersManager usersManager)
     {
         super("JustChat - Contacts", settings);
+
+        userListPanel = new UserListPanel(usersManager);
     }
 
     /**
@@ -159,6 +160,11 @@ public class Contacts extends AbstractMainFrame
         });
     }
 
+    /**
+     * Does a user list cleanup and then disconnects from the XMPP server
+     *
+     * TODO: Move parts of it to controller?
+     */
     public void doLogout()
     {
         // The cleanup must be done prior to the disconnect because it depends on the connection
@@ -168,12 +174,27 @@ public class Contacts extends AbstractMainFrame
         xmppAuthentication.getConnection().disconnect();
     }
 
+    /**
+     * When this is called a new window will be launched that will allow the users to send instant messages to the
+     * selected user
+     *
+     * TODO: Move to controller
+     *
+     * @param user User to start the conversation with
+     */
     private void startNewConversation(User user)
     {
-        Conversation conversationFrame = new Conversation(xmppAuthentication.getConnection(), user);
-        conversationFrame.setLocalUser((User) usersManager.getUser());
+//        Conversation conversationFrame = new Conversation(xmppAuthentication.getConnection(), user);
+//        conversationFrame.setLocalUser((User) usersManager.getUser());
     }
 
+    /**
+     * Returns the size that was found in settings or a default size
+     *
+     * TODO: Maybe move to controller?
+     *
+     * @return Dimension
+     */
     private Dimension getSizePreferences()
     {
         Dimension size = container.getSize();
@@ -187,19 +208,32 @@ public class Contacts extends AbstractMainFrame
         return container.getPreferredSize();
     }
 
+    /**
+     * Retrieves the users from the XMPP roster and adds them to the user list panel
+     *
+     */
     public void loadUsers()
     {
         userListPanel.addUsers();
     }
 
+    /**
+     * The listener handles the actions that will be done after the user authenticates
+     *
+     * TODO: Move to controller
+     *
+     * @version 1.0
+     * @link https://github.com/brian978/JustChat
+     * @since 2014-04-22
+     */
     private class AuthenticationStatusListener implements AuthenticationListener
     {
         @Override
         public void authenticationPerformed(AuthenticationEvent e)
         {
-            if (e.getStatusCode() == AuthenticationEvent.StatusCode.SUCCESS) {
-                usersManager.setUser(e.getUser());
-            }
+//            if (e.getStatusCode() == AuthenticationEvent.StatusCode.SUCCESS) {
+//                usersManager.setUser(e.getUser());
+//            }
         }
     }
 }

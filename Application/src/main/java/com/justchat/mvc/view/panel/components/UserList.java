@@ -1,4 +1,4 @@
-package com.justchat.view.panel.components;
+package com.justchat.mvc.view.panel.components;
 
 import com.acamar.users.UsersManagerListener;
 import com.justchat.users.NullUser;

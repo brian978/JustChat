@@ -1,4 +1,4 @@
-package com.justchat.view.frame.menu;
+package com.justchat.mvc.view.frame.menu;
 
 
 import com.acamar.gui.swing.menu.AbstractMenu;

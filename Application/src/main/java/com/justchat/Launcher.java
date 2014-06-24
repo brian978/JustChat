@@ -3,11 +3,11 @@ package com.justchat;
 import com.acamar.authentication.xmpp.Authentication;
 import com.acamar.event.EventManager;
 import com.acamar.util.Properties;
-import com.justchat.view.frame.Contacts;
-import com.justchat.view.frame.Login;
-import com.justchat.view.frame.menu.MainMenu;
-import com.justchat.view.panel.LoginPanel;
-import com.justchat.view.panel.components.CommunicationServiceItem;
+import com.justchat.mvc.view.frame.Contacts;
+import com.justchat.mvc.view.frame.Login;
+import com.justchat.mvc.view.frame.menu.MainMenu;
+import com.justchat.mvc.view.panel.LoginPanel;
+import com.justchat.mvc.view.panel.components.CommunicationServiceItem;
 
 import javax.swing.*;
 import java.awt.*;

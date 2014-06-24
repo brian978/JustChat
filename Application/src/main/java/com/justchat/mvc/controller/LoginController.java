@@ -1,4 +1,4 @@
-package com.justchat.controller;
+package com.justchat.mvc.controller;
 
 /**
  * JustChat

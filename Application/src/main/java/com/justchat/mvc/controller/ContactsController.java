@@ -1,4 +1,6 @@
-package com.justchat.controller;
+package com.justchat.mvc.controller;
+
+import com.justchat.mvc.view.frame.Contacts;
 
 /**
  * JustChat
@@ -9,4 +11,5 @@ package com.justchat.controller;
  */
 public class ContactsController
 {
+    Contacts view = new Contacts();
 }
