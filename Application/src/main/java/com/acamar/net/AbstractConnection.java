@@ -5,7 +5,6 @@ import com.acamar.event.EventManagerAwareInterface;
 import com.acamar.util.Properties;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 
 /**
@@ -13,7 +12,8 @@ import java.util.HashMap;
  *
  * @link https://github.com/brian978/JustChat
  */
-public abstract class AbstractConnection implements ConnectionInterface, ConnectionAsyncInterface, EventManagerAwareInterface
+public abstract class AbstractConnection
+        implements ConnectionInterface, ConnectionAsyncInterface, EventManagerAwareInterface
 {
     protected EventManager eventManager = null;
     protected Properties config = new Properties(getConfigFilename());
@@ -108,32 +108,6 @@ public abstract class AbstractConnection implements ConnectionInterface, Connect
     }
 
     /**
-     * Can be used to add a event listener for connection events
-     *
-     * @param listener Listener object that will listen for connection events
-     * @return AbstractConnection
-     */
-    public AbstractConnection addConnectionStatusListener(ConnectionStatusListener listener)
-    {
-        eventManager.add(ConnectionStatusListener.class, listener);
-
-        return this;
-    }
-
-    /**
-     * Can be used to remove a event listener for connection events
-     *
-     * @param listener Listener object that will listen for connection events
-     * @return AbstractConnection
-     */
-    public AbstractConnection removeConnectionStatusListener(ConnectionStatusListener listener)
-    {
-        eventManager.remove(ConnectionStatusListener.class, listener);
-
-        return this;
-    }
-
-    /**
      * Builds and fires a connection event
      *
      * @param message    Message that will be contained in the event object
@@ -145,15 +119,7 @@ public abstract class AbstractConnection implements ConnectionInterface, Connect
         eventParams.put("message", message);
         eventParams.put("statusCode", statusCode);
 
-        try {
-            eventManager.trigger(
-                    ConnectionStatusListener.class,
-                    new ConnectionEvent(this, eventParams),
-                    ConnectionStatusListener.class.getMethod("statusChanged", ConnectionEvent.class)
-            );
-        } catch (InvocationTargetException | IllegalAccessException | NoSuchMethodException e) {
-            e.printStackTrace();
-        }
+        eventManager.trigger(new ConnectionEvent(this, eventParams));
     }
 
     /**

@@ -21,7 +21,7 @@ public class AuthenticationEvent extends Event
      */
     public AuthenticationEvent(Object target)
     {
-        super("authentication", target);
+        super(AuthenticationEvent.class.getName(), target);
     }
 
     /**
@@ -32,7 +32,7 @@ public class AuthenticationEvent extends Event
      */
     public AuthenticationEvent(Object target, HashMap<Object, Object> params)
     {
-        super("authentication", target, params);
+        super(AuthenticationEvent.class.getName(), target, params);
     }
 
     /**

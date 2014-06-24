@@ -20,7 +20,7 @@ public class ConnectionEvent extends Event
      */
     public ConnectionEvent(Object target)
     {
-        super("connection", target);
+        super(ConnectionEvent.class.getName(), target);
 
         // Adding a default status code
         params.put("statusCode", StatusCode.UNKOWN);
@@ -34,7 +34,7 @@ public class ConnectionEvent extends Event
      */
     public ConnectionEvent(Object target, HashMap<Object, Object> params)
     {
-        super("connection", target, params);
+        super(ConnectionEvent.class.getName(), target, params);
     }
 
     /**

@@ -73,6 +73,7 @@ public class EventManager
     }
 
     /**
+     * Triggers an event
      *
      * @param name Name of the event to trigger
      * @param target Target of the event. This is usually the object that triggered the event
@@ -90,6 +91,69 @@ public class EventManager
                 }
             }
         }
+    }
+
+    /**
+     * Triggers an event
+     *
+     * @param name Name of the event to be triggered
+     * @param event Event to be triggered
+     */
+    public void trigger(String name, Event event)
+    {
+        ArrayList<EventListenerInterface> listeners = this.events.get(name);
+        if(listeners != null) {
+            for(EventListenerInterface listener : listeners) {
+                listener.onEvent(event);
+                if(event.isPropagationStopped()) {
+                    break;
+                }
+            }
+        }
+    }
+
+    /**
+     * Triggers an event
+     *
+     * @param event Event to be triggered
+     */
+    public void trigger(Event event)
+    {
+        trigger(event.getClass().getName(), event);
+    }
+
+    /**
+     * Triggers an event
+     *
+     * @param name Name of the event to trigger
+     * @param target Target of the event. This is usually the object that triggered the event
+     */
+    public void trigger(String name, Object target)
+    {
+        trigger(name, target, new HashMap<>());
+    }
+
+    /**
+     * Triggers an event
+     *
+     * @param eventClass Class that identifies the event
+     * @param target Target of the event. This is usually the object that triggered the event
+     * @param params Parameters for the event
+     */
+    public void trigger(Class eventClass, Object target, HashMap<Object, Object> params)
+    {
+        trigger(eventClass.getName(), target, params);
+    }
+
+    /**
+     * Triggers an event
+     *
+     * @param eventClass Class that identifies the event
+     * @param target Target of the event. This is usually the object that triggered the event
+     */
+    public void trigger(Class eventClass, Object target)
+    {
+        trigger(eventClass.getName(), target, new HashMap<>());
     }
 
     /**

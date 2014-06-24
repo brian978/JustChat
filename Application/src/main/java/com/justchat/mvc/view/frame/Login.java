@@ -28,14 +28,12 @@ import java.util.HashMap;
  */
 public class Login extends AbstractMainFrame
 {
-    private AuthenticationListener authenticationListener = new AuthenticationStatusListener();
-
     private LoginPanel loginPanel = new LoginPanel();
     private AuthenticatePanel authenticatePanel = new AuthenticatePanel();
 
-    public Login(Properties settings)
+    public Login()
     {
-        super("JustChat", settings);
+        super("JustChat", null);
     }
 
     /**
@@ -233,28 +231,5 @@ public class Login extends AbstractMainFrame
         data.put("resourceField", connection.getResource());
 
         loginPanel.prefill(data);
-    }
-
-    /**
-     * The class decides what happens to the frame when an authentication event occurs
-     *
-     * @version 1.0
-     * @link https://github.com/brian978/JustChat
-     * @since 2014-03-03
-     */
-    private class AuthenticationStatusListener implements AuthenticationListener
-    {
-        @Override
-        public void authenticationPerformed(AuthenticationEvent e)
-        {
-            // If the login is successful we hide the current frame (since we don't need it for now)
-            if (e.getStatusCode() == AuthenticationEvent.StatusCode.SUCCESS) {
-                container.setVisible(false);
-            }
-
-            // Since the login was done we need to revert what we show on this frame to the original state
-            // in case the user logs out
-            toggleMainPanels();
-        }
     }
 }

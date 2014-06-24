@@ -14,6 +14,10 @@ import java.awt.*;
  */
 public class AuthenticatePanel extends AbstractPanel
 {
+    /**
+     * Creates the panel, configures it and then populates with the required components
+     *
+     */
     public AuthenticatePanel()
     {
         super();
@@ -25,6 +29,10 @@ public class AuthenticatePanel extends AbstractPanel
         populate();
     }
 
+    /**
+     * Populates the panel with it's objects
+     *
+     */
     private void populate()
     {
         addBoxSeparator(new Dimension(0, 20));

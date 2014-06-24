@@ -17,10 +17,18 @@ import java.util.Set;
  */
 public class LoginPanel extends AbstractPanel
 {
+    // Triggered events
+    public final static String EVENT_SERVICE_CHANGED = "communication.service.changed";
+
+    // Panel properties
     Dimension sectionSeparator = new Dimension(0, 20);
     Dimension fieldSeparator = new Dimension(0, 7);
     Insets fieldMargin = new Insets(3, 3, 3, 3);
 
+    /**
+     * Creates the panel, configures it and then populates with the required components
+     *
+     */
     public LoginPanel()
     {
         super();
@@ -32,6 +40,10 @@ public class LoginPanel extends AbstractPanel
         populate();
     }
 
+    /**
+     * Populates the panel with it's objects
+     *
+     */
     protected void populate()
     {
         addBoxSeparator(new Dimension(0, 10));
@@ -76,6 +88,14 @@ public class LoginPanel extends AbstractPanel
         add(loginBtn);
     }
 
+    /**
+     * Creates a new row
+     *
+     * @param label Label for the row
+     * @param fieldObject Swing component for the row (like a text field)
+     * @param fieldName Swing component name. This is used to located the field using the findComponent() method
+     * @param fieldMargin Margin around the field
+     */
     private void createRow(String label, JComponent fieldObject, String fieldName, Insets fieldMargin)
     {
         add(new JLabel(label));
@@ -85,6 +105,14 @@ public class LoginPanel extends AbstractPanel
         addBoxSeparator(sectionSeparator);
     }
 
+    /**
+     * Configures a standard field (usually called by the createRow() method)
+     *
+     * @param field Swing component to be configured
+     * @param name Swing component name. This is used to located the field using the findComponent() method
+     * @param margin Margin around the field
+     * @return JComponent
+     */
     private JComponent configureStandardField(JComponent field, String name, Insets margin)
     {
         field.setName(name);

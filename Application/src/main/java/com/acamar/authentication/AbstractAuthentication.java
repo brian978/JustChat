@@ -4,8 +4,6 @@ import com.acamar.event.EventManager;
 import com.acamar.event.EventManagerAwareInterface;
 import com.acamar.users.User;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.HashMap;
 
 /**
@@ -70,7 +68,7 @@ public abstract class AbstractAuthentication
     /**
      * The method is called from within the authentication object when an authentication event occurs (like login)
      *
-     * @param user User that was authenticated (or tried to be authenticated)
+     * @param user       User that was authenticated (or tried to be authenticated)
      * @param statusCode Status codes for the authentication process
      */
     protected void fireAuthenticationEvent(User user, AuthenticationEvent.StatusCode statusCode)
@@ -79,20 +77,7 @@ public abstract class AbstractAuthentication
         eventParams.put("user", user);
         eventParams.put("statusCode", statusCode);
 
-        try {
-            Method authenticationPerformed = AuthenticationListener.class.getMethod(
-                    "authenticationPerformed",
-                    AuthenticationEvent.class
-            );
-
-            eventManager.trigger(
-                    AuthenticationListener.class,
-                    new AuthenticationEvent(this, eventParams),
-                    authenticationPerformed
-            );
-        } catch (InvocationTargetException | IllegalAccessException | NoSuchMethodException e1) {
-            e1.printStackTrace();
-        }
+        eventManager.trigger(new AuthenticationEvent(this, eventParams));
     }
 
     /**
