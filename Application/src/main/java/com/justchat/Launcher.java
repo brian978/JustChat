@@ -53,12 +53,12 @@ public class Launcher
         SaveOnExitListener exitListener = new SaveOnExitListener();
 
         // Login frame
-        login.getFrame().addWindowListener(exitListener);
+        login.getViewContainer().addWindowListener(exitListener);
         login.setMenu(new MainMenu());
         login.initialize();
 
         // Contacts frame
-        contacts.getFrame().addWindowListener(exitListener);
+        contacts.getViewContainer().addWindowListener(exitListener);
         contacts.setMenu(new MainMenu());
         contacts.initialize();
 
@@ -67,7 +67,7 @@ public class Launcher
          * Login frame listeners
          * --------------------------
          */
-        login.getFrame().addComponentListener(new ComponentAdapter()
+        login.getViewContainer().addComponentListener(new ComponentAdapter()
         {
             @Override
             public void componentHidden(ComponentEvent e)
@@ -75,7 +75,7 @@ public class Launcher
                 super.componentHidden(e);
                 contacts.updateRoster();
                 contacts.loadUsers();
-                contacts.show();
+                contacts.display();
             }
         });
 
@@ -100,20 +100,20 @@ public class Launcher
          * Contacts frame listeners
          * --------------------------
          */
-        contacts.getFrame().addComponentListener(new ComponentAdapter()
+        contacts.getViewContainer().addComponentListener(new ComponentAdapter()
         {
             @Override
             public void componentHidden(ComponentEvent e)
             {
                 super.componentHidden(e);
 
-                Dimension size = contacts.getFrame().getSize();
+                Dimension size = contacts.getViewContainer().getSize();
                 settings.set("ContactsWidth", String.valueOf((int) size.getWidth()));
                 settings.set("ContactsHeight", String.valueOf((int) size.getHeight()));
 
                 contacts.doLogout();
-                contacts.getFrame().invalidate();
-                login.getFrame().setVisible(true);
+                contacts.getViewContainer().invalidate();
+                login.getViewContainer().setVisible(true);
             }
         });
 
@@ -122,7 +122,7 @@ public class Launcher
          * Loading the software
          * -------------------------
          */
-        login.show();
+        login.display();
     }
 
     protected void setAuthenticationObject(CommunicationServiceItem serviceItem)

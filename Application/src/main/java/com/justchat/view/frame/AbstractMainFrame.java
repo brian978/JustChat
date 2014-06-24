@@ -3,7 +3,7 @@ package com.justchat.view.frame;
 import com.acamar.authentication.AbstractAuthentication;
 import com.acamar.authentication.AuthenticationAwareInterface;
 import com.acamar.authentication.xmpp.Authentication;
-import com.acamar.mvc.view.frame.AbstractFrame;
+import com.acamar.mvc.view.AbstractFrame;
 import com.acamar.util.Properties;
 import com.justchat.view.frame.menu.MainMenu;
 
@@ -55,7 +55,7 @@ public abstract class AbstractMainFrame extends AbstractFrame implements Authent
                     @Override
                     public void actionPerformed(ActionEvent e)
                     {
-                        System.out.println("Launching preferences window from " + frame.getTitle());
+                        System.out.println("Launching preferences window from " + container.getTitle());
                     }
                 }
         );
@@ -67,7 +67,7 @@ public abstract class AbstractMainFrame extends AbstractFrame implements Authent
                     @Override
                     public void actionPerformed(ActionEvent e)
                     {
-                        if (menu.getParentWindow((JMenuItem) e.getSource()) == frame) {
+                        if (menu.getParentWindow((JMenuItem) e.getSource()) == container) {
                             triggerClosingEvent();
                         }
                     }
@@ -77,7 +77,7 @@ public abstract class AbstractMainFrame extends AbstractFrame implements Authent
 
     public AbstractMainFrame initialize()
     {
-        configureFrame();
+        configure();
         populateFrame();
         setupEvents();
 

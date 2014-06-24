@@ -1,6 +1,6 @@
 package com.justchat.view.panel;
 
-import com.acamar.mvc.view.panel.AbstractPanel;
+import com.acamar.mvc.view.AbstractPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,9 +18,9 @@ public class AuthenticatePanel extends AbstractPanel
     {
         super();
 
-        setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-        setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        setAlignmentX(Component.CENTER_ALIGNMENT);
+        container.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+        container.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        container.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         populate();
     }

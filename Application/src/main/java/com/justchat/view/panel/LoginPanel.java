@@ -1,6 +1,6 @@
 package com.justchat.view.panel;
 
-import com.acamar.mvc.view.panel.AbstractPanel;
+import com.acamar.mvc.view.AbstractPanel;
 import com.justchat.view.panel.components.CommunicationServiceItem;
 
 import javax.swing.*;
@@ -25,9 +25,9 @@ public class LoginPanel extends AbstractPanel
     {
         super();
 
-        setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-        setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        setAlignmentX(Component.CENTER_ALIGNMENT);
+        container.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+        container.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        container.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         populate();
     }
@@ -115,7 +115,7 @@ public class LoginPanel extends AbstractPanel
         Set<String> keys = data.keySet();
 
         for (String key : keys) {
-            component = findComponent(key);
+            component = container.findComponent(key);
             if (component != null) {
                 if (component instanceof JTextField) {
                     ((JTextField) component).setText(data.get(key));

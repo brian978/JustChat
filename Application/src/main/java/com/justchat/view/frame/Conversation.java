@@ -1,6 +1,6 @@
 package com.justchat.view.frame;
 
-import com.acamar.mvc.view.frame.AbstractFrame;
+import com.acamar.mvc.view.AbstractFrame;
 import com.acamar.gui.swing.menu.AbstractMenu;
 import com.acamar.net.xmpp.Connection;
 import com.justchat.users.User;
@@ -42,10 +42,10 @@ public class Conversation extends AbstractFrame
         chat = chatmanager.createChat(remoteUser.getIdentity(), new InboundMessageListener());
 
         // Setting up the new frame
-        configureFrame();
+        configure();
         populateFrame();
         setupEvents();
-        show();
+        display();
         ensureMinimumSize();
     }
 
@@ -55,11 +55,11 @@ public class Conversation extends AbstractFrame
     }
 
     @Override
-    protected void configureFrame()
+    protected void configure()
     {
-        super.configureFrame();
+        super.configure();
 
-        frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        container.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
     }
 
     protected void populateFrame()
@@ -80,7 +80,7 @@ public class Conversation extends AbstractFrame
         c.fill = GridBagConstraints.BOTH;
         c.anchor = GridBagConstraints.FIRST_LINE_START;
 
-        frame.add(menu.getContainer(), c);
+        container.add(menu.getContainer(), c);
         attachMenuListeners(menu);
 
         /**
@@ -98,7 +98,7 @@ public class Conversation extends AbstractFrame
 
         chatPanel = new ChatPanel();
         chatPanel.setName("ChatPanel");
-        frame.add(chatPanel, c);
+        container.add(chatPanel, c);
     }
 
     private void setupEvents()
@@ -107,7 +107,7 @@ public class Conversation extends AbstractFrame
         chatPanel.getMessageBox().addKeyListener(new OutboundMessageListener(chatPanel.getChatBox()));
 
         // Frame events
-        frame.addWindowListener(new CleanupWindowListener());
+        container.addWindowListener(new CleanupWindowListener());
     }
 
     protected void attachMenuListeners(AbstractMenu menu)
@@ -143,7 +143,7 @@ public class Conversation extends AbstractFrame
                 @Override
                 public void actionPerformed(ActionEvent e)
                 {
-                    frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
+                    container.dispatchEvent(new WindowEvent(container, WindowEvent.WINDOW_CLOSING));
                 }
             });
         }

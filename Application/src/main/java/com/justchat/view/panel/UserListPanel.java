@@ -1,6 +1,6 @@
 package com.justchat.view.panel;
 
-import com.acamar.mvc.view.panel.AbstractPanel;
+import com.acamar.mvc.view.AbstractPanel;
 import com.acamar.smack.roster.RosterAdapter;
 import com.acamar.users.UsersManager;
 import com.justchat.view.panel.components.UserCategory;

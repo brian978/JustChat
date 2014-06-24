@@ -40,16 +40,21 @@ public class Contacts extends AbstractMainFrame
     @Override
     protected void ensureMinimumSize()
     {
-        frame.setMinimumSize(new Dimension(200, 300));
+        container.setMinimumSize(new Dimension(200, 300));
     }
 
+    /**
+     * The method is used to show the frame, pack it to it's minimum size (considering the elements on it)
+     * and set the location of the frame (which by default will be centered)
+     *
+     */
     @Override
-    public void show()
+    public void display()
     {
         // Updating the window dimensions to what the user last set
-        frame.setPreferredSize(getSizePreferences());
+        container.setPreferredSize(getSizePreferences());
 
-        super.show();
+        super.display();
     }
 
     public Contacts addAuthenticationListeners()
@@ -73,11 +78,11 @@ public class Contacts extends AbstractMainFrame
     }
 
     @Override
-    protected void configureFrame()
+    protected void configure()
     {
-        super.configureFrame();
+        super.configure();
 
-        frame.setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.PAGE_AXIS));
+        container.setLayout(new BoxLayout(container.getContentPane(), BoxLayout.PAGE_AXIS));
     }
 
     /**
@@ -91,7 +96,7 @@ public class Contacts extends AbstractMainFrame
          * main menu
          * -------------
          */
-        frame.setJMenuBar(menu.getContainer());
+        container.setJMenuBar(menu.getContainer());
 
         menu.display(MainMenu.DEFAULT_ITEMS);
         menu.display(MainMenu.AUTHENTICATED_ITEMS);
@@ -101,7 +106,7 @@ public class Contacts extends AbstractMainFrame
          * User list
          * -------------
          */
-        frame.add(userListPanel);
+        container.add(userListPanel);
     }
 
     /**
@@ -149,7 +154,7 @@ public class Contacts extends AbstractMainFrame
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                frame.setVisible(false);
+                container.setVisible(false);
             }
         });
     }
@@ -171,7 +176,7 @@ public class Contacts extends AbstractMainFrame
 
     private Dimension getSizePreferences()
     {
-        Dimension size = frame.getSize();
+        Dimension size = container.getSize();
         Object width = settings.get("ContactsWidth", String.valueOf((int) size.getWidth()));
         Object height = settings.get("ContactsHeight", String.valueOf((int) size.getHeight()));
 
@@ -179,7 +184,7 @@ public class Contacts extends AbstractMainFrame
             return new Dimension(Integer.parseInt(width.toString()), Integer.parseInt(height.toString()));
         }
 
-        return frame.getPreferredSize();
+        return container.getPreferredSize();
     }
 
     public void loadUsers()

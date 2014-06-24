@@ -1,5 +1,7 @@
 package com.acamar.mvc.controller;
 
+import com.acamar.mvc.view.ViewContainer;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -13,14 +15,16 @@ import java.awt.*;
 public abstract class AbstractController
 {
     /**
-     * Searches, by name, for a component in the current frame (does not search in the panels of the frame)
+     * Searches, by name, for a component in the given container (shallow search)
      *
-     * @param container The container in which to search for a component
+     * @param viewContainer The container in which to search for a component
      * @param name      Name of the component to locate
      * @return Component|null
      */
-    public Component findComponent(Container container, String name)
+    public Component findComponent(ViewContainer viewContainer, String name)
     {
+        // We get the container in which to search
+        Container container = (Container) viewContainer.getViewContainer();
         if (container instanceof JFrame) {
             container = ((JFrame) container).getContentPane();
         }
@@ -28,6 +32,7 @@ public abstract class AbstractController
         String componentName;
         Component[] components = container.getComponents();
 
+        // Doing a shallow search for a component that has the requested name
         for (Component component : components) {
             componentName = component.getName();
             if (componentName != null && componentName.equals(name)) {

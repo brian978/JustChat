@@ -1,6 +1,6 @@
 package com.justchat.view.panel;
 
-import com.acamar.mvc.view.panel.AbstractPanel;
+import com.acamar.mvc.view.AbstractPanel;
 import com.justchat.view.panel.components.ChatBox;
 
 import javax.swing.*;

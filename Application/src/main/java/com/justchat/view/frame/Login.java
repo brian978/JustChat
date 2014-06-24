@@ -64,16 +64,16 @@ public class Login extends AbstractMainFrame
         return this;
     }
 
-    protected void configureFrame()
+    protected void configure()
     {
-        super.configureFrame();
+        super.configure();
 
-        frame.setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.PAGE_AXIS));
+        container.setLayout(new BoxLayout(container.getContentPane(), BoxLayout.PAGE_AXIS));
     }
 
     protected void ensureMinimumSize()
     {
-        frame.setMinimumSize(new Dimension(200, 400));
+        container.setMinimumSize(new Dimension(200, 400));
     }
 
     /**
@@ -87,7 +87,7 @@ public class Login extends AbstractMainFrame
          * main menu
          * -------------
          */
-        frame.setJMenuBar(menu.getContainer());
+        container.setJMenuBar(menu.getContainer());
         menu.display(MainMenu.DEFAULT_ITEMS);
 
         /**
@@ -96,7 +96,7 @@ public class Login extends AbstractMainFrame
          * -------------
          */
         loginPanel.setName("loginPanel");
-        frame.add(loginPanel);
+        container.add(loginPanel);
 
         // We need to populate the fields by default
         prefillData((CommunicationServiceItem) ((JComboBox) loginPanel.findComponent("connectionField")).getItemAt(0));
@@ -108,7 +108,7 @@ public class Login extends AbstractMainFrame
          */
         authenticatePanel.setName("authenticatePanel");
         authenticatePanel.setVisible(false);
-        frame.add(authenticatePanel);
+        container.add(authenticatePanel);
     }
 
     /**
@@ -262,7 +262,7 @@ public class Login extends AbstractMainFrame
         {
             // If the login is successful we hide the current frame (since we don't need it for now)
             if (e.getStatusCode() == AuthenticationEvent.StatusCode.SUCCESS) {
-                frame.setVisible(false);
+                container.setVisible(false);
             }
 
             // Since the login was done we need to revert what we show on this frame to the original state
