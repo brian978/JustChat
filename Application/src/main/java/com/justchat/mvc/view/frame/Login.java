@@ -79,7 +79,7 @@ public class Login extends AbstractMainFrame
          * -------------
          */
         loginPanel.setName("loginPanel");
-        container.add(loginPanel);
+        container.add(loginPanel.getViewContainer());
 
         // We need to populate the fields by default
         prefillData((CommunicationServiceItem) ((JComboBox) loginPanel.findComponent("connectionField")).getItemAt(0));
@@ -91,7 +91,7 @@ public class Login extends AbstractMainFrame
          */
         authenticatePanel.setName("authenticatePanel");
         authenticatePanel.setVisible(false);
-        container.add(authenticatePanel);
+        container.add(authenticatePanel.getViewContainer());
     }
 
     /**

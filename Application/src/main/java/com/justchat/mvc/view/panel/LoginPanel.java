@@ -73,6 +73,7 @@ public class LoginPanel extends AbstractPanel
         rememberLogin.setActionCommand("rememberLogin");
         rememberLogin.setName("rememberLogin");
         container.add(rememberLogin);
+
         addBoxSeparator(sectionSeparator);
 
         /**
@@ -84,7 +85,6 @@ public class LoginPanel extends AbstractPanel
         loginBtn.setActionCommand("doLogin");
         loginBtn.setEnabled(true);
         loginBtn.setName("loginBtn");
-
         container.add(loginBtn);
     }
 
