@@ -33,7 +33,7 @@ public class LoginPanel extends AbstractPanel
     {
         super();
 
-        container.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+        container.setLayout(new BoxLayout(container, BoxLayout.PAGE_AXIS));
         container.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         container.setAlignmentX(Component.CENTER_ALIGNMENT);
 
@@ -72,7 +72,7 @@ public class LoginPanel extends AbstractPanel
         JCheckBox rememberLogin = new JCheckBox("Remember my ID & password");
         rememberLogin.setActionCommand("rememberLogin");
         rememberLogin.setName("rememberLogin");
-        add(rememberLogin);
+        container.add(rememberLogin);
         addBoxSeparator(sectionSeparator);
 
         /**
@@ -85,7 +85,7 @@ public class LoginPanel extends AbstractPanel
         loginBtn.setEnabled(true);
         loginBtn.setName("loginBtn");
 
-        add(loginBtn);
+        container.add(loginBtn);
     }
 
     /**
@@ -98,10 +98,10 @@ public class LoginPanel extends AbstractPanel
      */
     private void createRow(String label, JComponent fieldObject, String fieldName, Insets fieldMargin)
     {
-        add(new JLabel(label));
+        container.add(new JLabel(label));
         addBoxSeparator(fieldSeparator);
 
-        add(configureStandardField(fieldObject, fieldName, fieldMargin));
+        container.add(configureStandardField(fieldObject, fieldName, fieldMargin));
         addBoxSeparator(sectionSeparator);
     }
 

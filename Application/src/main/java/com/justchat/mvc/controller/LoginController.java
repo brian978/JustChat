@@ -1,17 +1,17 @@
 package com.justchat.mvc.controller;
 
 import com.acamar.authentication.AuthenticationEvent;
-import com.acamar.authentication.AuthenticationListener;
-import com.acamar.event.Event;
 import com.acamar.event.EventInterface;
 import com.acamar.event.EventListenerInterface;
 import com.acamar.event.EventManager;
 import com.acamar.mvc.controller.AbstractController;
+import com.acamar.mvc.event.MvcEvent;
 import com.justchat.mvc.view.frame.Login;
 import com.justchat.mvc.view.panel.LoginPanel;
 import com.justchat.mvc.view.panel.components.CommunicationServiceItem;
 
-import java.lang.reflect.Method;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 /**
  * JustChat
@@ -44,11 +44,27 @@ public class LoginController extends AbstractController
     {
         eventManager.attach(LoginPanel.EVENT_SERVICE_CHANGED, new CommunicationServiceChangedListener());
         eventManager.attach(AuthenticationEvent.class, new AuthenticationEventsListener());
+
+        // We also have from frame events that will trigger events on the event manager
+        loginFrame.getViewContainer().addWindowListener(new WindowAdapter()
+        {
+            /**
+             * Invoked when a window has been closed.
+             *
+             * @param e Window event object
+             */
+            @Override
+            public void windowClosing(WindowEvent e)
+            {
+                super.windowClosed(e);
+                eventManager.trigger(new MvcEvent(MvcEvent.WINDOW_CLOSING, loginFrame));
+            }
+        });
     }
 
     public void displayLogin()
     {
-
+        loginFrame.initialize().display();
     }
 
     /**

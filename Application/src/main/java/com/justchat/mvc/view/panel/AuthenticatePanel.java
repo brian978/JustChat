@@ -22,7 +22,7 @@ public class AuthenticatePanel extends AbstractPanel
     {
         super();
 
-        container.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+        container.setLayout(new BoxLayout(container, BoxLayout.PAGE_AXIS));
         container.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         container.setAlignmentX(Component.CENTER_ALIGNMENT);
 
@@ -40,7 +40,7 @@ public class AuthenticatePanel extends AbstractPanel
         // Informational label
         JLabel label = new JLabel("Authenticating, please wait...");
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
-        add(label);
+        container.add(label);
 
         addBoxSeparator(new Dimension(0, 20));
 
@@ -48,6 +48,6 @@ public class AuthenticatePanel extends AbstractPanel
         JButton cancelBtn = new JButton("Cancel");
         cancelBtn.setName("cancelBtn");
         cancelBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
-        add(cancelBtn);
+        container.add(cancelBtn);
     }
 }
