@@ -18,7 +18,7 @@ import java.awt.event.ActionListener;
  * @link https://github.com/brian978/JustChat
  * @since 2014-04-23
  */
-public abstract class AbstractMainFrame extends AbstractFrame implements AuthenticationAwareInterface
+public abstract class AbstractMainFrame extends AbstractFrame
 {
     protected MainMenu menu = new MainMenu();
     protected Properties settings;
@@ -82,19 +82,5 @@ public abstract class AbstractMainFrame extends AbstractFrame implements Authent
         setupEvents();
 
         return this;
-    }
-
-    @Override
-    public AbstractMainFrame setAuthentication(AbstractAuthentication authentication)
-    {
-        this.xmppAuthentication = (Authentication) authentication;
-
-        return this;
-    }
-
-    @Override
-    public Authentication getAuthentication()
-    {
-        return xmppAuthentication;
     }
 }

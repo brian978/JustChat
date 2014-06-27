@@ -28,12 +28,33 @@ import java.util.HashMap;
  */
 public class Login extends AbstractMainFrame
 {
+    // Frame components
     private LoginPanel loginPanel = new LoginPanel();
     private AuthenticatePanel authenticatePanel = new AuthenticatePanel();
 
     public Login()
     {
         super("JustChat", null);
+    }
+
+    /**
+     * Returns the login panel object
+     *
+     * @return LoginPanel
+     */
+    public LoginPanel getLoginPanel()
+    {
+        return loginPanel;
+    }
+
+    /**
+     * Returns the authentication panel object
+     *
+     * @return AuthenticationPanel
+     */
+    public AuthenticatePanel getAuthenticatePanel()
+    {
+        return authenticatePanel;
     }
 
     /**
@@ -81,110 +102,14 @@ public class Login extends AbstractMainFrame
         loginPanel.setName("loginPanel");
         container.add(loginPanel.getViewContainer());
 
-        // We need to populate the fields by default
-        prefillData((CommunicationServiceItem) ((JComboBox) loginPanel.findComponent("connectionField")).getItemAt(0));
-
         /**
          * -------------
          * Authenticate panel
          * -------------
          */
         authenticatePanel.setName("authenticatePanel");
-        authenticatePanel.setVisible(false);
+        authenticatePanel.getViewContainer().setVisible(false);
         container.add(authenticatePanel.getViewContainer());
-    }
-
-    /**
-     * Adds event handlers to the events that will be triggered by elements on the frame
-     *
-     * TODO: Move to controller
-     */
-    @Override
-    protected void setupEvents()
-    {
-        super.setupEvents();
-
-        // Buttons and fields events
-        final JComboBox connection = (JComboBox) loginPanel.findComponent("connectionField");
-        final JPasswordField password = (JPasswordField) loginPanel.findComponent("passwordField");
-        final JButton loginBtn = (JButton) loginPanel.findComponent("loginBtn");
-        final JButton cancelBtn = (JButton) authenticatePanel.findComponent("cancelBtn");
-
-        // Communication service changed
-        connection.addActionListener(new ActionListener()
-        {
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                prefillData((CommunicationServiceItem) connection.getSelectedItem());
-            }
-        });
-
-        // Password field key actions
-        password.addKeyListener(new KeyAdapter()
-        {
-            @Override
-            public void keyReleased(KeyEvent e)
-            {
-                if (e.getKeyCode() == 10) {
-                    handleAuthenticateAction();
-                }
-            }
-        });
-
-        // Login btn action
-        loginBtn.addActionListener(new ActionListener()
-        {
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                if (e.getActionCommand().equals("doLogin")) {
-                    handleAuthenticateAction();
-                }
-            }
-        });
-
-        // Cancel btn action
-        cancelBtn.addActionListener(new ActionListener()
-        {
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                if (xmppAuthentication.cancel()) {
-                    toggleMainPanels();
-                }
-            }
-        });
-    }
-
-    /**
-     * It handles the connection setup and calls the authentication method on the proper object
-     *
-     * The method is called when the user clicks the login button in the login panel
-     *
-     * TODO: Move to controller
-     */
-    private void handleAuthenticateAction()
-    {
-        toggleMainPanels();
-
-        // Login data
-        JTextField identityField = (JTextField) loginPanel.findComponent("identifierField");
-        JPasswordField passwordField = (JPasswordField) loginPanel.findComponent("passwordField");
-
-        // Storing the configuration of the connection
-        JTextField serverField, portField, resourceField;
-        serverField = (JTextField) loginPanel.findComponent("serverField");
-        portField = (JTextField) loginPanel.findComponent("portField");
-        resourceField = (JTextField) loginPanel.findComponent("resourceField");
-
-        // Will also store the settings
-        xmppAuthentication.getConnection()
-                          .setup(serverField.getText(), Integer.parseInt(portField.getText()), resourceField.getText());
-
-        // Now we authenticate (async so we don't block the interface)
-        xmppAuthentication.authenticateAsync(identityField.getText(), passwordField.getPassword());
-        passwordField.setText("");
     }
 
     /**
@@ -193,8 +118,14 @@ public class Login extends AbstractMainFrame
      */
     public void toggleMainPanels()
     {
-        loginPanel.setVisible(!loginPanel.isVisible());
-        authenticatePanel.setVisible(!loginPanel.isVisible());
+        JPanel loginContainer = loginPanel.getViewContainer();
+        JPanel authContainer = authenticatePanel.getViewContainer();
+
+        loginContainer.setVisible(!loginContainer.isVisible());
+        authContainer.setVisible(!authContainer.isVisible());
+
+        JButton cancelBtn = (JButton) authenticatePanel.findComponent("cancelBtn");
+        cancelBtn.setEnabled(true);
     }
 
     /**

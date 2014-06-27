@@ -19,6 +19,7 @@ public class LoginPanel extends AbstractPanel
 {
     // Triggered events
     public final static String EVENT_SERVICE_CHANGED = "communication.service.changed";
+    final public static String CANCEL_AUTHENTICATION = "authentication.cancel";
 
     // Panel properties
     Dimension sectionSeparator = new Dimension(0, 20);

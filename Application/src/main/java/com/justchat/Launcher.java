@@ -1,5 +1,6 @@
 package com.justchat;
 
+import com.acamar.authentication.AuthenticationAwareInterface;
 import com.acamar.authentication.xmpp.Authentication;
 import com.acamar.event.EventInterface;
 import com.acamar.event.EventListenerInterface;
@@ -57,7 +58,6 @@ public class Launcher
         if (!settingsLoaded) {
             System.exit(-10);
         }
-
 
         /**
          * --------------------------

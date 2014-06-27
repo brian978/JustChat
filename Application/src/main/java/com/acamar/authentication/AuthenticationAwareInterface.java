@@ -15,9 +15,8 @@ public interface AuthenticationAwareInterface<T>
      * Is used to inject an authentication object into another object
      *
      * @param authentication Authentication object
-     * @return T
      */
-    public T setAuthentication(AbstractAuthentication authentication);
+    public void setAuthentication(AbstractAuthentication authentication);
 
     /**
      * Returns the authentication object set in an object
