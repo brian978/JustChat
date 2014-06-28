@@ -40,32 +40,6 @@ public abstract class AbstractAuthentication
     }
 
     /**
-     * Adds an event listener to the global event manager
-     *
-     * @param listener An object that will be called after the authentication is done
-     * @return AbstractAuthentication
-     */
-    public AbstractAuthentication addAuthenticationListener(AuthenticationListener listener)
-    {
-        eventManager.add(AuthenticationListener.class, listener);
-
-        return this;
-    }
-
-    /**
-     * Removes a listener from the global event manager
-     *
-     * @param listener The listener object to be removed
-     * @return AbstractAuthentication
-     */
-    public AbstractAuthentication removeAuthenticationListener(AuthenticationListener listener)
-    {
-        eventManager.remove(AuthenticationListener.class, listener);
-
-        return this;
-    }
-
-    /**
      * The method is called from within the authentication object when an authentication event occurs (like login)
      *
      * @param user       User that was authenticated (or tried to be authenticated)
