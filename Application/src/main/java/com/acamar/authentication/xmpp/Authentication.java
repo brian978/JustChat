@@ -2,6 +2,7 @@ package com.acamar.authentication.xmpp;
 
 import com.acamar.authentication.AbstractAuthentication;
 import com.acamar.authentication.AuthenticationEvent;
+import com.acamar.event.EventManager;
 import com.acamar.net.xmpp.Connection;
 import com.acamar.users.User;
 import org.jivesoftware.smack.XMPPException;
@@ -44,6 +45,7 @@ public class Authentication extends AbstractAuthentication
     {
         if (connection == null) {
             connection = new Connection();
+            connection.setEventManager(eventManager);
         }
 
         return connection;
@@ -116,5 +118,22 @@ public class Authentication extends AbstractAuthentication
         }
 
         return false;
+    }
+
+    /**
+     * Injects an EventManager object into another object
+     *
+     * @param eventManager An EventManager object
+     */
+    @Override
+    public void setEventManager(EventManager eventManager)
+    {
+        super.setEventManager(eventManager);
+
+        // No need to call getConnection() if the connection object is set to NULL
+        // because when it will be called it will also set the event manager
+        if(connection != null) {
+            connection.setEventManager(eventManager);
+        }
     }
 }

@@ -58,20 +58,6 @@ public class Contacts extends AbstractMainFrame
         super.display();
     }
 
-    public Contacts addAuthenticationListeners()
-    {
-        xmppAuthentication.addAuthenticationListener(authenticationListener);
-
-        return this;
-    }
-
-    public Contacts removeAuthenticationListeners()
-    {
-        xmppAuthentication.addAuthenticationListener(authenticationListener);
-
-        return this;
-    }
-
     public void updateRoster()
     {
         // The roster is needed when we do operations on the user list
