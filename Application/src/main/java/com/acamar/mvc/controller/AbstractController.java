@@ -1,9 +1,6 @@
 package com.acamar.mvc.controller;
 
-import com.acamar.mvc.view.ViewContainer;
-
-import javax.swing.*;
-import java.awt.*;
+import com.acamar.event.EventManager;
 
 /**
  * JustChat
@@ -14,4 +11,5 @@ import java.awt.*;
  */
 public abstract class AbstractController
 {
+    protected EventManager eventManager = null;
 }
