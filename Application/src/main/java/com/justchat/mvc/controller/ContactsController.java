@@ -1,6 +1,7 @@
 package com.justchat.mvc.controller;
 
-import com.justchat.mvc.view.frame.Contacts;
+import com.acamar.event.EventManager;
+import com.acamar.mvc.controller.AbstractController;
 
 /**
  * JustChat
@@ -9,6 +10,15 @@ import com.justchat.mvc.view.frame.Contacts;
  * @link https://github.com/brian978/JustChat
  * @since 2014-06-22
  */
-public class ContactsController
+public class ContactsController extends AbstractController
 {
+    /**
+     * Creates the object and attaches the required events
+     *
+     * @param eventManager Event manager object
+     */
+    public ContactsController(EventManager eventManager)
+    {
+        this.eventManager = eventManager;
+    }
 }

@@ -1,7 +1,5 @@
 package com.justchat.mvc.controller;
 
-import com.acamar.authentication.AbstractAuthentication;
-import com.acamar.authentication.AuthenticationAwareInterface;
 import com.acamar.authentication.AuthenticationEvent;
 import com.acamar.authentication.xmpp.Authentication;
 import com.acamar.event.EventInterface;
@@ -26,8 +24,6 @@ import java.awt.event.*;
  */
 public class LoginController extends AbstractController
 {
-    private EventManager eventManager;
-
     private Login loginFrame = new Login();
 
     /**
@@ -49,6 +45,9 @@ public class LoginController extends AbstractController
 
     /**
      * Attaches a set of events to the event listener
+     *
+     * Called after the frame has been initialized
+     *
      */
     private void attachEvents()
     {
