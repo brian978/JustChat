@@ -25,15 +25,13 @@ public class AuthenticatePanel extends AbstractPanel
         container.setLayout(new BoxLayout(container, BoxLayout.PAGE_AXIS));
         container.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         container.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        populate();
     }
 
     /**
      * Populates the panel with it's objects
      *
      */
-    private void populate()
+    public void populate()
     {
         addBoxSeparator(new Dimension(0, 20));
 

@@ -39,6 +39,11 @@ public class LoginController extends AbstractController
     {
         this.eventManager = eventManager;
 
+        // We must first inject the event manager into the panels because when we initialize the frame
+        // the panels will also be populated with objects
+        loginFrame.getLoginPanel().setEventManager(eventManager);
+
+        // Initializing the frame and selecting a default communication service
         initializeFrame();
     }
 
@@ -63,13 +68,13 @@ public class LoginController extends AbstractController
         AuthenticatePanel authenticatePanel = loginFrame.getAuthenticatePanel();
 
         // Communication service changed
-        final JComboBox connection = (JComboBox) loginPanel.findComponent("connectionField");
-        connection.addActionListener(new ActionListener()
+        final JComboBox connectionField = (JComboBox) loginPanel.findComponent("connectionField");
+        connectionField.addActionListener(new ActionListener()
         {
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                loginFrame.prefillData((CommunicationServiceItem) connection.getSelectedItem());
+                loginFrame.prefillData((CommunicationServiceItem) connectionField.getSelectedItem());
             }
         });
 
@@ -157,6 +162,7 @@ public class LoginController extends AbstractController
     {
         JComboBox jComboBox =((JComboBox) loginFrame.getLoginPanel().findComponent("connectionField"));
         Authentication authentication = null;
+
         try {
             authentication = ((CommunicationServiceItem) jComboBox.getItemAt(0)).getInstance();
         } catch (IllegalAccessException | InstantiationException e) {
@@ -231,7 +237,7 @@ public class LoginController extends AbstractController
         {
             // If the login is successful we hide the current frame (since we don't need it for now)
             if (((AuthenticationEvent) e).getStatusCode() == AuthenticationEvent.StatusCode.SUCCESS) {
-                loginFrame.setVisible(false);
+                loginFrame.getViewContainer().setVisible(false);
             }
 
             // Since the login was done we need to revert what we show on this frame to the original state

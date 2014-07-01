@@ -69,6 +69,17 @@ public class Login extends AbstractMainFrame
         container.setLayout(new BoxLayout(container.getContentPane(), BoxLayout.PAGE_AXIS));
     }
 
+    @Override
+    public AbstractMainFrame initialize()
+    {
+        super.initialize();
+
+        loginPanel.populate();
+        authenticatePanel.populate();
+
+        return this;
+    }
+
     /**
      * Sets the minimum size of the frame
      *

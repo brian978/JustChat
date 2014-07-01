@@ -1,5 +1,8 @@
 package com.justchat.mvc.view.panel;
 
+import com.acamar.authentication.xmpp.Authentication;
+import com.acamar.event.EventManager;
+import com.acamar.event.EventManagerAwareInterface;
 import com.acamar.mvc.view.AbstractPanel;
 import com.justchat.mvc.view.panel.components.CommunicationServiceItem;
 
@@ -15,11 +18,13 @@ import java.util.Set;
  * @link https://github.com/brian978/JustChat
  * @since 2014-03-03
  */
-public class LoginPanel extends AbstractPanel
+public class LoginPanel extends AbstractPanel implements EventManagerAwareInterface
 {
     // Triggered events
     public final static String EVENT_SERVICE_CHANGED = "communication.service.changed";
     final public static String CANCEL_AUTHENTICATION = "authentication.cancel";
+
+    EventManager eventManager = null;
 
     // Panel properties
     Dimension sectionSeparator = new Dimension(0, 20);
@@ -28,7 +33,6 @@ public class LoginPanel extends AbstractPanel
 
     /**
      * Creates the panel, configures it and then populates with the required components
-     *
      */
     public LoginPanel()
     {
@@ -37,15 +41,12 @@ public class LoginPanel extends AbstractPanel
         container.setLayout(new BoxLayout(container, BoxLayout.PAGE_AXIS));
         container.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         container.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        populate();
     }
 
     /**
      * Populates the panel with it's objects
-     *
      */
-    protected void populate()
+    public void populate()
     {
         addBoxSeparator(new Dimension(0, 10));
 
@@ -55,8 +56,8 @@ public class LoginPanel extends AbstractPanel
          * -----------------
          */
         JComboBox<CommunicationServiceItem> connectionField = new JComboBox<>();
-        connectionField.addItem(new CommunicationServiceItem<>(com.acamar.authentication.xmpp.Authentication.class, "XMPP"));
-        connectionField.addItem(new CommunicationServiceItem<>(com.acamar.authentication.xmpp.facebook.Authentication.class, "XMPP (Facebook)"));
+        connectionField.addItem(new CommunicationServiceItem<>(com.acamar.authentication.xmpp.Authentication.class, "XMPP", eventManager));
+        connectionField.addItem(new CommunicationServiceItem<>(com.acamar.authentication.xmpp.facebook.Authentication.class, "XMPP (Facebook)", eventManager));
 
         createRow("Connection:", connectionField, "connectionField", fieldMargin);
         createRow("Username / Email:", new JTextField(), "identifierField", fieldMargin);
@@ -92,9 +93,9 @@ public class LoginPanel extends AbstractPanel
     /**
      * Creates a new row
      *
-     * @param label Label for the row
+     * @param label       Label for the row
      * @param fieldObject Swing component for the row (like a text field)
-     * @param fieldName Swing component name. This is used to located the field using the findComponent() method
+     * @param fieldName   Swing component name. This is used to located the field using the findComponent() method
      * @param fieldMargin Margin around the field
      */
     private void createRow(String label, JComponent fieldObject, String fieldName, Insets fieldMargin)
@@ -109,8 +110,8 @@ public class LoginPanel extends AbstractPanel
     /**
      * Configures a standard field (usually called by the createRow() method)
      *
-     * @param field Swing component to be configured
-     * @param name Swing component name. This is used to located the field using the findComponent() method
+     * @param field  Swing component to be configured
+     * @param name   Swing component name. This is used to located the field using the findComponent() method
      * @param margin Margin around the field
      * @return JComponent
      */
@@ -132,7 +133,7 @@ public class LoginPanel extends AbstractPanel
 
     /**
      * Adds a set of data to the fields present in the panel
-     *
+     * <p/>
      * Each entry in the data must identified by the name of the element in the panel that must be
      * populated with that data
      *
@@ -151,5 +152,27 @@ public class LoginPanel extends AbstractPanel
                 }
             }
         }
+    }
+
+    /**
+     * Injects an EventManager object into another object
+     *
+     * @param eventManager An EventManager object
+     */
+    @Override
+    public void setEventManager(EventManager eventManager)
+    {
+        this.eventManager = eventManager;
+    }
+
+    /**
+     * Returns the event manager object that was injected or created inside this object
+     *
+     * @return EventManager
+     */
+    @Override
+    public EventManager getEventManager()
+    {
+        return eventManager;
     }
 }
