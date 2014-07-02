@@ -5,6 +5,8 @@ import com.acamar.authentication.xmpp.Authentication;
 import com.acamar.event.EventInterface;
 import com.acamar.event.EventListenerInterface;
 import com.acamar.event.EventManager;
+import com.acamar.event.EventManagerAwareInterface;
+import com.acamar.mvc.controller.AbstractController;
 import com.acamar.mvc.event.MvcEvent;
 import com.acamar.util.Properties;
 import com.justchat.mvc.controller.LoginController;
@@ -31,7 +33,7 @@ public class Launcher
     Properties settings = new Properties("preferences.properties");
     SaveOnExitListener exitListener = new SaveOnExitListener();
     EventManager eventManager = new EventManager();
-    LoginController loginController = new LoginController(eventManager);
+    LoginController loginController = null;
 
 //    Login login = new Login(settings);
 //    Contacts contacts = new Contacts(settings);
@@ -58,6 +60,8 @@ public class Launcher
         if (!settingsLoaded) {
             System.exit(-10);
         }
+
+        loginController = configureController(new LoginController());
 
         /**
          * --------------------------
@@ -135,6 +139,14 @@ public class Launcher
 //         * -------------------------
 //         */
 //        login.display();
+    }
+
+    private <T extends AbstractController> T configureController(T controller)
+    {
+        // Configuring the controller
+        controller.setEventManager(eventManager);
+
+        return controller;
     }
 
     protected void setAuthenticationObject(CommunicationServiceItem serviceItem)

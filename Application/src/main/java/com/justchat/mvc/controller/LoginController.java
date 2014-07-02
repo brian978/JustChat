@@ -24,17 +24,22 @@ import java.awt.event.*;
  */
 public class LoginController extends AbstractController
 {
+    private boolean setupCompleted = false;
     private Login loginFrame = new Login();
 
     /**
-     * Creates the object and attaches the required events
-     *
-     * @param eventManager Event manager object
+     * Creates the controller object
      */
-    public LoginController(EventManager eventManager)
+    public LoginController()
     {
-        this.eventManager = eventManager;
 
+    }
+
+    /**
+     * The method should be called when all the necessary configuration has been done on the controller
+     */
+    public void completeSetup()
+    {
         // We must first inject the event manager into the panels because when we initialize the frame
         // the panels will also be populated with objects
         loginFrame.getLoginPanel().setEventManager(eventManager);
@@ -45,9 +50,8 @@ public class LoginController extends AbstractController
 
     /**
      * Attaches a set of events to the event listener
-     *
+     * <p/>
      * Called after the frame has been initialized
-     *
      */
     private void attachEvents()
     {
@@ -145,7 +149,7 @@ public class LoginController extends AbstractController
         loginFrame.initialize();
 
         // We need to populate the fields by default
-        JComboBox jComboBox =((JComboBox) loginFrame.getLoginPanel().findComponent("connectionField"));
+        JComboBox jComboBox = ((JComboBox) loginFrame.getLoginPanel().findComponent("connectionField"));
         loginFrame.prefillData((CommunicationServiceItem) jComboBox.getItemAt(0));
 
         // Now that we have all the elements on the frame we need to attach some events on it
@@ -159,7 +163,7 @@ public class LoginController extends AbstractController
      */
     private Authentication getAuthentication()
     {
-        JComboBox jComboBox =((JComboBox) loginFrame.getLoginPanel().findComponent("connectionField"));
+        JComboBox jComboBox = ((JComboBox) loginFrame.getLoginPanel().findComponent("connectionField"));
         Authentication authentication = null;
 
         try {
@@ -173,7 +177,7 @@ public class LoginController extends AbstractController
 
     /**
      * It handles the connection setup and calls the authentication method on the proper object
-     *
+     * <p/>
      * The method is called when the user clicks the login button in the login panel
      */
     private void performAuthentication()
@@ -182,7 +186,7 @@ public class LoginController extends AbstractController
         Authentication authentication = getAuthentication();
 
         // Performing the authentication
-        if(authentication != null) {
+        if (authentication != null) {
             // Switching the panels so the user knows what's happening
             loginFrame.toggleMainPanels();
 
