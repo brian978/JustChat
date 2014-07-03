@@ -60,6 +60,15 @@ public abstract class AbstractFrame extends ViewContainer<JFrame>
     }
 
     /**
+     * Sets the minimum size of the frame
+     *
+     */
+    protected void ensureMinimumSize()
+    {
+        container.setMinimumSize(container.getSize());
+    }
+
+    /**
      * The method is used to show the frame, pack it to it's minimum size (considering the elements on it)
      * and set the location of the frame (which by default will be centered)
      *
@@ -70,15 +79,6 @@ public abstract class AbstractFrame extends ViewContainer<JFrame>
         container.pack();
         container.setLocationRelativeTo(null);
         container.validate();
-    }
-
-    /**
-     * Sets the minimum size of the frame
-     *
-     */
-    protected void ensureMinimumSize()
-    {
-        container.setMinimumSize(container.getSize());
     }
 
     /**

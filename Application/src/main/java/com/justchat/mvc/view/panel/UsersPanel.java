@@ -1,5 +1,7 @@
 package com.justchat.mvc.view.panel;
 
+import com.acamar.event.EventManager;
+import com.acamar.event.EventManagerAwareInterface;
 import com.acamar.mvc.view.AbstractPanel;
 import com.acamar.smack.roster.RosterAdapter;
 import com.acamar.users.UsersManager;
@@ -23,27 +25,27 @@ import java.util.Collection;
  * @link https://github.com/brian978/JustChat
  * @since 2014-03-03
  */
-public class UserListPanel extends AbstractPanel
+public class UsersPanel extends AbstractPanel implements EventManagerAwareInterface
 {
+    private EventManager eventManager = null;
     private UserList userList = new UserList();
     private UsersManager usersManager = null;
     private Roster roster = null;
     private RosterListener rosterListener = new PresenceListener();
 
-    public UserListPanel(UsersManager usersManager)
+    public UsersPanel()
     {
         super();
 
-        this.usersManager = usersManager;
-        this.usersManager.addListener(userList);
-
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         setPreferredSize(new Dimension(300, 500));
-
-        populate();
     }
 
-    protected void populate()
+    /**
+     * Populates the panel with it's objects
+     *
+     */
+    public void populate()
     {
         // Adding a scroll panel to the list
         JScrollPane scrollableUserList = new JScrollPane(userList);
@@ -52,6 +54,11 @@ public class UserListPanel extends AbstractPanel
         add(scrollableUserList);
     }
 
+    /**
+     * Sets the roster that will be watched
+     *
+     * @param roster Roster object
+     */
     public void setRoster(Roster roster)
     {
         // Cleaning up the last roster first
@@ -60,7 +67,6 @@ public class UserListPanel extends AbstractPanel
         }
 
         this.roster = roster;
-
         this.roster.addRosterListener(rosterListener);
     }
 
@@ -111,6 +117,28 @@ public class UserListPanel extends AbstractPanel
         usersManager.removeAll();
 
         roster = null;
+    }
+
+    /**
+     * Injects an EventManager object into another object
+     *
+     * @param eventManager An EventManager object
+     */
+    @Override
+    public void setEventManager(EventManager eventManager)
+    {
+        this.eventManager = eventManager;
+    }
+
+    /**
+     * Returns the event manager object that was injected or created inside this object
+     *
+     * @return EventManager
+     */
+    @Override
+    public EventManager getEventManager()
+    {
+        return eventManager;
     }
 
     /**

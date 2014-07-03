@@ -21,14 +21,16 @@ import java.awt.event.ActionListener;
 public abstract class AbstractMainFrame extends AbstractFrame
 {
     protected MainMenu menu = new MainMenu();
-    protected Properties settings;
     protected Authentication xmppAuthentication;
 
-    public AbstractMainFrame(String title, Properties settings)
+    /**
+     * Creates the object, sets the title of the frame and makes sure that the frame is no smaller then is should
+     *
+     * @param title Title of the frame
+     */
+    public AbstractMainFrame(String title)
     {
         super(title);
-
-        this.settings = settings;
     }
 
     /**

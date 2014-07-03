@@ -20,16 +20,12 @@ import java.util.Set;
  */
 public class LoginPanel extends AbstractPanel implements EventManagerAwareInterface
 {
-    // Triggered events
-    public final static String EVENT_SERVICE_CHANGED = "communication.service.changed";
-    final public static String CANCEL_AUTHENTICATION = "authentication.cancel";
-
-    EventManager eventManager = null;
+    private EventManager eventManager = null;
 
     // Panel properties
-    Dimension sectionSeparator = new Dimension(0, 20);
-    Dimension fieldSeparator = new Dimension(0, 7);
-    Insets fieldMargin = new Insets(3, 3, 3, 3);
+    private Dimension sectionSeparator = new Dimension(0, 20);
+    private Dimension fieldSeparator = new Dimension(0, 7);
+    private Insets fieldMargin = new Insets(3, 3, 3, 3);
 
     /**
      * Creates the panel, configures it and then populates with the required components
@@ -45,6 +41,7 @@ public class LoginPanel extends AbstractPanel implements EventManagerAwareInterf
 
     /**
      * Populates the panel with it's objects
+     *
      */
     public void populate()
     {

@@ -8,6 +8,8 @@ import com.acamar.event.EventManager;
 import com.acamar.mvc.controller.AbstractController;
 import com.acamar.mvc.event.MvcEvent;
 import com.acamar.util.Properties;
+import com.acamar.util.PropertiesAwareInterface;
+import com.justchat.mvc.controller.ContactsController;
 import com.justchat.mvc.controller.LoginController;
 import com.justchat.mvc.view.panel.components.CommunicationServiceItem;
 
@@ -23,9 +25,7 @@ import java.io.IOException;
 public class Launcher
 {
     Properties settings = new Properties("preferences.properties");
-    SaveOnExitListener exitListener = new SaveOnExitListener();
     EventManager eventManager = new EventManager();
-    LoginController loginController = null;
 
 //    Login login = new Login(settings);
 //    Contacts contacts = new Contacts(settings);
@@ -53,14 +53,15 @@ public class Launcher
             System.exit(-10);
         }
 
-        loginController = configureController(new LoginController());
+        LoginController loginController = configureController(new LoginController());
+        configureController(new ContactsController());
 
         /**
          * --------------------------
          * Event listeners
          * --------------------------
          */
-        eventManager.attach(MvcEvent.WINDOW_CLOSING, exitListener);
+        eventManager.attach(MvcEvent.WINDOW_CLOSING, new SaveOnExitListener());
 
         /**
          * --------------------------
@@ -137,6 +138,10 @@ public class Launcher
         // Configuring the controller
         controller.setEventManager(eventManager);
         controller.completeSetup();
+
+        if(controller instanceof PropertiesAwareInterface) {
+            ((PropertiesAwareInterface) controller).setProperties(settings);
+        }
 
         return controller;
     }

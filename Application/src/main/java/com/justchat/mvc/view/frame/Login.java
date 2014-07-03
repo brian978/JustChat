@@ -32,9 +32,13 @@ public class Login extends AbstractMainFrame
     private LoginPanel loginPanel = new LoginPanel();
     private AuthenticatePanel authenticatePanel = new AuthenticatePanel();
 
+    /**
+     * Creates a login frame object
+     *
+     */
     public Login()
     {
-        super("JustChat", null);
+        super("JustChat");
     }
 
     /**

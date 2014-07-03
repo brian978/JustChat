@@ -4,7 +4,6 @@ import com.acamar.authentication.AuthenticationEvent;
 import com.acamar.authentication.xmpp.Authentication;
 import com.acamar.event.EventInterface;
 import com.acamar.event.listener.AbstractEventListener;
-import com.acamar.event.listener.EventListenerInterface;
 import com.acamar.mvc.controller.AbstractController;
 import com.acamar.mvc.event.MvcEvent;
 import com.justchat.mvc.view.frame.Login;
@@ -24,7 +23,7 @@ import java.awt.event.*;
  */
 public class LoginController extends AbstractController
 {
-    private Login loginFrame = new Login();
+    private Login view = new Login();
 
     /**
      * The method should be called when all the necessary configuration has been done on the controller
@@ -34,7 +33,8 @@ public class LoginController extends AbstractController
         if (!setupCompleted) {
             // We must first inject the event manager into the panels because when we initialize the frame
             // the panels will also be populated with objects
-            loginFrame.getLoginPanel().setEventManager(eventManager);
+            view.getLoginPanel()
+                .setEventManager(eventManager);
 
             // Initializing the frame and selecting a default communication service
             initializeFrame();
@@ -60,8 +60,8 @@ public class LoginController extends AbstractController
          * Components events
          * -----------------------
          */
-        LoginPanel loginPanel = loginFrame.getLoginPanel();
-        AuthenticatePanel authenticatePanel = loginFrame.getAuthenticatePanel();
+        LoginPanel loginPanel = view.getLoginPanel();
+        AuthenticatePanel authenticatePanel = view.getAuthenticatePanel();
 
         // Communication service changed
         final JComboBox connectionField = (JComboBox) loginPanel.findComponent("connectionField");
@@ -70,7 +70,7 @@ public class LoginController extends AbstractController
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                loginFrame.prefillData((CommunicationServiceItem) connectionField.getSelectedItem());
+                view.prefillData((CommunicationServiceItem) connectionField.getSelectedItem());
             }
         });
 
@@ -109,7 +109,7 @@ public class LoginController extends AbstractController
             {
                 Authentication authentication = getAuthentication();
                 if (authentication.cancel()) {
-                    loginFrame.toggleMainPanels();
+                    view.toggleMainPanels();
                 } else {
                     // To prevent the user from spamming the button
                     cancelBtn.setEnabled(false);
@@ -118,7 +118,7 @@ public class LoginController extends AbstractController
         });
 
         // We also have from frame events that will trigger events on the event manager
-        loginFrame.getViewContainer().addWindowListener(new WindowAdapter()
+        view.getViewContainer().addWindowListener(new WindowAdapter()
         {
             /**
              * Invoked when a window has been closed.
@@ -129,7 +129,7 @@ public class LoginController extends AbstractController
             public void windowClosing(WindowEvent e)
             {
                 super.windowClosed(e);
-                eventManager.trigger(new MvcEvent(MvcEvent.WINDOW_CLOSING, loginFrame));
+                eventManager.trigger(new MvcEvent(MvcEvent.WINDOW_CLOSING, view));
             }
         });
     }
@@ -139,11 +139,11 @@ public class LoginController extends AbstractController
      */
     private void initializeFrame()
     {
-        loginFrame.initialize();
+        view.initialize();
 
         // We need to populate the fields by default
-        JComboBox jComboBox = ((JComboBox) loginFrame.getLoginPanel().findComponent("connectionField"));
-        loginFrame.prefillData((CommunicationServiceItem) jComboBox.getItemAt(0));
+        JComboBox jComboBox = ((JComboBox) view.getLoginPanel().findComponent("connectionField"));
+        view.prefillData((CommunicationServiceItem) jComboBox.getItemAt(0));
 
         // Now that we have all the elements on the frame we need to attach some events on it
         attachEvents();
@@ -156,7 +156,7 @@ public class LoginController extends AbstractController
      */
     private Authentication getAuthentication()
     {
-        JComboBox jComboBox = ((JComboBox) loginFrame.getLoginPanel().findComponent("connectionField"));
+        JComboBox jComboBox = ((JComboBox) view.getLoginPanel().findComponent("connectionField"));
         Authentication authentication = null;
 
         try {
@@ -181,9 +181,9 @@ public class LoginController extends AbstractController
         // Performing the authentication
         if (authentication != null) {
             // Switching the panels so the user knows what's happening
-            loginFrame.toggleMainPanels();
+            view.toggleMainPanels();
 
-            LoginPanel loginPanel = loginFrame.getLoginPanel();
+            LoginPanel loginPanel = view.getLoginPanel();
 
             // Login data
             JTextField identityField = (JTextField) loginPanel.findComponent("identifierField");
@@ -210,7 +210,7 @@ public class LoginController extends AbstractController
      */
     public void displayLogin()
     {
-        loginFrame.display();
+        view.display();
     }
 
     /**
@@ -233,12 +233,12 @@ public class LoginController extends AbstractController
         {
             // If the login is successful we hide the current frame (since we don't need it for now)
             if (((AuthenticationEvent) e).getStatusCode() == AuthenticationEvent.StatusCode.SUCCESS) {
-                loginFrame.getViewContainer().setVisible(false);
+                view.getViewContainer().setVisible(false);
             }
 
             // Since the login was done we need to revert what we show on this frame to the original state
             // in case the user logs out
-            loginFrame.toggleMainPanels();
+            view.toggleMainPanels();
         }
     }
 }
