@@ -92,6 +92,6 @@ public class EventManagerTest
         eventManager.trigger("some.event6", this);
 
 
-        Assert.assertArrayEquals(new Object[]{"First listener", "Second s"}, list.toArray());
+        Assert.assertArrayEquals(new Object[]{"First listener", "Second listener"}, list.toArray());
     }
 }

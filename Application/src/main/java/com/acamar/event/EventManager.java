@@ -3,6 +3,8 @@ package com.acamar.event;
 import com.acamar.event.listener.EventListenerInterface;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 
 /**
@@ -92,7 +94,7 @@ public class EventManager
      */
     public void trigger(String name, Event event)
     {
-        ArrayList<EventListenerInterface> listeners = getListeners(name);
+        ArrayList<EventListenerInterface> listeners = sortListeners(getListeners(name));
         for (EventListenerInterface listener : listeners) {
             listener.onEvent(event);
             if (event.isPropagationStopped()) {
@@ -180,5 +182,29 @@ public class EventManager
     public void clear()
     {
         events.clear();
+    }
+
+    /**
+     * The method will sort the listeners by priority (higher priority first)
+     *
+     * @param listeners Listeners to be sorted
+     */
+    protected ArrayList<EventListenerInterface> sortListeners(ArrayList<EventListenerInterface> listeners)
+    {
+        Collections.sort(listeners, new Comparator<EventListenerInterface>()
+        {
+            public int compare(EventListenerInterface o1, EventListenerInterface o2)
+            {
+                if (o1.getPriority() < o2.getPriority()) {
+                    return 1;
+                } else if (o1.getPriority() > o2.getPriority()) {
+                    return -1;
+                } else {
+                    return 0;
+                }
+            }
+        });
+
+        return listeners;
     }
 }
