@@ -1,5 +1,7 @@
 package com.acamar.event;
 
+import com.acamar.event.listener.EventListenerInterface;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -20,27 +22,45 @@ public class EventManager
     /**
      * Attaches a listener to a named event
      *
-     * @param name Name of the event. This can also be the class name of an event class
+     * @param name     Name of the event. This can also be the class name of an event class
      * @param listener Listener object that will handle the event
      */
     public void attach(String name, EventListenerInterface listener)
     {
-        ArrayList<EventListenerInterface> events = this.events.get(name);
+        ArrayList<EventListenerInterface> listeners = getListeners(name);
 
-        // Initializing the events list if we don't have one for the event
-        if (events == null) {
-            events = new ArrayList<>();
-            this.events.put(name, events);
-        }
+        listeners.add(listener);
+    }
 
-        events.add(listener);
+    /**
+     * Attaches a listener with a priority to a named event
+     *
+     * @param name     Name of the event. This can also be the class name of an event class
+     * @param listener Listener object that will handle the event
+     * @param priority The priority that the listener will be called at
+     */
+    public void attach(String name, EventListenerInterface listener, Integer priority)
+    {
+        attach(name, listener.setPriority(priority));
     }
 
     /**
      * Attaches a listener to a named event
      *
      * @param eventClass Class that identifies the event
-     * @param listener Listener object that will handle the event
+     * @param listener   Listener object that will handle the event
+     * @param priority   The priority that the listener will be called at
+     */
+    public void attach(Class eventClass, EventListenerInterface listener, Integer priority)
+    {
+        attach(eventClass.getName(), listener.setPriority(priority));
+    }
+
+    /**
+     * Attaches a listener to a named event
+     *
+     * @param eventClass Class that identifies the event
+     * @param listener   Listener object that will handle the event
      */
     public void attach(Class eventClass, EventListenerInterface listener)
     {
@@ -50,12 +70,12 @@ public class EventManager
     /**
      * Detaches an event listener from an event
      *
-     * @param name Name of the event to remove the listener from
+     * @param name     Name of the event to remove the listener from
      * @param listener The listener object to be removed
      */
     public void detach(String name, EventListenerInterface listener)
     {
-        ArrayList<EventListenerInterface> listeners = this.getListeners(name);
+        ArrayList<EventListenerInterface> listeners = getListeners(name);
         if (listeners != null) {
             listeners.remove(listener);
         }
@@ -65,7 +85,7 @@ public class EventManager
      * Detaches an event listener from an event
      *
      * @param eventClass Class that identifies the event
-     * @param listener The listener object to be removed
+     * @param listener   The listener object to be removed
      */
     public void detach(Class eventClass, EventListenerInterface listener)
     {
@@ -75,37 +95,32 @@ public class EventManager
     /**
      * Triggers an event
      *
-     * @param name Name of the event to trigger
+     * @param name   Name of the event to trigger
      * @param target Target of the event. This is usually the object that triggered the event
      * @param params Parameters for the event
      */
     public void trigger(String name, Object target, HashMap<Object, Object> params)
     {
         ArrayList<EventListenerInterface> listeners = this.events.get(name);
-        if(listeners != null) {
+        if (listeners != null) {
             Event event = new Event(name, target, params);
-            for(EventListenerInterface listener : listeners) {
-                listener.onEvent(event);
-                if(event.isPropagationStopped()) {
-                    break;
-                }
-            }
+            trigger(name, event);
         }
     }
 
     /**
      * Triggers an event
      *
-     * @param name Name of the event to be triggered
+     * @param name  Name of the event to be triggered
      * @param event Event to be triggered
      */
     public void trigger(String name, Event event)
     {
         ArrayList<EventListenerInterface> listeners = this.events.get(name);
-        if(listeners != null) {
-            for(EventListenerInterface listener : listeners) {
+        if (listeners != null) {
+            for (EventListenerInterface listener : listeners) {
                 listener.onEvent(event);
-                if(event.isPropagationStopped()) {
+                if (event.isPropagationStopped()) {
                     break;
                 }
             }
@@ -125,7 +140,7 @@ public class EventManager
     /**
      * Triggers an event
      *
-     * @param name Name of the event to trigger
+     * @param name   Name of the event to trigger
      * @param target Target of the event. This is usually the object that triggered the event
      */
     public void trigger(String name, Object target)
@@ -137,8 +152,8 @@ public class EventManager
      * Triggers an event
      *
      * @param eventClass Class that identifies the event
-     * @param target Target of the event. This is usually the object that triggered the event
-     * @param params Parameters for the event
+     * @param target     Target of the event. This is usually the object that triggered the event
+     * @param params     Parameters for the event
      */
     public void trigger(Class eventClass, Object target, HashMap<Object, Object> params)
     {
@@ -149,106 +164,11 @@ public class EventManager
      * Triggers an event
      *
      * @param eventClass Class that identifies the event
-     * @param target Target of the event. This is usually the object that triggered the event
+     * @param target     Target of the event. This is usually the object that triggered the event
      */
     public void trigger(Class eventClass, Object target)
     {
         trigger(eventClass.getName(), target, new HashMap<>());
-    }
-
-    /**
-     * Adds an event listener to the queue
-     *
-     * @param listenerClass The class of the event listener is used to group a the event listeners
-     * @param listener      The object that will listen for events
-     */
-    public void add(Class listenerClass, Object listener)
-    {
-        ArrayList<Object> listeners = this.listeners.get(listenerClass);
-
-        // Initializing the listeners ArrayList in case it's not present
-        if (listeners == null) {
-            listeners = new ArrayList<>();
-            this.listeners.put(listenerClass, listeners);
-        }
-
-        listeners.add(listener);
-    }
-
-    /**
-     * Adds an event listener to the queue
-     *
-     * @param listener Object of the listener to add
-     */
-    public void add(EventListenerInterface listener)
-    {
-        add(listener.getClass(), listener);
-    }
-
-    /**
-     * Removes an event listener to the queue
-     *
-     * @param listenerClass The class of the event listener is used to identify the group of listeners where to look
-     * @param listener      The object that will listen for events
-     */
-    public void remove(Class listenerClass, Object listener)
-    {
-        ArrayList<Object> listeners = this.getListeners(listenerClass);
-        if (listeners != null) {
-            listeners.remove(listener);
-        }
-    }
-
-    /**
-     * Removes an event listener to the queue
-     *
-     * @param listener Object of the listener to remove
-     */
-    public void remove(EventListenerInterface listener)
-    {
-        remove(listener.getClass(), listener);
-    }
-
-    /**
-     * Dispatches an event to the registered listeners that have a certain class
-     *
-     * @param listenerClass The class of the event listeners that will be notified of the event
-     * @param e             The event object
-     * @param methodToCall  An object that identifies the method to call when dispatching the event
-     * @throws InvocationTargetException
-     * @throws IllegalAccessException
-     */
-    public void trigger(Class listenerClass, EventInterface e, Method methodToCall) throws InvocationTargetException, IllegalAccessException
-    {
-        ArrayList<Object> listeners = this.getListeners(listenerClass);
-        if (!listeners.isEmpty()) {
-            for (Object listener : listeners) {
-                methodToCall.invoke(listener, e);
-                if (e.isPropagationStopped()) {
-                    break;
-                }
-            }
-        }
-    }
-
-    /**
-     * Dispatches an event to the registered listeners that have a certain class
-     *
-     * @param listenerClass     The class of the event listeners that will be notified of the event
-     * @param e                 The event object
-     * @param fireEventCallback An object that will dispatch the event to a method of the listener
-     */
-    public void trigger(Class listenerClass, EventInterface e, FireEventCallback fireEventCallback)
-    {
-        ArrayList<Object> listeners = this.getListeners(listenerClass);
-        if (!listeners.isEmpty()) {
-            for (Object listener : listeners) {
-                fireEventCallback.trigger(listener, e);
-                if (e.isPropagationStopped()) {
-                    break;
-                }
-            }
-        }
     }
 
     /**

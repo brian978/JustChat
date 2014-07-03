@@ -1,24 +1,16 @@
 package com.justchat;
 
-import com.acamar.authentication.AuthenticationAwareInterface;
 import com.acamar.authentication.xmpp.Authentication;
 import com.acamar.event.EventInterface;
-import com.acamar.event.EventListenerInterface;
+import com.acamar.event.listener.AbstractEventListener;
+import com.acamar.event.listener.EventListenerInterface;
 import com.acamar.event.EventManager;
-import com.acamar.event.EventManagerAwareInterface;
 import com.acamar.mvc.controller.AbstractController;
 import com.acamar.mvc.event.MvcEvent;
 import com.acamar.util.Properties;
 import com.justchat.mvc.controller.LoginController;
-import com.justchat.mvc.view.frame.Contacts;
-import com.justchat.mvc.view.frame.Login;
-import com.justchat.mvc.view.frame.menu.MainMenu;
-import com.justchat.mvc.view.panel.LoginPanel;
 import com.justchat.mvc.view.panel.components.CommunicationServiceItem;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
 import java.io.IOException;
 
 /**
@@ -69,7 +61,6 @@ public class Launcher
          * --------------------------
          */
         eventManager.attach(MvcEvent.WINDOW_CLOSING, exitListener);
-
 
         /**
          * --------------------------
@@ -192,7 +183,7 @@ public class Launcher
      * @link https://github.com/brian978/JustChat
      * @since 2014-06-27
      */
-    private class SaveOnExitListener implements EventListenerInterface
+    private class SaveOnExitListener extends AbstractEventListener
     {
         /**
          * The method is called by the event manager when an EventListener class is passed to the trigger() method

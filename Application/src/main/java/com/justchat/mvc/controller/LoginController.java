@@ -3,8 +3,8 @@ package com.justchat.mvc.controller;
 import com.acamar.authentication.AuthenticationEvent;
 import com.acamar.authentication.xmpp.Authentication;
 import com.acamar.event.EventInterface;
-import com.acamar.event.EventListenerInterface;
-import com.acamar.event.EventManager;
+import com.acamar.event.listener.AbstractEventListener;
+import com.acamar.event.listener.EventListenerInterface;
 import com.acamar.mvc.controller.AbstractController;
 import com.acamar.mvc.event.MvcEvent;
 import com.justchat.mvc.view.frame.Login;
@@ -220,7 +220,7 @@ public class LoginController extends AbstractController
      * @link https://github.com/brian978/JustChat
      * @since 2014-03-03
      */
-    private class AuthenticationEventsListener implements EventListenerInterface
+    private class AuthenticationEventsListener extends AbstractEventListener
     {
         /**
          * The method is called by the event manager when an EventListener class is passed to the trigger() method
