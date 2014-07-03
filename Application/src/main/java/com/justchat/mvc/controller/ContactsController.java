@@ -21,4 +21,13 @@ public class ContactsController extends AbstractController
     {
         this.eventManager = eventManager;
     }
+
+    /**
+     * The method will be called after all the dependencies have been injected in the controller
+     */
+    @Override
+    public void completeSetup()
+    {
+
+    }
 }
