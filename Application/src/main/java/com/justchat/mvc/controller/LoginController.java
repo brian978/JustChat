@@ -24,28 +24,21 @@ import java.awt.event.*;
  */
 public class LoginController extends AbstractController
 {
-    private boolean setupCompleted = false;
     private Login loginFrame = new Login();
-
-    /**
-     * Creates the controller object
-     */
-    public LoginController()
-    {
-
-    }
 
     /**
      * The method should be called when all the necessary configuration has been done on the controller
      */
     public void completeSetup()
     {
-        // We must first inject the event manager into the panels because when we initialize the frame
-        // the panels will also be populated with objects
-        loginFrame.getLoginPanel().setEventManager(eventManager);
+        if (!setupCompleted) {
+            // We must first inject the event manager into the panels because when we initialize the frame
+            // the panels will also be populated with objects
+            loginFrame.getLoginPanel().setEventManager(eventManager);
 
-        // Initializing the frame and selecting a default communication service
-        initializeFrame();
+            // Initializing the frame and selecting a default communication service
+            initializeFrame();
+        }
     }
 
     /**

@@ -145,6 +145,7 @@ public class Launcher
     {
         // Configuring the controller
         controller.setEventManager(eventManager);
+        controller.completeSetup();
 
         return controller;
     }

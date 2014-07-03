@@ -12,6 +12,7 @@ import com.acamar.event.EventManagerAwareInterface;
  */
 public abstract class AbstractController implements EventManagerAwareInterface
 {
+    protected boolean setupCompleted = false;
     protected EventManager eventManager = null;
 
     /**
@@ -35,4 +36,10 @@ public abstract class AbstractController implements EventManagerAwareInterface
     {
         return eventManager;
     }
+
+    /**
+     * The method will be called after all the dependencies have been injected in the controller
+     *
+     */
+    abstract public void completeSetup();
 }
