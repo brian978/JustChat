@@ -48,6 +48,7 @@ public abstract class AbstractAuthentication
     protected void fireAuthenticationEvent(User user, AuthenticationEvent.StatusCode statusCode)
     {
         HashMap<Object, Object> eventParams = new HashMap<>();
+        eventParams.put("object", this);
         eventParams.put("user", user);
         eventParams.put("statusCode", statusCode);
 

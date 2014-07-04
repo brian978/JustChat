@@ -23,7 +23,6 @@ import java.awt.event.MouseEvent;
  */
 public class Contacts extends AbstractMainFrame
 {
-    private AuthenticationListener authenticationListener = new AuthenticationStatusListener();
     private UsersPanel usersPanel = new UsersPanel();
 
     /**
@@ -102,31 +101,6 @@ public class Contacts extends AbstractMainFrame
 
         /**
          * -----------------------
-         * Contacts list handlers
-         * -----------------------
-         */
-        usersPanel.addMouseListener(new MouseAdapter()
-        {
-            /**
-             * {@inheritDoc}
-             *
-             * @param e
-             */
-            @Override
-            public void mouseClicked(MouseEvent e)
-            {
-                super.mouseClicked(e);
-                if (e.getClickCount() == 2) {
-                    User user = ((UserList) e.getSource()).getSelectedUser();
-                    if (user.getIdentity().length() > 0) {
-                        startNewConversation(user);
-                    }
-                }
-            }
-        });
-
-        /**
-         * -----------------------
          * Menu handlers
          * -----------------------
          */
@@ -162,45 +136,11 @@ public class Contacts extends AbstractMainFrame
     }
 
     /**
-     * When this is called a new window will be launched that will allow the users to send instant messages to the
-     * selected user
-     *
-     * TODO: Move to controller
-     *
-     * @param user User to start the conversation with
-     */
-    private void startNewConversation(User user)
-    {
-//        Conversation conversationFrame = new Conversation(xmppAuthentication.getConnection(), user);
-//        conversationFrame.setLocalUser((User) usersManager.getUser());
-    }
-
-    /**
      * Retrieves the users from the XMPP roster and adds them to the user list panel
      *
      */
     public void loadUsers()
     {
         usersPanel.addUsers();
-    }
-
-    /**
-     * The listener handles the actions that will be done after the user authenticates
-     *
-     * TODO: Move to controller
-     *
-     * @version 1.0
-     * @link https://github.com/brian978/JustChat
-     * @since 2014-04-22
-     */
-    private class AuthenticationStatusListener implements AuthenticationListener
-    {
-        @Override
-        public void authenticationPerformed(AuthenticationEvent e)
-        {
-//            if (e.getStatusCode() == AuthenticationEvent.StatusCode.SUCCESS) {
-//                usersManager.setUser(e.getUser());
-//            }
-        }
     }
 }

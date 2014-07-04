@@ -1,15 +1,22 @@
 package com.justchat.mvc.controller;
 
 import com.acamar.authentication.AuthenticationEvent;
+import com.acamar.authentication.xmpp.Authentication;
 import com.acamar.event.EventInterface;
 import com.acamar.event.listener.AbstractEventListener;
 import com.acamar.mvc.controller.AbstractController;
 import com.acamar.util.Properties;
 import com.acamar.util.PropertiesAwareInterface;
 import com.justchat.mvc.view.frame.Contacts;
+import com.justchat.mvc.view.frame.Conversation;
+import com.justchat.mvc.view.panel.components.UserList;
+import com.justchat.users.User;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 
 /**
  * JustChat
@@ -20,8 +27,10 @@ import java.awt.*;
  */
 public class ContactsController extends AbstractController implements PropertiesAwareInterface
 {
-    Properties settings = null;
-    Contacts view = new Contacts();
+    private Properties settings = null;
+    private Contacts view = new Contacts();
+    private ArrayList<Conversation> conversations = new ArrayList<>();
+    private Authentication authentication = null;
 
     /**
      * The method will be called after all the dependencies have been injected in the controller
@@ -40,7 +49,6 @@ public class ContactsController extends AbstractController implements Properties
 
     /**
      * Sets the preferred size of the view
-     *
      */
     private void setViewPreferredSize()
     {
@@ -59,11 +67,31 @@ public class ContactsController extends AbstractController implements Properties
 
     /**
      * Attached the events for which the controller or a nested object will listen to
-     *
      */
     private void attachEvents()
     {
         eventManager.attach(AuthenticationEvent.class, new AuthenticationEventsListener());
+
+        // View events
+        view.getUsersPanel().addMouseListener(new MouseAdapter()
+        {
+            /**
+             * {@inheritDoc}
+             *
+             * @param e
+             */
+            @Override
+            public void mouseClicked(MouseEvent e)
+            {
+                super.mouseClicked(e);
+                if (e.getClickCount() == 2) {
+                    User user = ((UserList) e.getSource()).getSelectedUser();
+                    if (user.getIdentity().length() > 0) {
+                        startNewConversation(user);
+                    }
+                }
+            }
+        });
     }
 
     /**
@@ -87,6 +115,21 @@ public class ContactsController extends AbstractController implements Properties
     }
 
     /**
+     * When this is called a new window will be launched that will allow the users to send instant messages to the
+     * selected user
+     *
+     * @param user User to start the conversation with
+     */
+    private void startNewConversation(User user)
+    {
+        Conversation conversationFrame = new Conversation(authentication.getConnection(), user);
+//        conversationFrame.setLocalUser((User) usersManager.getUser());
+
+        // Tracking the conversation frame
+        conversations.add(conversationFrame);
+    }
+
+    /**
      * The class decides what happens to the frame when an authentication event occurs
      *
      * @version 1.0
@@ -104,8 +147,12 @@ public class ContactsController extends AbstractController implements Properties
         @Override
         public void onEvent(EventInterface e)
         {
+            AuthenticationEvent event = (AuthenticationEvent) e;
+
             // If the login is successful we hide the current frame (since we don't need it for now)
-            if (((AuthenticationEvent) e).getStatusCode() == AuthenticationEvent.StatusCode.SUCCESS) {
+            if (event.getStatusCode() == AuthenticationEvent.StatusCode.SUCCESS) {
+                authentication = (Authentication) event.getParams().get("object");
+
                 view.display();
             }
         }
