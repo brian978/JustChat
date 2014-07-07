@@ -1,10 +1,8 @@
 package com.justchat.mvc.view.frame;
 
-import com.acamar.authentication.AbstractAuthentication;
-import com.acamar.authentication.AuthenticationAwareInterface;
-import com.acamar.authentication.xmpp.Authentication;
+import com.acamar.event.EventManager;
+import com.acamar.event.EventManagerAwareInterface;
 import com.acamar.mvc.view.AbstractFrame;
-import com.acamar.util.Properties;
 import com.justchat.mvc.view.frame.menu.MainMenu;
 
 import javax.swing.*;
@@ -18,10 +16,10 @@ import java.awt.event.ActionListener;
  * @link https://github.com/brian978/JustChat
  * @since 2014-04-23
  */
-public abstract class AbstractMainFrame extends AbstractFrame
+public abstract class AbstractMainFrame extends AbstractFrame implements EventManagerAwareInterface
 {
+    protected EventManager eventManager = null;
     protected MainMenu menu = new MainMenu();
-    protected Authentication xmppAuthentication;
 
     /**
      * Creates the object, sets the title of the frame and makes sure that the frame is no smaller then is should
@@ -84,5 +82,27 @@ public abstract class AbstractMainFrame extends AbstractFrame
         setupEvents();
 
         return this;
+    }
+
+    /**
+     * Injects an EventManager object into another object
+     *
+     * @param eventManager An EventManager object
+     */
+    @Override
+    public void setEventManager(EventManager eventManager)
+    {
+        this.eventManager = eventManager;
+    }
+
+    /**
+     * Returns the event manager object that was injected or created inside this object
+     *
+     * @return EventManager
+     */
+    @Override
+    public EventManager getEventManager()
+    {
+        return eventManager;
     }
 }

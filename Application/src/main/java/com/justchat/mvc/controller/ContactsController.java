@@ -3,12 +3,14 @@ package com.justchat.mvc.controller;
 import com.acamar.authentication.AuthenticationEvent;
 import com.acamar.authentication.xmpp.Authentication;
 import com.acamar.event.EventInterface;
+import com.acamar.event.EventManagerAwareInterface;
 import com.acamar.event.listener.AbstractEventListener;
 import com.acamar.mvc.controller.AbstractController;
 import com.acamar.util.Properties;
 import com.acamar.util.PropertiesAwareInterface;
 import com.justchat.mvc.view.frame.Contacts;
 import com.justchat.mvc.view.frame.Conversation;
+import com.justchat.mvc.view.panel.UsersPanel;
 import com.justchat.mvc.view.panel.components.UserList;
 import com.justchat.users.User;
 
@@ -39,6 +41,7 @@ public class ContactsController extends AbstractController implements Properties
     public void completeSetup()
     {
         if (!setupCompleted) {
+            view.setEventManager(eventManager);
             view.getUsersPanel()
                 .setEventManager(eventManager);
 
@@ -71,6 +74,7 @@ public class ContactsController extends AbstractController implements Properties
     private void attachEvents()
     {
         eventManager.attach(AuthenticationEvent.class, new AuthenticationEventsListener());
+        eventManager.attach(AuthenticationEvent.TYPE_LOGIN, new AuthenticationEventsListener());
 
         // View events
         view.getUsersPanel().addMouseListener(new MouseAdapter()
@@ -129,6 +133,22 @@ public class ContactsController extends AbstractController implements Properties
         conversations.add(conversationFrame);
     }
 
+    private void displayUserList()
+    {
+        UsersPanel usersPanel = view.getUsersPanel();
+        usersPanel.setRoster(authentication.getConnection().getEndpoint().getRoster());
+        usersPanel.addUsers();
+    }
+
+    /**
+     * Does a user list cleanup and then disconnects from the XMPP server
+     */
+    private void doLogout()
+    {
+        view.getUsersPanel().cleanup();
+        authentication.getConnection().disconnect();
+    }
+
     /**
      * The class decides what happens to the frame when an authentication event occurs
      *
@@ -150,9 +170,10 @@ public class ContactsController extends AbstractController implements Properties
             AuthenticationEvent event = (AuthenticationEvent) e;
 
             // If the login is successful we hide the current frame (since we don't need it for now)
-            if (event.getStatusCode() == AuthenticationEvent.StatusCode.SUCCESS) {
+            if (event.getName().equals(AuthenticationEvent.class.toString()) && event.getStatusCode() == AuthenticationEvent.StatusCode.SUCCESS) {
                 authentication = (Authentication) event.getParams().get("object");
 
+                displayUserList();
                 view.display();
             }
         }

@@ -114,33 +114,4 @@ public class Contacts extends AbstractMainFrame
             }
         });
     }
-
-    public void updateRoster()
-    {
-        // The roster is needed when we do operations on the user list
-        usersPanel.setRoster(xmppAuthentication.getConnection().getEndpoint().getRoster());
-    }
-
-    /**
-     * Does a user list cleanup and then disconnects from the XMPP server
-     *
-     * TODO: Move parts of it to controller?
-     */
-    public void doLogout()
-    {
-        // The cleanup must be done prior to the disconnect because it depends on the connection
-        // in order to work properly
-        usersPanel.cleanup();
-
-        xmppAuthentication.getConnection().disconnect();
-    }
-
-    /**
-     * Retrieves the users from the XMPP roster and adds them to the user list panel
-     *
-     */
-    public void loadUsers()
-    {
-        usersPanel.addUsers();
-    }
 }

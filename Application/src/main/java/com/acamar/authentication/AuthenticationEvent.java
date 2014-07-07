@@ -14,6 +14,9 @@ import java.util.HashMap;
  */
 public class AuthenticationEvent extends Event
 {
+    public final static String TYPE_LOGIN = "login";
+    public final static String TYPE_LOGOUT = "logout";
+
     /**
      * Constructs a new event object
      *
