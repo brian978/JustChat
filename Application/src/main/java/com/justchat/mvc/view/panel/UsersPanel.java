@@ -27,11 +27,9 @@ import java.util.Collection;
  */
 public class UsersPanel extends AbstractPanel implements EventManagerAwareInterface
 {
+    public final UserList userList = new UserList();
+
     private EventManager eventManager = null;
-    private UserList userList = new UserList();
-    private UsersManager usersManager = null;
-    private Roster roster = null;
-    private RosterListener rosterListener = new PresenceListener();
 
     public UsersPanel()
     {
@@ -55,71 +53,6 @@ public class UsersPanel extends AbstractPanel implements EventManagerAwareInterf
     }
 
     /**
-     * Sets the roster that will be watched
-     *
-     * @param roster Roster object
-     */
-    public void setRoster(Roster roster)
-    {
-        // Cleaning up the last roster first
-        if (this.roster != null) {
-            this.roster.removeRosterListener(rosterListener);
-        }
-
-        this.roster = roster;
-        this.roster.addRosterListener(rosterListener);
-    }
-
-    public void addUsers()
-    {
-        /**
-         * -----------------------
-         * Adding the users
-         * -----------------------
-         */
-        Collection<RosterEntry> buddyList = roster.getEntries();
-        User user;
-        Presence presence;
-        UserCategory category;
-
-        // Getting the default categories for now
-        UserCategory onlineCategory = userList.findCategory("Online");
-
-        // Default user category
-        category = userList.findCategory("Offline");
-
-        // Adding and sorting the users
-        for (RosterEntry buddy : buddyList) {
-            presence = roster.getPresence(buddy.getUser());
-
-            if (presence.isAvailable()) {
-                category = onlineCategory;
-            }
-
-            user = new User(buddy.getUser(), buddy.getName());
-            user.setCategory(category);
-
-            usersManager.add(user);
-        }
-
-        // No need to also import the users since they will be imported after the sort
-        usersManager.sort();
-    }
-
-    public void addMouseListener(MouseListener mouseListener)
-    {
-        userList.addMouseListener(mouseListener);
-    }
-
-    public void cleanup()
-    {
-        roster.removeRosterListener(rosterListener);
-        usersManager.removeAll();
-
-        roster = null;
-    }
-
-    /**
      * Injects an EventManager object into another object
      *
      * @param eventManager An EventManager object
@@ -139,35 +72,5 @@ public class UsersPanel extends AbstractPanel implements EventManagerAwareInterf
     public EventManager getEventManager()
     {
         return eventManager;
-    }
-
-    /**
-     * The listener will change the user category when the presence changes
-     */
-    private class PresenceListener extends RosterAdapter
-    {
-        @Override
-        public void presenceChanged(Presence presence)
-        {
-            // We need to remove the resource from the "from" string
-            String from = presence.getFrom();
-            int lastIndex = from.lastIndexOf('/');
-
-            if (lastIndex >= 0) {
-                from = presence.getFrom().substring(0, lastIndex);
-            }
-
-            User user = (User) usersManager.find(from);
-
-            System.out.println(user + " changed presence to: " + presence.getType());
-
-            if (user != null) {
-                if (presence.isAvailable()) {
-                    userList.updateUser(user, userList.findCategory("Online"));
-                } else {
-                    userList.updateUser(user, userList.findCategory("Offline"));
-                }
-            }
-        }
     }
 }

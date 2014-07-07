@@ -2,6 +2,7 @@ package com.justchat.mvc.view.frame;
 
 import com.acamar.event.EventManager;
 import com.acamar.event.EventManagerAwareInterface;
+import com.acamar.mvc.event.MvcEvent;
 import com.acamar.mvc.view.AbstractFrame;
 import com.justchat.mvc.view.frame.menu.MainMenu;
 
@@ -32,14 +33,26 @@ public abstract class AbstractMainFrame extends AbstractFrame implements EventMa
     }
 
     /**
-     * Adds the default elements that are on the frame (other can be added dynamically any other time of course)
+     * Configures, populates and loads the events for the frame
      *
+     * @return AbstractMainFrame
+     */
+    public AbstractMainFrame initialize()
+    {
+        configure();
+        populateFrame();
+        setupEvents();
+
+        return this;
+    }
+
+    /**
+     * Adds the default elements that are on the frame (other can be added dynamically any other time of course)
      */
     abstract protected void populateFrame();
 
     /**
      * Adds event handlers to the events that will be triggered by elements on the frame
-     *
      */
     protected void setupEvents()
     {
@@ -49,39 +62,34 @@ public abstract class AbstractMainFrame extends AbstractFrame implements EventMa
          * ----------------
          */
         // Preferences action
-        menu.findItemByName("preferencesItem").addActionListener(
-                new ActionListener()
-                {
-                    @Override
-                    public void actionPerformed(ActionEvent e)
-                    {
-                        System.out.println("Launching preferences window from " + container.getTitle());
-                    }
-                }
-        );
+        menu.findItemByName("preferencesItem").addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                eventManager.trigger(MvcEvent.LOAD_PREFERENCES, e.getSource());
+            }
+        });
 
         // Exit action
-        menu.findItemByName("exitItem").addActionListener(
-                new ActionListener()
-                {
-                    @Override
-                    public void actionPerformed(ActionEvent e)
-                    {
-                        if (menu.getParentWindow((JMenuItem) e.getSource()) == container) {
-                            triggerClosingEvent();
-                        }
-                    }
+        menu.findItemByName("exitItem").addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                if (menu.getParentWindow((JMenuItem) e.getSource()) == container) {
+                    triggerClosingEvent();
                 }
-        );
+            }
+        });
     }
 
-    public AbstractMainFrame initialize()
+    /**
+     * Dispatches a window closing event when, for example, the user clicks an "Exit" button
+     */
+    public void triggerClosingEvent()
     {
-        configure();
-        populateFrame();
-        setupEvents();
-
-        return this;
+        eventManager.trigger(MvcEvent.APPLICATION_EXIT, this);
     }
 
     /**

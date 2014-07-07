@@ -63,6 +63,7 @@ public class Launcher
          */
         eventManager.attach(MvcEvent.WINDOW_CLOSING, new SaveOnExitListener());
 
+
         /**
          * --------------------------
          * Running the application
@@ -137,11 +138,12 @@ public class Launcher
     {
         // Configuring the controller
         controller.setEventManager(eventManager);
-        controller.completeSetup();
 
         if(controller instanceof PropertiesAwareInterface) {
             ((PropertiesAwareInterface) controller).setProperties(settings);
         }
+
+        controller.completeSetup();
 
         return controller;
     }

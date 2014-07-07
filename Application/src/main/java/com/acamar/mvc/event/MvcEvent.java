@@ -14,6 +14,8 @@ import java.util.HashMap;
 public class MvcEvent extends Event
 {
     public final static String WINDOW_CLOSING = "windowClosing";
+    public final static String APPLICATION_EXIT = "applicationExit";
+    public final static String LOAD_PREFERENCES = "loadPreferences";
 
     /**
      * Constructs a new event object

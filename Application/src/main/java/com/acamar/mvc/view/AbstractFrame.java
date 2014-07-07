@@ -2,7 +2,6 @@ package com.acamar.mvc.view;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.WindowEvent;
 
 /**
  * JustChat
@@ -39,16 +38,6 @@ public abstract class AbstractFrame extends ViewContainer<JFrame>
     }
 
     /**
-     * The method is a shortcut to the add() method from the container
-     *
-     * @param panel The panel to be added to the frame
-     */
-    public void addPanel(AbstractPanel panel)
-    {
-        container.add(panel.getViewContainer());
-    }
-
-    /**
      * Sets different properties of the frame, what layout to use and what happens when the frame is closed
      *
      */
@@ -79,14 +68,5 @@ public abstract class AbstractFrame extends ViewContainer<JFrame>
         container.pack();
         container.setLocationRelativeTo(null);
         container.validate();
-    }
-
-    /**
-     * Dispatches a window closing event when, for example, the user clicks an "Exit" button
-     *
-     */
-    public void triggerClosingEvent()
-    {
-        container.dispatchEvent(new WindowEvent(container, WindowEvent.WINDOW_CLOSING));
     }
 }

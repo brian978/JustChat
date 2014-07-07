@@ -1,18 +1,13 @@
 package com.justchat.mvc.view.frame;
 
 import com.acamar.authentication.AuthenticationEvent;
-import com.acamar.authentication.AuthenticationListener;
+import com.acamar.event.EventManager;
 import com.justchat.mvc.view.panel.UsersPanel;
-import com.justchat.users.User;
 import com.justchat.mvc.view.frame.menu.MainMenu;
-import com.justchat.mvc.view.panel.components.UserList;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 
 /**
  * JustChat
@@ -32,6 +27,19 @@ public class Contacts extends AbstractMainFrame
     public Contacts()
     {
         super("JustChat - Contacts");
+    }
+
+    /**
+     * Injects an EventManager object into another object
+     *
+     * @param eventManager An EventManager object
+     */
+    @Override
+    public void setEventManager(EventManager eventManager)
+    {
+        super.setEventManager(eventManager);
+
+        usersPanel.setEventManager(eventManager);
     }
 
     /**
@@ -110,7 +118,7 @@ public class Contacts extends AbstractMainFrame
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                container.setVisible(false);
+                eventManager.trigger(AuthenticationEvent.TYPE_LOGOUT, null);
             }
         });
     }
