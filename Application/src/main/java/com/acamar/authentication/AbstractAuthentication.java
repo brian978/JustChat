@@ -42,14 +42,14 @@ public abstract class AbstractAuthentication
     /**
      * The method is called from within the authentication object when an authentication event occurs (like login)
      *
-     * @param user       User that was authenticated (or tried to be authenticated)
+     * @param identity   Identity (username/email) of the user that was authenticated (or tried to be authenticated)
      * @param statusCode Status codes for the authentication process
      */
-    protected void fireAuthenticationEvent(User user, AuthenticationEvent.StatusCode statusCode)
+    protected void fireAuthenticationEvent(String identity, AuthenticationEvent.StatusCode statusCode)
     {
         HashMap<Object, Object> eventParams = new HashMap<>();
         eventParams.put("object", this);
-        eventParams.put("user", user);
+        eventParams.put("identity", identity);
         eventParams.put("statusCode", statusCode);
 
         eventManager.trigger(new AuthenticationEvent(this, eventParams));

@@ -87,7 +87,7 @@ public class Authentication extends AbstractAuthentication
         Arrays.fill(password, '0');
 
         // Letting the listeners know what happened (since this is asynchronous)
-        fireAuthenticationEvent(new User(identity, "Me"), statusCode);
+        fireAuthenticationEvent(identity, statusCode);
     }
 
     /**

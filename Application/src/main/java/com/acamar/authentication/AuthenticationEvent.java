@@ -41,11 +41,11 @@ public class AuthenticationEvent extends Event
     /**
      * Returns the user that tried to authenticate
      *
-     * @return User
+     * @return String
      */
-    public User getUser()
+    public String getIdentity()
     {
-        return (User) params.get("user");
+        return (String) params.get("identity");
     }
 
     /**

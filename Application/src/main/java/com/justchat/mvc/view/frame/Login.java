@@ -4,6 +4,7 @@ import com.acamar.authentication.AbstractAuthentication;
 import com.acamar.authentication.AuthenticationEvent;
 import com.acamar.authentication.AuthenticationListener;
 import com.acamar.authentication.xmpp.Authentication;
+import com.acamar.event.EventManager;
 import com.acamar.net.xmpp.Connection;
 import com.acamar.util.Properties;
 import com.justchat.mvc.view.frame.menu.MainMenu;
@@ -59,6 +60,19 @@ public class Login extends AbstractMainFrame
     public AuthenticatePanel getAuthenticatePanel()
     {
         return authenticatePanel;
+    }
+
+    /**
+     * Injects an EventManager object into another object
+     *
+     * @param eventManager An EventManager object
+     */
+    @Override
+    public void setEventManager(EventManager eventManager)
+    {
+        super.setEventManager(eventManager);
+
+        loginPanel.setEventManager(eventManager);
     }
 
     /**

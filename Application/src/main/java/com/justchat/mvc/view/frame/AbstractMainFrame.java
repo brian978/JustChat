@@ -78,18 +78,10 @@ public abstract class AbstractMainFrame extends AbstractFrame implements EventMa
             public void actionPerformed(ActionEvent e)
             {
                 if (menu.getParentWindow((JMenuItem) e.getSource()) == container) {
-                    triggerClosingEvent();
+                    eventManager.trigger(new MvcEvent(MvcEvent.APPLICATION_EXIT, null));
                 }
             }
         });
-    }
-
-    /**
-     * Dispatches a window closing event when, for example, the user clicks an "Exit" button
-     */
-    public void triggerClosingEvent()
-    {
-        eventManager.trigger(MvcEvent.APPLICATION_EXIT, this);
     }
 
     /**

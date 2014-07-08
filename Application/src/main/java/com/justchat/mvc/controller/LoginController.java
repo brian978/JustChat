@@ -33,8 +33,7 @@ public class LoginController extends AbstractController
         if (!setupCompleted) {
             // We must first inject the event manager into the panels because when we initialize the frame
             // the panels will also be populated with objects
-            view.getLoginPanel()
-                .setEventManager(eventManager);
+            view.setEventManager(eventManager);
 
             // Initializing the frame and selecting a default communication service
             initializeFrame();

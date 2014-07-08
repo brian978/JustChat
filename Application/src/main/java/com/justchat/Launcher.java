@@ -11,6 +11,7 @@ import com.acamar.util.Properties;
 import com.acamar.util.PropertiesAwareInterface;
 import com.justchat.mvc.controller.ContactsController;
 import com.justchat.mvc.controller.LoginController;
+import com.justchat.mvc.view.frame.AbstractMainFrame;
 import com.justchat.mvc.view.panel.components.CommunicationServiceItem;
 
 import java.io.IOException;
@@ -139,7 +140,7 @@ public class Launcher
         // Configuring the controller
         controller.setEventManager(eventManager);
 
-        if(controller instanceof PropertiesAwareInterface) {
+        if (controller instanceof PropertiesAwareInterface) {
             ((PropertiesAwareInterface) controller).setProperties(settings);
         }
 
@@ -200,8 +201,6 @@ public class Launcher
         @Override
         public void onEvent(EventInterface e)
         {
-            System.out.println("Handling the " + e.getName() + " event");
-
             try {
                 settings.store();
             } catch (IOException e1) {

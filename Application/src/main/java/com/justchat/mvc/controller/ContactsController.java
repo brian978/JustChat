@@ -13,6 +13,7 @@ import com.acamar.util.PropertiesAwareInterface;
 import com.justchat.mvc.view.frame.Contacts;
 import com.justchat.mvc.view.frame.Conversation;
 import com.justchat.mvc.view.panel.UsersPanel;
+import com.justchat.mvc.view.panel.components.CommunicationServiceItem;
 import com.justchat.mvc.view.panel.components.UserCategory;
 import com.justchat.mvc.view.panel.components.UserList;
 import com.justchat.users.User;
@@ -52,9 +53,22 @@ public class ContactsController extends AbstractController implements Properties
         if (!setupCompleted) {
             view.setEventManager(eventManager);
 
-            setViewPreferredSize();
-            attachEvents();
+            // Initializing the frame and selecting a default communication service
+            initializeFrame();
         }
+    }
+
+    /**
+     * Calls the initialize() method on the login frame and then attaches the event listeners
+     */
+    private void initializeFrame()
+    {
+        view.initialize();
+
+        setViewPreferredSize();
+
+        // Now that we have all the elements on the frame we need to attach some events on it
+        attachEvents();
     }
 
     /**
@@ -93,7 +107,7 @@ public class ContactsController extends AbstractController implements Properties
             @Override
             public void onEvent(EventInterface e)
             {
-                view.triggerClosingEvent();
+                eventManager.trigger(new MvcEvent(MvcEvent.APPLICATION_EXIT, view));
             }
         });
 
@@ -164,9 +178,12 @@ public class ContactsController extends AbstractController implements Properties
     private void startNewConversation(User user)
     {
         Conversation conversationFrame = new Conversation(authentication.getConnection(), user);
-        //        conversationFrame.setLocalUser((User) usersManager.getUser());
+        conversationFrame.setLocalUser(currentUser);
     }
 
+    /**
+     * Populates the users panel, adds some listeners and populates the user list
+     */
     private void displayUserList()
     {
         UsersPanel usersPanel = view.getUsersPanel();
@@ -250,7 +267,7 @@ public class ContactsController extends AbstractController implements Properties
                 authentication = (Authentication) event.getParams().get("object");
 
                 // Updating the current user
-                currentUser = (User) event.getUser();
+                currentUser = new User(event.getIdentity());
 
                 // Showing the user list
                 displayUserList();
@@ -264,7 +281,7 @@ public class ContactsController extends AbstractController implements Properties
      *
      * @version 1.0
      * @link https://github.com/brian978/JustChat
-     * @since 2014-06-03
+     * @since 2014-07-07
      */
     private class PresenceListener extends RosterAdapter
     {
