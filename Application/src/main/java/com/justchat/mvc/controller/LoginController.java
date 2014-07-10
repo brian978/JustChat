@@ -4,6 +4,7 @@ import com.acamar.authentication.AuthenticationEvent;
 import com.acamar.authentication.xmpp.Authentication;
 import com.acamar.event.EventInterface;
 import com.acamar.event.listener.AbstractEventListener;
+import com.acamar.event.listener.EventListenerInterface;
 import com.acamar.mvc.controller.AbstractController;
 import com.acamar.mvc.event.MvcEvent;
 import com.justchat.mvc.view.frame.Login;
@@ -53,6 +54,7 @@ public class LoginController extends AbstractController
          * -----------------------
          */
         eventManager.attach(AuthenticationEvent.class, new AuthenticationEventsListener());
+        eventManager.attach(AuthenticationEvent.TYPE_LOGOUT, new LogoutEventListener());
 
         /**
          * -----------------------
@@ -238,6 +240,27 @@ public class LoginController extends AbstractController
             // Since the login was done we need to revert what we show on this frame to the original state
             // in case the user logs out
             view.toggleMainPanels();
+        }
+    }
+
+    /**
+     * The class decides what happens to the frame when a logout occurs
+     *
+     * @version 1.0
+     * @link https://github.com/brian978/JustChat
+     * @since 2014-07-10
+     */
+    private class LogoutEventListener extends AbstractEventListener
+    {
+        /**
+         * The method is called by the event manager when an EventListener class is passed to the trigger() method
+         *
+         * @param e Event that was triggered
+         */
+        @Override
+        public void onEvent(EventInterface e)
+        {
+            view.getViewContainer().setVisible(true);
         }
     }
 }

@@ -118,7 +118,7 @@ public class Contacts extends AbstractMainFrame
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                eventManager.trigger(AuthenticationEvent.TYPE_LOGOUT, null);
+                eventManager.trigger(AuthenticationEvent.TYPE_LOGOUT);
             }
         });
     }

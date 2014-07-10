@@ -94,7 +94,13 @@ public class ContactsController extends AbstractController implements Properties
      */
     private void attachEvents()
     {
+        /**
+         * -----------------------
+         * Event manager events
+         * -----------------------
+         */
         eventManager.attach(AuthenticationEvent.class, new LoginEventListener());
+        eventManager.attach(AuthenticationEvent.TYPE_LOGOUT, new LogoutEventListener());
 
         // Application exit handlers
         eventManager.attach("application.exit", new AbstractEventListener()
@@ -111,6 +117,11 @@ public class ContactsController extends AbstractController implements Properties
             }
         });
 
+        /**
+         * -----------------------
+         * Components events
+         * -----------------------
+         */
         // View events
         view.getUsersPanel().userList.addMouseListener(new MouseAdapter()
         {
@@ -183,16 +194,15 @@ public class ContactsController extends AbstractController implements Properties
 
     /**
      * Populates the users panel, adds some listeners and populates the user list
+     *
      */
-    private void displayUserList()
+    private void prepareUserListDependencies()
     {
         UsersPanel usersPanel = view.getUsersPanel();
         usersPanel.populate();
 
         // Updating the listeners for the users manager
         usersManager.addListener(usersPanel.userList);
-
-        addUsers();
 
         // Updating the roster
         authentication.getConnection().getEndpoint().getRoster().addRosterListener(new PresenceListener());
@@ -251,6 +261,8 @@ public class ContactsController extends AbstractController implements Properties
      */
     private class LoginEventListener extends AbstractEventListener
     {
+        private boolean panelPrepared = false;
+
         /**
          * The method is called by the event manager when an EventListener class is passed to the trigger() method
          * It will update the login fields
@@ -270,7 +282,12 @@ public class ContactsController extends AbstractController implements Properties
                 currentUser = new User(event.getIdentity());
 
                 // Showing the user list
-                displayUserList();
+                if(!panelPrepared) {
+                    panelPrepared = true;
+                    prepareUserListDependencies();
+                }
+
+                addUsers();
                 view.display();
             }
         }
@@ -309,6 +326,32 @@ public class ContactsController extends AbstractController implements Properties
                     userList.updateUser(user, userList.findCategory("Offline"));
                 }
             }
+        }
+    }
+
+    /**
+     * The class decides what happens to the frame when a logout occurs
+     *
+     * @version 1.0
+     * @link https://github.com/brian978/JustChat
+     * @since 2014-07-10
+     */
+    private class LogoutEventListener extends AbstractEventListener
+    {
+        /**
+         * The method is called by the event manager when an EventListener class is passed to the trigger() method
+         *
+         * @param e Event that was triggered
+         */
+        @Override
+        public void onEvent(EventInterface e)
+        {
+                Dimension size = view.getViewContainer().getSize();
+                settings.set("ContactsWidth", String.valueOf((int) size.getWidth()));
+                settings.set("ContactsHeight", String.valueOf((int) size.getHeight()));
+
+                doLogout();
+                view.getViewContainer().invalidate();
         }
     }
 }

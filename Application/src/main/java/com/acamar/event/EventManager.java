@@ -89,6 +89,16 @@ public class EventManager
     /**
      * Triggers an event by name
      *
+     * @param name Name of the event to be triggered
+     */
+    public void trigger(String name)
+    {
+        trigger(name, new Event(name, null));
+    }
+
+    /**
+     * Triggers an event by name
+     *
      * @param name  Name of the event to be triggered
      * @param event Event to be triggered
      */
