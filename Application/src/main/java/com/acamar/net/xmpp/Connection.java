@@ -105,10 +105,10 @@ public class Connection extends AbstractConnection
 
         try {
             endpoint.connect();
-            fireConnectionEvent("", ConnectionEvent.CONNECTION_OPENED);
+            fireConnectionEvent("", ConnectionEvent.StatusCode.CONNECTION_OPENED);
             connected = endpoint.isConnected();
         } catch (XMPPException e) {
-            fireConnectionEvent(e.getMessage(), ConnectionEvent.ERROR_OCCURED);
+            fireConnectionEvent(e.getMessage(), ConnectionEvent.StatusCode.ERROR_OCCURED);
         }
     }
 

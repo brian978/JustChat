@@ -22,7 +22,7 @@ public class User implements UserInterface, Comparable<User>
      */
     public User(String identity)
     {
-        this.identity = identity;
+        this(identity, identity);
     }
 
     /**
@@ -33,8 +33,7 @@ public class User implements UserInterface, Comparable<User>
      */
     public User(String identity, String name)
     {
-        this(identity);
-
+        this.identity = identity;
         this.name = name;
     }
 

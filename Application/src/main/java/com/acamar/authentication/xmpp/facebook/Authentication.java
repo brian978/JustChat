@@ -22,6 +22,7 @@ public class Authentication extends com.acamar.authentication.xmpp.Authenticatio
     {
         if (connection == null) {
             connection = new Connection();
+            connection.setEventManager(eventManager);
         }
 
         return (Connection) connection;

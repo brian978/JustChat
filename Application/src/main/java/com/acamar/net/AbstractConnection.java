@@ -1,18 +1,21 @@
 package com.acamar.net;
 
 import com.acamar.event.EventManager;
+import com.acamar.event.EventManagerAwareInterface;
 import com.acamar.util.Properties;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
 
 /**
  * JustChat
  *
  * @link https://github.com/brian978/JustChat
  */
-abstract public class AbstractConnection implements ConnectionInterface, ConnectionAsyncInterface
+public abstract class AbstractConnection
+        implements ConnectionInterface, ConnectionAsyncInterface, EventManagerAwareInterface
 {
+    protected EventManager eventManager = null;
     protected Properties config = new Properties(getConfigFilename());
     protected String host = "";
     protected int port = 0;
@@ -105,48 +108,18 @@ abstract public class AbstractConnection implements ConnectionInterface, Connect
     }
 
     /**
-     * Can be used to add a event listener for connection events
-     *
-     * @param listener Listener object that will listen for connection events
-     * @return AbstractConnection
-     */
-    public AbstractConnection addConnectionStatusListener(ConnectionStatusListener listener)
-    {
-        EventManager.add(ConnectionStatusListener.class, listener);
-
-        return this;
-    }
-
-    /**
-     * Can be used to remove a event listener for connection events
-     *
-     * @param listener Listener object that will listen for connection events
-     * @return AbstractConnection
-     */
-    public AbstractConnection removeConnectionStatusListener(ConnectionStatusListener listener)
-    {
-        EventManager.remove(ConnectionStatusListener.class, listener);
-
-        return this;
-    }
-
-    /**
      * Builds and fires a connection event
      *
      * @param message    Message that will be contained in the event object
      * @param statusCode Status code so we can determine from the event what happened
      */
-    protected void fireConnectionEvent(String message, int statusCode)
+    protected void fireConnectionEvent(String message, ConnectionEvent.StatusCode statusCode)
     {
-        try {
-            EventManager.fireEvent(
-                    ConnectionStatusListener.class,
-                    new ConnectionEvent(message, statusCode),
-                    ConnectionStatusListener.class.getMethod("statusChanged", ConnectionEvent.class)
-            );
-        } catch (InvocationTargetException | IllegalAccessException | NoSuchMethodException e) {
-            e.printStackTrace();
-        }
+        HashMap<Object, Object> eventParams = new HashMap<>();
+        eventParams.put("message", message);
+        eventParams.put("statusCode", statusCode);
+
+        eventManager.trigger(new ConnectionEvent(this, eventParams));
     }
 
     /**
@@ -187,5 +160,27 @@ abstract public class AbstractConnection implements ConnectionInterface, Connect
             // We will handle this using an event
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Injects an EventManager object into another object
+     *
+     * @param eventManager An EventManager object
+     */
+    @Override
+    public void setEventManager(EventManager eventManager)
+    {
+        this.eventManager = eventManager;
+    }
+
+    /**
+     * Returns the event manager object that was injected or created inside this object
+     *
+     * @return EventManager
+     */
+    @Override
+    public EventManager getEventManager()
+    {
+        return eventManager;
     }
 }

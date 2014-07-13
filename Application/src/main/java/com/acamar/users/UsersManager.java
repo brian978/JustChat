@@ -14,7 +14,6 @@ public class UsersManager
 {
     ArrayList<User> users = new ArrayList<>();
     ArrayList<UsersManagerListener> listeners = new ArrayList<>();
-    User currentUser = null;
 
     /**
      * Adds a user to the users array and dispatches the userAdded event
@@ -80,33 +79,12 @@ public class UsersManager
     }
 
     /**
-     * Adds the user that is using the application to the manager so we can make use of this information later
-     *
-     * @param currentUser User that has authenticated
-     */
-    public void setUser(User currentUser)
-    {
-        this.currentUser = currentUser;
-    }
-
-    /**
-     * Returns the current user (the one that logged in)
-     *
-     * @return User
-     */
-    public User getUser()
-    {
-        return currentUser;
-    }
-
-    /**
      * Sorts the list of users and then dispatches a usersSorted event
      *
      */
     public void sort()
     {
         Collections.sort(users);
-
         for (UsersManagerListener listener : listeners) {
             listener.usersSorted(users);
         }

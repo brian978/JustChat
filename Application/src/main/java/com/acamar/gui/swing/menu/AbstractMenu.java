@@ -8,19 +8,20 @@ import java.util.HashMap;
 /**
  * JustChat
  *
- * @version 1.0
+ * @version 1.1
  * @link https://github.com/brian978/JustChat
- * @since 03-03-2014
+ * @since 2014-03-03
  */
-public class AbstractMenu extends JMenuBar
+public abstract class AbstractMenu
 {
+    protected JMenuBar container = new JMenuBar();
     protected HashMap<String, JMenuItem> menuItems = new HashMap<>();
 
     /**
      * Creates a new top level menu that is added to the menu bar
      *
      * @param label Label of the menu entry
-     * @param name Name of the menu to identify in the code
+     * @param name  Name of the menu to identify in the code
      * @return JMenu
      */
     protected JMenu addMenu(String label, String name)
@@ -28,7 +29,7 @@ public class AbstractMenu extends JMenuBar
         JMenu menu = new JMenu(label);
         menu.setName(name);
 
-        return add(menu);
+        return container.add(menu);
     }
 
     /**
@@ -69,9 +70,9 @@ public class AbstractMenu extends JMenuBar
     /**
      * Creates a menu item and adds it to the menu
      *
-     * @param menu Menu to add an item to
+     * @param menu  Menu to add an item to
      * @param label Label of the item
-     * @param name A name that can be used to identify the item in code
+     * @param name  A name that can be used to identify the item in code
      * @return JMenuItem
      */
     protected JMenuItem addMenuItem(JMenu menu, String label, String name)
@@ -129,6 +130,16 @@ public class AbstractMenu extends JMenuBar
         JMenu jMenu = (JMenu) popupMenu.getInvoker();
 
         return SwingUtilities.getWindowAncestor(jMenu);
+    }
+
+    /**
+     * Returns the container where the menu elements are added
+     *
+     * @return JMenuBar
+     */
+    public JMenuBar getContainer()
+    {
+        return container;
     }
 
     /**

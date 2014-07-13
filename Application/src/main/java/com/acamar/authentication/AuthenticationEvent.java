@@ -1,32 +1,51 @@
 package com.acamar.authentication;
 
-import com.acamar.event.AbstractEvent;
+import com.acamar.event.Event;
 import com.acamar.users.User;
+
+import java.util.HashMap;
 
 /**
  * JustChat
  *
+ * @version 2.0
  * @link https://github.com/brian978/JustChat
+ * @since 2014-03-30
  */
-public class AuthenticationEvent extends AbstractEvent
+public class AuthenticationEvent extends Event
 {
-    private StatusCode statusCode;
-    private User user = null;
+    public final static String TYPE_LOGIN = "login";
+    public final static String TYPE_LOGOUT = "logout";
 
-    public AuthenticationEvent(User user, StatusCode statusCode)
+    /**
+     * Constructs a new event object
+     *
+     * @param target Target of the event (usually the object that triggered the event)
+     */
+    public AuthenticationEvent(Object target)
     {
-        this.user = user;
-        this.statusCode = statusCode;
+        super(AuthenticationEvent.class.getName(), target);
+    }
+
+    /**
+     * Constructs a new event object
+     *
+     * @param target Target of the event (usually the object that triggered the event)
+     * @param params Parameters for the event
+     */
+    public AuthenticationEvent(Object target, HashMap<Object, Object> params)
+    {
+        super(AuthenticationEvent.class.getName(), target, params);
     }
 
     /**
      * Returns the user that tried to authenticate
      *
-     * @return User
+     * @return String
      */
-    public User getUser()
+    public String getIdentity()
     {
-        return user;
+        return (String) params.get("identity");
     }
 
     /**
@@ -36,7 +55,7 @@ public class AuthenticationEvent extends AbstractEvent
      */
     public StatusCode getStatusCode()
     {
-        return statusCode;
+        return (StatusCode) params.get("statusCode");
     }
 
     /**

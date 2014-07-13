@@ -1,17 +1,21 @@
 package com.acamar.authentication;
 
 import com.acamar.event.EventManager;
+import com.acamar.event.EventManagerAwareInterface;
+import com.acamar.users.User;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.util.HashMap;
 
 /**
  * JustChat
  *
  * @link https://github.com/brian978/JustChat
  */
-public abstract class AbstractAuthentication implements AuthenticationInterface, AsyncAuthenticationInterface
+public abstract class AbstractAuthentication
+        implements AuthenticationInterface, AsyncAuthenticationInterface, EventManagerAwareInterface
 {
+    protected EventManager eventManager = null;
+
     /**
      * The method provides an asynchronous way for authenticating the user
      *
@@ -36,47 +40,40 @@ public abstract class AbstractAuthentication implements AuthenticationInterface,
     }
 
     /**
-     * Adds an event listener to the global event manager
-     *
-     * @param listener An object that will be called after the authentication is done
-     * @return AbstractAuthentication
-     */
-    public AbstractAuthentication addAuthenticationListener(AuthenticationListener listener)
-    {
-        EventManager.add(AuthenticationListener.class, listener);
-
-        return this;
-    }
-
-    /**
-     * Removes a listener from the global event manager
-     *
-     * @param listener The listener object to be removed
-     * @return AbstractAuthentication
-     */
-    public AbstractAuthentication removeAuthenticationListener(AuthenticationListener listener)
-    {
-        EventManager.remove(AuthenticationListener.class, listener);
-
-        return this;
-    }
-
-    /**
      * The method is called from within the authentication object when an authentication event occurs (like login)
      *
-     * @param e An event object to be sent to all attached listeners of the AuthenticationListener type
+     * @param identity   Identity (username/email) of the user that was authenticated (or tried to be authenticated)
+     * @param statusCode Status codes for the authentication process
      */
-    protected void fireAuthenticationEvent(AuthenticationEvent e)
+    protected void fireAuthenticationEvent(String identity, AuthenticationEvent.StatusCode statusCode)
     {
-        try {
-            Method authenticationPerformed = AuthenticationListener.class.getMethod(
-                    "authenticationPerformed",
-                    AuthenticationEvent.class
-            );
+        HashMap<Object, Object> eventParams = new HashMap<>();
+        eventParams.put("object", this);
+        eventParams.put("identity", identity);
+        eventParams.put("statusCode", statusCode);
 
-            EventManager.fireEvent(AuthenticationListener.class, e, authenticationPerformed);
-        } catch (InvocationTargetException | IllegalAccessException | NoSuchMethodException e1) {
-            e1.printStackTrace();
-        }
+        eventManager.trigger(new AuthenticationEvent(this, eventParams));
+    }
+
+    /**
+     * Injects an EventManager object into another object
+     *
+     * @param eventManager An EventManager object
+     */
+    @Override
+    public void setEventManager(EventManager eventManager)
+    {
+        this.eventManager = eventManager;
+    }
+
+    /**
+     * Returns the event manager object that was injected or created inside this object
+     *
+     * @return EventManager
+     */
+    @Override
+    public EventManager getEventManager()
+    {
+        return eventManager;
     }
 }
