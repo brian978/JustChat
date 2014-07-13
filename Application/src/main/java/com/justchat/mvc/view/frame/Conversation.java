@@ -12,6 +12,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 /**
  * JustChat
@@ -27,7 +29,7 @@ public class Conversation extends AbstractFrame implements EventManagerAwareInte
 
     /**
      * Constructor
-     *
+     * <p/>
      * Creates an Conversation object
      */
     public Conversation()
@@ -135,6 +137,22 @@ public class Conversation extends AbstractFrame implements EventManagerAwareInte
          */
         final Conversation _this = this;
 
+        container.addWindowListener(new WindowAdapter()
+        {
+            /**
+             * Invoked when a window is in the process of being closed.
+             * The close operation can be overridden at this point.
+             *
+             * @param e
+             */
+            @Override
+            public void windowClosing(WindowEvent e)
+            {
+                super.windowClosing(e);
+                eventManager.trigger(new MvcEvent(MvcEvent.WINDOW_CLOSING, _this));
+            }
+        });
+
         item = menu.findItemByName("conversationCloseItem");
         if (item != null) {
             item.addActionListener(new ActionListener()
@@ -143,6 +161,7 @@ public class Conversation extends AbstractFrame implements EventManagerAwareInte
                 public void actionPerformed(ActionEvent e)
                 {
                     eventManager.trigger(new MvcEvent(MvcEvent.WINDOW_CLOSING, _this));
+                    container.dispatchEvent(new WindowEvent(container, WindowEvent.WINDOW_CLOSING));
                 }
             });
         }

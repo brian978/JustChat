@@ -170,9 +170,6 @@ public class ConversationsController extends AbstractController
         {
             Object target = e.getTarget();
             if (target instanceof Conversation) {
-                JFrame viewContainer = ((Conversation) target).getViewContainer();
-                viewContainer.dispatchEvent(new WindowEvent(viewContainer, WindowEvent.WINDOW_CLOSING));
-
                 // Removing the conversation container from the hash map
                 for (ConversationContainer container : conversations.values()) {
                     if (container.getWindow() == target) {
