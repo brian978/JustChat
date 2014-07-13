@@ -22,11 +22,6 @@ public class ChatPanel extends AbstractPanel
     {
         super();
 
-        populate();
-    }
-
-    protected void populate()
-    {
         GridBagConstraints c;
 
         /**
@@ -46,7 +41,7 @@ public class ChatPanel extends AbstractPanel
         c.fill = GridBagConstraints.BOTH;
         c.anchor = GridBagConstraints.FIRST_LINE_START;
 
-        add(chatBox.getScrollable(), c);
+        container.add(chatBox.getScrollable(), c);
 
         /**
          * -----------------
@@ -65,7 +60,7 @@ public class ChatPanel extends AbstractPanel
         c.fill = GridBagConstraints.BOTH;
         c.anchor = GridBagConstraints.LINE_START;
 
-        add(messageBox, c);
+        container.add(messageBox, c);
     }
 
     public ChatBox getChatBox()

@@ -35,15 +35,14 @@ public abstract class AbstractMainFrame extends AbstractFrame implements EventMa
     /**
      * Configures, populates and loads the events for the frame
      *
-     * @return AbstractMainFrame
      */
-    public AbstractMainFrame initialize()
+    @Override
+    public void initialize()
     {
-        configure();
+        super.initialize();
+
         populateFrame();
         setupEvents();
-
-        return this;
     }
 
     /**

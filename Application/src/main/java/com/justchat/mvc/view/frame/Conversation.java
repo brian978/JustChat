@@ -1,21 +1,17 @@
 package com.justchat.mvc.view.frame;
 
-import com.acamar.mvc.view.AbstractFrame;
+import com.acamar.event.EventManager;
+import com.acamar.event.EventManagerAwareInterface;
 import com.acamar.gui.swing.menu.AbstractMenu;
-import com.acamar.net.xmpp.Connection;
-import com.justchat.users.User;
+import com.acamar.mvc.event.MvcEvent;
+import com.acamar.mvc.view.AbstractFrame;
 import com.justchat.mvc.view.frame.menu.ChatMenu;
 import com.justchat.mvc.view.panel.ChatPanel;
-import com.justchat.mvc.view.panel.components.ChatBox;
-import org.jivesoftware.smack.Chat;
-import org.jivesoftware.smack.ChatManager;
-import org.jivesoftware.smack.MessageListener;
-import org.jivesoftware.smack.XMPPException;
-import org.jivesoftware.smack.packet.Message;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * JustChat
@@ -24,36 +20,46 @@ import java.awt.event.*;
  * @link https://github.com/brian978/JustChat
  * @since 2014-04-16
  */
-public class Conversation extends AbstractFrame
+public class Conversation extends AbstractFrame implements EventManagerAwareInterface
 {
-    private User localUser;
-    private User remoteUser;
-    private Chat chat;
+    private EventManager eventManager;
     private ChatPanel chatPanel;
 
-    public Conversation(Connection connection, User remoteUser)
+    /**
+     * Constructor
+     *
+     * Creates an Conversation object
+     */
+    public Conversation()
     {
         super("JustChat - conversation");
+    }
 
-        this.remoteUser = remoteUser;
+    /**
+     * Since the main component of this frame is the chat panel we need a quick way to access it
+     *
+     * @return ChatPanel object
+     */
+    public ChatPanel getChatPanel()
+    {
+        return chatPanel;
+    }
 
-        // Creating the chat session
-        ChatManager chatmanager = connection.getEndpoint().getChatManager();
-        chat = chatmanager.createChat(remoteUser.getIdentity(), new InboundMessageListener());
+    /**
+     * Configures, populates and loads the events for the frame
+     */
+    public void initialize()
+    {
+        super.initialize();
 
         // Setting up the new frame
-        configure();
         populateFrame();
-        setupEvents();
-        display();
         ensureMinimumSize();
     }
 
-    public void setLocalUser(User localUser)
-    {
-        this.localUser = localUser;
-    }
-
+    /**
+     * Sets different properties of the frame, what layout to use and what happens when the frame is closed
+     */
     @Override
     protected void configure()
     {
@@ -98,16 +104,7 @@ public class Conversation extends AbstractFrame
 
         chatPanel = new ChatPanel();
         chatPanel.setName("ChatPanel");
-        container.add(chatPanel, c);
-    }
-
-    private void setupEvents()
-    {
-        // Message event listeners
-        chatPanel.getMessageBox().addKeyListener(new OutboundMessageListener(chatPanel.getChatBox()));
-
-        // Frame events
-        container.addWindowListener(new CleanupWindowListener());
+        container.add(chatPanel.getViewContainer(), c);
     }
 
     protected void attachMenuListeners(AbstractMenu menu)
@@ -136,6 +133,8 @@ public class Conversation extends AbstractFrame
          * Listener for close conversation
          * -------------------------------
          */
+        final Conversation _this = this;
+
         item = menu.findItemByName("conversationCloseItem");
         if (item != null) {
             item.addActionListener(new ActionListener()
@@ -143,122 +142,31 @@ public class Conversation extends AbstractFrame
                 @Override
                 public void actionPerformed(ActionEvent e)
                 {
-                    container.dispatchEvent(new WindowEvent(container, WindowEvent.WINDOW_CLOSING));
+                    eventManager.trigger(new MvcEvent(MvcEvent.WINDOW_CLOSING, _this));
                 }
             });
         }
     }
 
-    private class CleanupWindowListener implements WindowListener
+    /**
+     * Injects an EventManager object into another object
+     *
+     * @param eventManager An EventManager object
+     */
+    @Override
+    public void setEventManager(EventManager eventManager)
     {
-        @Override
-        public void windowOpened(WindowEvent e)
-        {
-
-        }
-
-        @Override
-        public void windowClosing(WindowEvent e)
-        {
-            System.out.println("Cleaning up the frame");
-        }
-
-        @Override
-        public void windowClosed(WindowEvent e)
-        {
-
-        }
-
-        @Override
-        public void windowIconified(WindowEvent e)
-        {
-
-        }
-
-        @Override
-        public void windowDeiconified(WindowEvent e)
-        {
-
-        }
-
-        @Override
-        public void windowActivated(WindowEvent e)
-        {
-
-        }
-
-        @Override
-        public void windowDeactivated(WindowEvent e)
-        {
-
-        }
+        this.eventManager = eventManager;
     }
 
-    private class OutboundMessageListener implements KeyListener, ActionListener
+    /**
+     * Returns the event manager object that was injected or created inside this object
+     *
+     * @return EventManager
+     */
+    @Override
+    public EventManager getEventManager()
     {
-        private ChatBox chatPane;
-
-        public OutboundMessageListener(ChatBox chatBox)
-        {
-            chatPane = chatBox;
-        }
-
-        private void sendFieldContents(AWTEvent e)
-        {
-            JTextField field = (JTextField) e.getSource();
-            String message = field.getText();
-            field.setText("");
-
-            if (message.length() > 0) {
-                chatPane.append(Color.RED, localUser, message);
-
-                try {
-                    chat.sendMessage(message);
-                } catch (XMPPException e1) {
-                    e1.printStackTrace();
-                }
-            }
-        }
-
-        @Override
-        public void actionPerformed(ActionEvent e)
-        {
-            if (e.getActionCommand().equals("send")) {
-                sendFieldContents(e);
-            }
-        }
-
-        @Override
-        public void keyTyped(KeyEvent e)
-        {
-
-        }
-
-        @Override
-        public void keyPressed(KeyEvent e)
-        {
-            if (e.getKeyCode() == 10) {
-                sendFieldContents(e);
-            }
-        }
-
-        @Override
-        public void keyReleased(KeyEvent e)
-        {
-
-        }
-    }
-
-    private class InboundMessageListener implements MessageListener
-    {
-        @Override
-        public void processMessage(Chat chat, Message message)
-        {
-            // For now we ignore notification messages
-            String messageBody = message.getBody();
-            if (messageBody != null) {
-                chatPanel.getChatBox().append(Color.BLUE, remoteUser, message.getBody());
-            }
-        }
+        return eventManager;
     }
 }

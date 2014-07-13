@@ -2,6 +2,7 @@ package com.justchat.mvc.view.frame;
 
 import com.acamar.authentication.AuthenticationEvent;
 import com.acamar.event.EventManager;
+import com.justchat.mvc.view.panel.ChatPanel;
 import com.justchat.mvc.view.panel.UsersPanel;
 import com.justchat.mvc.view.frame.menu.MainMenu;
 

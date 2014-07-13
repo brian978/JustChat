@@ -87,15 +87,17 @@ public class Login extends AbstractMainFrame
         container.setLayout(new BoxLayout(container.getContentPane(), BoxLayout.PAGE_AXIS));
     }
 
+    /**
+     * Configures, populates and loads the events for the frame
+     *
+     */
     @Override
-    public AbstractMainFrame initialize()
+    public void initialize()
     {
         super.initialize();
 
         loginPanel.populate();
         authenticatePanel.populate();
-
-        return this;
     }
 
     /**

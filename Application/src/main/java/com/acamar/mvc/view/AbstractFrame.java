@@ -38,8 +38,18 @@ public abstract class AbstractFrame extends ViewContainer<JFrame>
     }
 
     /**
+     * Configures, populates and loads the events for the frame
+     * <p/>
+     * By default it must only call the configure() method since the minimum size cannot be ensured
+     * until the frame is populated
+     */
+    public void initialize()
+    {
+        configure();
+    }
+
+    /**
      * Sets different properties of the frame, what layout to use and what happens when the frame is closed
-     *
      */
     protected void configure()
     {
@@ -50,7 +60,6 @@ public abstract class AbstractFrame extends ViewContainer<JFrame>
 
     /**
      * Sets the minimum size of the frame
-     *
      */
     protected void ensureMinimumSize()
     {
@@ -60,7 +69,6 @@ public abstract class AbstractFrame extends ViewContainer<JFrame>
     /**
      * The method is used to show the frame, pack it to it's minimum size (considering the elements on it)
      * and set the location of the frame (which by default will be centered)
-     *
      */
     public void display()
     {

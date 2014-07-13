@@ -13,7 +13,6 @@ import com.acamar.util.PropertiesAwareInterface;
 import com.justchat.mvc.view.frame.Contacts;
 import com.justchat.mvc.view.frame.Conversation;
 import com.justchat.mvc.view.panel.UsersPanel;
-import com.justchat.mvc.view.panel.components.CommunicationServiceItem;
 import com.justchat.mvc.view.panel.components.UserCategory;
 import com.justchat.mvc.view.panel.components.UserList;
 import com.justchat.users.User;
@@ -28,6 +27,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Collection;
+import java.util.HashMap;
 
 /**
  * JustChat
@@ -42,7 +42,6 @@ public class ContactsController extends AbstractController implements Properties
     private Contacts view = new Contacts();
     private Authentication authentication = null;
     private UsersManager usersManager = new UsersManager();
-    private User currentUser = null;
 
     /**
      * The method will be called after all the dependencies have been injected in the controller
@@ -135,9 +134,11 @@ public class ContactsController extends AbstractController implements Properties
             {
                 super.mouseClicked(e);
                 if (e.getClickCount() == 2) {
-                    User user = ((UserList) e.getSource()).getSelectedUser();
-                    if (user.getIdentity().length() > 0) {
-                        startNewConversation(user);
+                    User remoteUser = ((UserList) e.getSource()).getSelectedUser();
+                    if (remoteUser.getIdentity().length() > 0) {
+                        HashMap<Object, Object> params = new HashMap<>();
+                        params.put("remoteUser", remoteUser);
+                        eventManager.trigger("new.conversation", null, params);
                     }
                 }
             }
@@ -181,20 +182,7 @@ public class ContactsController extends AbstractController implements Properties
     }
 
     /**
-     * When this is called a new window will be launched that will allow the users to send instant messages to the
-     * selected user
-     *
-     * @param user User to start the conversation with
-     */
-    private void startNewConversation(User user)
-    {
-        Conversation conversationFrame = new Conversation(authentication.getConnection(), user);
-        conversationFrame.setLocalUser(currentUser);
-    }
-
-    /**
      * Populates the users panel, adds some listeners and populates the user list
-     *
      */
     private void prepareUserListDependencies()
     {
@@ -278,11 +266,8 @@ public class ContactsController extends AbstractController implements Properties
             if (event.getStatusCode() == AuthenticationEvent.StatusCode.SUCCESS) {
                 authentication = (Authentication) event.getParams().get("object");
 
-                // Updating the current user
-                currentUser = new User(event.getIdentity());
-
                 // Showing the user list
-                if(!panelPrepared) {
+                if (!panelPrepared) {
                     panelPrepared = true;
                     prepareUserListDependencies();
                 }
@@ -290,6 +275,33 @@ public class ContactsController extends AbstractController implements Properties
                 addUsers();
                 view.display();
             }
+        }
+    }
+
+    /**
+     * The class decides what happens to the frame when a logout occurs
+     *
+     * @version 1.0
+     * @link https://github.com/brian978/JustChat
+     * @since 2014-07-10
+     */
+    private class LogoutEventListener extends AbstractEventListener
+    {
+        /**
+         * The method is called by the event manager when an EventListener class is passed to the trigger() method
+         *
+         * @param e Event that was triggered
+         */
+        @Override
+        public void onEvent(EventInterface e)
+        {
+            Dimension size = view.getViewContainer().getSize();
+            settings.set("ContactsWidth", String.valueOf((int) size.getWidth()));
+            settings.set("ContactsHeight", String.valueOf((int) size.getHeight()));
+
+            doLogout();
+            view.getViewContainer().invalidate();
+            view.getViewContainer().setVisible(false);
         }
     }
 
@@ -326,32 +338,6 @@ public class ContactsController extends AbstractController implements Properties
                     userList.updateUser(user, userList.findCategory("Offline"));
                 }
             }
-        }
-    }
-
-    /**
-     * The class decides what happens to the frame when a logout occurs
-     *
-     * @version 1.0
-     * @link https://github.com/brian978/JustChat
-     * @since 2014-07-10
-     */
-    private class LogoutEventListener extends AbstractEventListener
-    {
-        /**
-         * The method is called by the event manager when an EventListener class is passed to the trigger() method
-         *
-         * @param e Event that was triggered
-         */
-        @Override
-        public void onEvent(EventInterface e)
-        {
-                Dimension size = view.getViewContainer().getSize();
-                settings.set("ContactsWidth", String.valueOf((int) size.getWidth()));
-                settings.set("ContactsHeight", String.valueOf((int) size.getHeight()));
-
-                doLogout();
-                view.getViewContainer().invalidate();
         }
     }
 }

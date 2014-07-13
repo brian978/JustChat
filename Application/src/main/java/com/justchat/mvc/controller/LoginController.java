@@ -4,7 +4,6 @@ import com.acamar.authentication.AuthenticationEvent;
 import com.acamar.authentication.xmpp.Authentication;
 import com.acamar.event.EventInterface;
 import com.acamar.event.listener.AbstractEventListener;
-import com.acamar.event.listener.EventListenerInterface;
 import com.acamar.mvc.controller.AbstractController;
 import com.acamar.mvc.event.MvcEvent;
 import com.justchat.mvc.view.frame.Login;
@@ -53,7 +52,7 @@ public class LoginController extends AbstractController
          * Event manager events
          * -----------------------
          */
-        eventManager.attach(AuthenticationEvent.class, new AuthenticationEventsListener());
+        eventManager.attach(AuthenticationEvent.class, new LoginEventListener());
         eventManager.attach(AuthenticationEvent.TYPE_LOGOUT, new LogoutEventListener());
 
         /**
@@ -221,7 +220,7 @@ public class LoginController extends AbstractController
      * @link https://github.com/brian978/JustChat
      * @since 2014-03-03
      */
-    private class AuthenticationEventsListener extends AbstractEventListener
+    private class LoginEventListener extends AbstractEventListener
     {
         /**
          * The method is called by the event manager when an EventListener class is passed to the trigger() method
@@ -234,6 +233,7 @@ public class LoginController extends AbstractController
         {
             // If the login is successful we hide the current frame (since we don't need it for now)
             if (((AuthenticationEvent) e).getStatusCode() == AuthenticationEvent.StatusCode.SUCCESS) {
+                view.getViewContainer().invalidate();
                 view.getViewContainer().setVisible(false);
             }
 
@@ -260,7 +260,7 @@ public class LoginController extends AbstractController
         @Override
         public void onEvent(EventInterface e)
         {
-            view.getViewContainer().setVisible(true);
+            view.display();
         }
     }
 }
