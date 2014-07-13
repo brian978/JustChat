@@ -1,16 +1,20 @@
 package com.justchat;
 
 import com.acamar.authentication.xmpp.Authentication;
+import com.acamar.event.EventInterface;
+import com.acamar.event.EventManager;
+import com.acamar.event.listener.AbstractEventListener;
+import com.acamar.mvc.controller.AbstractController;
+import com.acamar.mvc.event.MvcEvent;
 import com.acamar.util.Properties;
-import com.justchat.gui.frame.Contacts;
-import com.justchat.gui.frame.Login;
-import com.justchat.gui.frame.menu.MainMenu;
-import com.justchat.gui.panel.LoginPanel;
-import com.justchat.gui.panel.components.CommunicationServiceItem;
+import com.acamar.util.PropertiesAwareInterface;
+import com.justchat.mvc.controller.ContactsController;
+import com.justchat.mvc.controller.ConversationsController;
+import com.justchat.mvc.controller.LoginController;
+import com.justchat.mvc.view.frame.Contacts;
+import com.justchat.mvc.view.frame.Login;
+import com.justchat.mvc.view.panel.components.CommunicationServiceItem;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
 import java.io.IOException;
 
 /**
@@ -23,14 +27,21 @@ import java.io.IOException;
 public class Launcher
 {
     Properties settings = new Properties("preferences.properties");
-    Login login = new Login(settings);
-    Contacts contacts = new Contacts(settings);
+    EventManager eventManager = new EventManager();
 
+    /**
+     * The method creates a new instance of the Launcher object
+     *
+     * @param args Arguments for the launcher
+     */
     public static void main(String[] args)
     {
         new Launcher();
     }
 
+    /**
+     * Creates a launcher object and configures it
+     */
     public Launcher()
     {
         // Loading (or creating) the preferences file
@@ -41,148 +52,69 @@ public class Launcher
             System.exit(-10);
         }
 
-        /**
-         * --------------------------
-         * Frames setup
-         * --------------------------
-         */
-        // Frame listeners
-        SaveOnExitListener exitListener = new SaveOnExitListener();
-
-        // Login frame
-        login.addWindowListener(exitListener);
-        login.setMenu(new MainMenu());
-        login.initialize();
-
-        // Contacts frame
-        contacts.addWindowListener(exitListener);
-        contacts.setMenu(new MainMenu());
-        contacts.initialize();
+        LoginController loginController = configureController(new LoginController());
+        configureController(new ContactsController());
+        configureController(new ConversationsController());
 
         /**
          * --------------------------
-         * Login frame listeners
+         * Event listeners
          * --------------------------
          */
-        login.addComponentListener(new ComponentAdapter()
-        {
-            @Override
-            public void componentHidden(ComponentEvent e)
-            {
-                super.componentHidden(e);
-                contacts.updateRoster();
-                contacts.loadUsers();
-                contacts.showFrame();
-            }
-        });
+        eventManager.attach(MvcEvent.WINDOW_CLOSING, new SaveOnExitListener());
 
-        // Deciding what to do when we select a different communication server
-        LoginPanel loginPanel = (LoginPanel) login.findComponent("loginPanel");
-        final JComboBox connection = (JComboBox) loginPanel.findComponent("connectionField");
-
-        // Selecting the authentication object of the first item because by default that is what we will have pre-filled
-        setAuthenticationObject((CommunicationServiceItem) ((JComboBox) loginPanel.findComponent("connectionField")).getItemAt(0));
-
-        connection.addActionListener(new ActionListener()
-        {
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                setAuthenticationObject((CommunicationServiceItem) connection.getSelectedItem());
-            }
-        });
 
         /**
          * --------------------------
-         * Contacts frame listeners
+         * Running the application
          * --------------------------
          */
-        contacts.addComponentListener(new ComponentAdapter()
-        {
-            @Override
-            public void componentHidden(ComponentEvent e)
-            {
-                super.componentHidden(e);
-
-                Dimension size = contacts.getSize();
-                settings.set("ContactsWidth", String.valueOf((int) size.getWidth()));
-                settings.set("ContactsHeight", String.valueOf((int) size.getHeight()));
-
-                contacts.doLogout();
-                contacts.invalidate();
-                login.setVisible(true);
-            }
-        });
-
-        /**
-         * -------------------------
-         * Loading the software
-         * -------------------------
-         */
-        login.showFrame();
-    }
-
-    protected void setAuthenticationObject(CommunicationServiceItem serviceItem)
-    {
-        Authentication authentication = null;
-
-        try {
-            authentication = serviceItem.getInstance();
-        } catch (IllegalAccessException | InstantiationException e1) {
-            e1.printStackTrace();
-        }
-
-        if (authentication != null) {
-            setAuthenticationObject(authentication);
-        }
+        loginController.displayLogin();
     }
 
     /**
-     * Injects the authentication object in the login and contacts frames
+     * Configures a controller and injects all the dependencies
      *
-     * The process involves removing the old listeners and reattaching new ones
-     *
-     * @param xmppAuthentication Authentication
+     * @param controller Controller object to be configured
+     * @return A configured controller object
      */
-    protected void setAuthenticationObject(Authentication xmppAuthentication)
+    private <T extends AbstractController> T configureController(T controller)
     {
-        if (login.getAuthentication() != null) {
-            login.removeAuthenticationListeners();
+        // Configuring the controller
+        controller.setEventManager(eventManager);
+
+        if (controller instanceof PropertiesAwareInterface) {
+            ((PropertiesAwareInterface) controller).setProperties(settings);
         }
 
-        if (contacts.getAuthentication() != null) {
-            contacts.removeAuthenticationListeners();
-        }
+        controller.completeSetup();
 
-        login.setAuthentication(xmppAuthentication);
-        login.addAuthenticationListeners();
-
-        contacts.setAuthentication(xmppAuthentication);
-        contacts.addAuthenticationListeners();
+        return controller;
     }
 
     /**
-     * Application close listener that handles configuration saving
+     * The event listener will handle window closing events
      *
      * @version 1.0
+     * @link https://github.com/brian978/JustChat
+     * @since 2014-06-27
      */
-    private class SaveOnExitListener extends WindowAdapter
+    private class SaveOnExitListener extends AbstractEventListener
     {
         /**
-         * Invoked when the user attempts to close the window
-         * from the window's system menu.
+         * The method is called by the event manager when an EventListener class is passed to the trigger() method
          *
-         * @param e WindowEvent object used to determine properties of the window
+         * @param e Event that was triggered
          */
         @Override
-        public void windowClosing(WindowEvent e)
+        public void onEvent(EventInterface e)
         {
-            System.out.println("Cleaning up the main program");
-
-            try {
-                settings.store();
-            } catch (IOException e1) {
-                e1.printStackTrace();
+            if (e.getTarget() instanceof Contacts || e.getTarget() instanceof Login) {
+                try {
+                    settings.store();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
             }
         }
     }
