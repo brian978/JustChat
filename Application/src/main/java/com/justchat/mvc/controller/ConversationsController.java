@@ -9,10 +9,7 @@ import com.acamar.mvc.event.MvcEvent;
 import com.acamar.net.xmpp.Connection;
 import com.justchat.mvc.view.frame.Conversation;
 import com.justchat.users.User;
-import org.jivesoftware.smack.Chat;
-import org.jivesoftware.smack.ChatManager;
-import org.jivesoftware.smack.MessageListener;
-import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smack.*;
 import org.jivesoftware.smack.packet.Message;
 
 import javax.swing.*;
@@ -56,8 +53,38 @@ public class ConversationsController extends AbstractController
          * -----------------------
          */
         eventManager.attach(AuthenticationEvent.class, new LoginEventListener());
+        eventManager.attach(AuthenticationEvent.TYPE_LOGOUT, new LogoutEventListener());
         eventManager.attach("new.conversation", new ConversationStartListener());
         eventManager.attach(MvcEvent.WINDOW_CLOSING, new ConversationCloseListener());
+    }
+
+    /**
+     * Creates a new conversation container object and displays the conversation window
+     *
+     * @param remoteUser The user on the other end of the conversation
+     * @param chat       Chat object that will be used for messaging
+     */
+    private void createChatWindow(User remoteUser, Chat chat)
+    {
+        // Setting up the window
+        Conversation window = new Conversation();
+        window.setEventManager(eventManager);
+        window.initialize();
+
+        // Creating the rest of the objects we need
+        ConversationContainer container = new ConversationContainer(remoteUser, chat, window);
+        InboundMessageListener inboundMessageListener = new InboundMessageListener(container);
+        OutboundMessageListener outboundMessageListener = new OutboundMessageListener(container);
+
+        // We need to do some final dependency injections
+        chat.addMessageListener(inboundMessageListener);
+        window.getChatPanel().getMessageBox().addKeyListener(outboundMessageListener);
+
+        // Registering the container in the hash map so we don't create it again
+        conversations.put(remoteUser, container);
+
+        // Now when we have all the objects we can initialize the window
+        window.display();
     }
 
     /**
@@ -92,6 +119,27 @@ public class ConversationsController extends AbstractController
     }
 
     /**
+     * The class decides what happens when the user logs out
+     *
+     * @version 1.0
+     * @link https://github.com/brian978/JustChat
+     * @since 2014-07-14
+     */
+    private class LogoutEventListener extends AbstractEventListener
+    {
+        /**
+         * The method is called by the event manager when an EventListener class is passed to the trigger() method
+         *
+         * @param e Event that was triggered
+         */
+        @Override
+        public void onEvent(EventInterface e)
+        {
+            conversations.clear();
+        }
+    }
+
+    /**
      * The listener will create a new chat window
      *
      * @version 1.0
@@ -116,25 +164,8 @@ public class ConversationsController extends AbstractController
                 ChatManager chatmanager = connection.getEndpoint().getChatManager();
                 Chat chat = chatmanager.createChat(remoteUser.getIdentity(), null);
 
-                // Setting up the window
-                Conversation window = new Conversation();
-                window.setEventManager(eventManager);
-                window.initialize();
-
-                // Creating the rest of the objects we need
-                ConversationContainer container = new ConversationContainer(remoteUser, chat, window);
-                InboundMessageListener inboundMessageListener = new InboundMessageListener(container);
-                OutboundMessageListener outboundMessageListener = new OutboundMessageListener(container);
-
-                // We need to do some final dependency injections
-                chat.addMessageListener(inboundMessageListener);
-                window.getChatPanel().getMessageBox().addKeyListener(outboundMessageListener);
-
-                // Registering the container in the hash map so we don't create it again
-                conversations.put(remoteUser, container);
-
-                // Now when we have all the objects we can initialize the window
-                window.display();
+                // Creating the chat window
+                createChatWindow(remoteUser, chat);
             } else {
                 final ConversationContainer container = conversations.get(remoteUser);
                 EventQueue.invokeLater(new Runnable()
