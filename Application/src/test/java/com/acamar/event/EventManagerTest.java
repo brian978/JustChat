@@ -19,8 +19,8 @@ public class EventManagerTest
     EventManager eventManager = new EventManager();
 
     @Test
-    public void listenerCanBeAttached() {
-
+    public void listenerCanBeAttached()
+    {
         eventManager.attach("some.event", new AbstractEventListener()
         {
             @Override
@@ -41,8 +41,10 @@ public class EventManagerTest
             @Override
             public void onEvent(EventInterface e)
             {
-                Integer value = (int) e.getParams().get("value");
-                e.getParams().put("value", ++value);
+                Event evt = (Event) e;
+                HashMap<Object, Object> params = evt.getParams();
+                Integer value = (Integer) params.get("value");
+                params.put("value", ++value);
             }
         };
 
