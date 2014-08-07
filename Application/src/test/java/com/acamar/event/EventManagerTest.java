@@ -41,8 +41,8 @@ public class EventManagerTest
             @Override
             public void onEvent(EventInterface e)
             {
-                HashMap<String, Integer> params = (HashMap<String, Integer>)e.getParams();
-                Integer value = params.get("value");
+                HashMap<Object, Object> params = (HashMap<Object, Object>) e.getParams();
+                Integer value = (int) params.get("value");
                 params.put("value", ++value);
             }
         };
