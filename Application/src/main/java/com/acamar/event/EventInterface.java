@@ -30,7 +30,7 @@ public interface EventInterface
      *
      * @return HashMap
      */
-    public HashMap<?, ?> getParams();
+    public HashMap<Object, Object> getParams();
 
     /**
      * When called a flag is set that will prevent the event to be dispatched to the remaining listeners
